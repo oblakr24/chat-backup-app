@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Chat Backup</string>
+
+    <string name="file_provider">rokoblak.chatbackup.fileprovider</string>
+
+    <string-array name="faq_items">
+        <item>How do you use this app?</item>
+        <item>Answer to this question goes here</item>
+        <item>What if I want a different export/import format?</item>
+        <item>Answer to this question goes here</item>
+        <item>What if I want a different export/import format?</item>
+        <item>Answer to this question goes here</item>
+    </string-array>
+</resources>
