@@ -18,9 +18,7 @@ data class Conversations(
     val mapping: Map<Contact, Conversation>,
     val sortedContactsByLastMsg: List<Contact>,
 ) {
-    private val mappedContacts: Map<String, Contact> by lazy {
-        sortedContactsByLastMsg.associateBy { it.id }
-    }
+    private val idMapping = mapping.mapKeys { it.key.id }
 
     val sortedConversations by lazy {
         sortedContactsByLastMsg.map {
@@ -36,13 +34,13 @@ data class Conversations(
         sortedConversations.sumOf { it.messages.size }
     }
 
-    fun retrieve(contactId: String) = mappedContacts[contactId]?.let {
-        mapping[it]!!
+    fun resolveConvByContactId(contactId: String): Conversation? {
+        return idMapping[contactId]
     }
 
     fun removeConvs(contactIds: Set<String>): Conversations {
         val newContacts = sortedContactsByLastMsg.filterNot { contactIds.contains(it.id) }
-        val newMapping  = mapping.filterNot { contactIds.contains(it.key.id) }
+        val newMapping = mapping.filterNot { contactIds.contains(it.key.id) }
         return Conversations(newMapping, newContacts)
     }
 }
