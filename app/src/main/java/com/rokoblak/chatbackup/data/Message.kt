@@ -26,6 +26,10 @@ data class Conversations(
         }
     }
 
+    val contactIds by lazy {
+        sortedContactsByLastMsg.map { it.id }.toSet()
+    }
+
     val totalChats by lazy {
         sortedConversations.size
     }
@@ -42,5 +46,11 @@ data class Conversations(
         val newContacts = sortedContactsByLastMsg.filterNot { contactIds.contains(it.id) }
         val newMapping = mapping.filterNot { contactIds.contains(it.key.id) }
         return Conversations(newMapping, newContacts)
+    }
+
+    fun retrieveMessages(contactIds: Set<String>): List<Message> {
+        return idMapping.filterKeys { contactIds.contains(it) }.values.flatMap {
+            it.messages
+        }
     }
 }
