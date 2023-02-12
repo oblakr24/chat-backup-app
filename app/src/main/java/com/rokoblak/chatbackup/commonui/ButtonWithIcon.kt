@@ -17,9 +17,15 @@ import androidx.compose.ui.unit.dp
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
 
 @Composable
-fun ButtonWithIcon(text: String, icon: ImageVector, enabled: Boolean = true, onClick: () -> Unit) {
+fun ButtonWithIcon(
+    text: String,
+    icon: ImageVector,
+    enabled: Boolean = true,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Button(
-        enabled = enabled, modifier = Modifier,
+        enabled = enabled, modifier = modifier,
         onClick = onClick
     ) {
         Row(
