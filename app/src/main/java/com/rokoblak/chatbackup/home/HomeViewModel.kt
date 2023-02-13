@@ -98,7 +98,8 @@ class HomeViewModel @Inject constructor(
     ): HomeScreenUIState {
         val settings = settingsFlow.collectAsState(initial = AppStorage.defaultSettings).value
         val editState = editStateFlow.collectAsState().value
-        val selections = selectionsFlow.collectAsState().value.takeIf { editState.editing }
+        val selections = selectionsFlow.collectAsState().value
+        val selectionsIfEditing = selections.takeIf { editState.editing }
         val hasPerms = permissions.collectAsState().value
         val isDefaultSMSApp = isDefaultSMSAppFlow.collectAsState().value
 
@@ -115,7 +116,8 @@ class HomeViewModel @Inject constructor(
         }
 
         val conversationsState = if (conversations != null) {
-            val searchState = searchStatesFlow.collectAsState(initial = SearchState.NoSearch).value
+            val searchState = searchStatesFlow
+                .collectAsState(initial = SearchState.NoSearch).value
             when (searchState) {
                 SearchState.NoSearch -> {
                     mappedConvsFlow.collectAsState(initial = ConversationsListingUIState.Loading).value
@@ -133,7 +135,8 @@ class HomeViewModel @Inject constructor(
                     ConversationsListingUIState.Loaded(persistentListOf(), "No results")
                 }
                 is SearchState.ResultsFound -> {
-                    val mapped = uiMapper.mapToUI(conversations, selections, searchState.results)
+                    val mapped =
+                        uiMapper.mapToUI(conversations, selectionsIfEditing, searchState.results)
                     ConversationsListingUIState.Loaded(mapped)
                 }
             }
@@ -141,7 +144,7 @@ class HomeViewModel @Inject constructor(
             ConversationsListingUIState.Loading
         }
 
-        val selectionsEmpty = selections?.filter { it.value }?.isEmpty() ?: true
+        val selectionsEmpty = selections.filter { it.value }.isEmpty()
         val deleteEnabled = editState.editing && selectionsEmpty.not()
         val exportEnabled = selectionsEmpty.not()
         val convsAreEmpty = conversations?.mapping.isNullOrEmpty()
@@ -159,7 +162,7 @@ class HomeViewModel @Inject constructor(
             ""
         }
         val subtitle = if (conversations != null && editState.editing) {
-            val selectedCount = selections?.values?.count { it } ?: 0
+            val selectedCount = selections.values.count { it }
             "$selectedCount selected"
         } else {
             ""
@@ -200,7 +203,7 @@ class HomeViewModel @Inject constructor(
             HomeAction.FAQClicked -> navigateToRoute(FAQRoute.route)
             is HomeAction.SetDarkMode -> setDarkMode(act.enabled)
             HomeAction.CloseEditClicked -> editState.update { it.copy(editing = false) }
-            HomeAction.EditClicked -> editState.update { it.copy(editing = true) }
+            HomeAction.EditClicked -> enterEdit()
             HomeAction.PermissionsUpdated -> permissions.value = appScope.hasMessagesPermissions()
             is HomeAction.OpenSetAsDefaultClicked -> effects.send(HomeEffects.ShowSetAsDefaultPrompt)
             HomeAction.SetAsDefaultUpdated -> isDefaultSMSApp.value = appScope.isDefaultSMSApp()
@@ -212,6 +215,11 @@ class HomeViewModel @Inject constructor(
             }))
             is HomeAction.QueryChanged -> searchQuery.value = act.query
         }
+    }
+
+    fun enterEdit() {
+        effects.send(HomeEffects.HideKeyboard)
+        editState.update { it.copy(editing = true) }
     }
 
     private fun clearSelections() {

@@ -16,7 +16,7 @@ class ConversationSearcher @Inject constructor() {
                 it.matches(convs.mapping[it]!!, query)
             }
             if (matched.all { it is MatchedContact.NotMatched }) return@withContext null
-            SearchResults(matched)
+            SearchResults(query, matched)
         }
 
     private fun Contact.matches(conv: Conversation, query: String): MatchedContact {
@@ -36,6 +36,7 @@ class ConversationSearcher @Inject constructor() {
 }
 
 data class SearchResults(
+    val query: String,
     val matchingContacts: List<MatchedContact>
 )
 

@@ -6,7 +6,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rokoblak.chatbackup.commonui.*
@@ -37,13 +36,12 @@ fun HomeInnerContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
                     modifier = Modifier
-                        .wrapContentHeight()
-                        .padding(12.dp)
+                        .wrapContentHeight().padding(top = 8.dp)
                 ) {
                     Text(text = state.title, style = LocalTypography.current.subheadRegular)
                     Text(text = state.subtitle, style = LocalTypography.current.captionRegular)
@@ -57,7 +55,7 @@ fun HomeInnerContent(
         if (searchQuery != null && innerState is ConversationsListingUIState.Loaded) {
             SearchBar(text = searchQuery, onChange = {
                 onAction(HomeAction.QueryChanged(it))
-            }, modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+            }, modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp))
         }
 
         ConversationsListing(state = innerState, onItemClicked = { cId ->
@@ -74,17 +72,7 @@ fun HomeInnerContent(
 @Composable
 fun HomeInnerContentPreview() {
     ChatBackupTheme {
-        val mockItems = (0..20).map {
-            ConversationDisplayData(
-                it.toString(),
-                id = it.toString(),
-                title = "title $it",
-                subtitle = "subtitle $it",
-                date = "date $it",
-                checked = null,
-                avatarData = InitialsAvatarData("CO", Color.Blue),
-            )
-        }
+        val mockItems = PreviewDataUtils.mockConversations
         val convState = ConversationsListingUIState.Loaded(mockItems.toImmutableList())
         val state = HomeContentUIState(
             title = "title",

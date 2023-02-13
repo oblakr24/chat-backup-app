@@ -62,18 +62,29 @@ fun ConversationsListing(
             }
             ConversationsListingUIState.Loading -> {
                 item {
-                    Text(modifier = Modifier.padding(12.dp), text = "Loading messages...")
+                    Row(
+                        modifier = Modifier
+                            .background(MaterialTheme.colors.background.alpha(0.8f))
+                            .padding(12.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(text = "Loading messages...")
+                    }
                 }
             }
             is ConversationsListingUIState.Loaded -> {
                 if (state.headerTitle != null) {
                     stickyHeader {
-                        Text(
+                        Row(
                             modifier = Modifier
                                 .background(MaterialTheme.colors.background.alpha(0.8f))
                                 .padding(12.dp)
-                                .fillMaxWidth(), text = state.headerTitle
-                        )
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(text = state.headerTitle)
+                        }
                     }
                 }
                 items(

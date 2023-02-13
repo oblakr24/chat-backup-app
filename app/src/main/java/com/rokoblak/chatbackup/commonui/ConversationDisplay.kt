@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -19,8 +20,8 @@ import com.rokoblak.chatbackup.ui.theme.LocalTypography
 data class ConversationDisplayData(
     val contactId: String,
     val id: String,
-    val title: String,
-    val subtitle: String,
+    val title: AnnotatedString,
+    val subtitle: AnnotatedString,
     val date: String,
     val checked: Boolean?,
     val avatarData: InitialsAvatarData,
@@ -103,8 +104,8 @@ fun ConversationDisplayPreview() {
             data = ConversationDisplayData(
                 contactId = "C_id1",
                 id = "id1",
-                title = "Conv title",
-                subtitle = "conv subtitle long message to make it really long and fit more than one line",
+                title = AnnotatedString("Conv title"),
+                subtitle = AnnotatedString("conv subtitle long message to make it really long and fit more than one line"),
                 date = "13th Mar 2022 19:45:44",
                 checked = true,
                 avatarData = InitialsAvatarData("CO", Color.Blue),

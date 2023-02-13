@@ -1,6 +1,7 @@
 package com.rokoblak.chatbackup.commonui
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
 
 object PreviewDataUtils {
 
@@ -8,8 +9,8 @@ object PreviewDataUtils {
         ConversationDisplayData(
             contactId = "C_id1",
             id = "id$it",
-            title = "title$it",
-            subtitle = "subtitle",
+            title = AnnotatedString("title$it"),
+            subtitle = AnnotatedString("subtitle"),
             date = "date$it",
             checked = true,
             avatarData = InitialsAvatarData("C1", Color.Blue),

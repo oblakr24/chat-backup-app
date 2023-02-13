@@ -6,7 +6,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -70,9 +72,11 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     })
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun Effects(viewModel: HomeViewModel, launcher: ActivityResultLauncher<Intent>) {
     val ctx = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(viewModel) {
         viewModel.effects.consumeEvents { effect ->
             when (effect) {
@@ -84,6 +88,9 @@ private fun Effects(viewModel: HomeViewModel, launcher: ActivityResultLauncher<I
                 }
                 is HomeEffects.OpenIntent -> {
                     ctx.startActivity(effect.intent)
+                }
+                HomeEffects.HideKeyboard -> {
+                    keyboardController?.hide()
                 }
             }
         }
