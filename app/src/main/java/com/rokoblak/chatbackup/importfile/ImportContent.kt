@@ -95,7 +95,7 @@ fun ImportContentPreview() {
         val state = ImportScreenUIState.Loaded(
             title = "1234.json",
             toolbar = ImportTopToolbarUIState(showEdit = true, downloadShowsPrompt = true),
-            listing = mockConversations.toImmutableList(),
+            listing = mockConversations,
             downloadLoadingLabel = "450/4000 downloaded",
         )
         ImportContent(state = state, onBackPressed = {}, onAction = {})

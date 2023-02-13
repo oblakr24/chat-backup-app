@@ -42,7 +42,8 @@ class ConversationsRepo @Inject constructor(
     }
 
     fun retrieveConversation(contactId: String): Conversation? =
-        deviceConversations?.resolveConvByContactId(contactId) ?: importedConversations?.resolveConvByContactId(contactId)
+        deviceConversations?.resolveConvByContactId(contactId)
+            ?: importedConversations?.resolveConvByContactId(contactId)
 
     private val loadTypeFlow = MutableStateFlow(ConvLoadType())
 
@@ -50,7 +51,7 @@ class ConversationsRepo @Inject constructor(
 
     private val deviceLoadConvsFlow: Flow<Conversations?> = flow {
         emit(null)
-        val conv =if (appScope.hasMessagesPermissions()) {
+        val conv = if (appScope.hasMessagesPermissions()) {
             smsRetriever.retrieveMessages()
         } else {
             Timber.e("No permissions but flow still collected")

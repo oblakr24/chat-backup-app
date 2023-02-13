@@ -99,11 +99,9 @@ fun HomeDrawer(
                         .padding(2.dp),
                 ) {
                     Text("This is not the default SMS app.\nChange to enable additional functionalities such as restoring imported messages and deleting.")
-
                     Spacer(modifier = Modifier.height(12.dp))
-
                     ButtonWithIcon("Make default", Icons.Filled.Message) {
-                        onAction(HomeAction.SetAsDefaultUpdated)
+                        onAction(HomeAction.OpenSetAsDefaultClicked)
                     }
                 }
             }
