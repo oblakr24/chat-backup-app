@@ -1,5 +1,7 @@
 package com.rokoblak.chatbackup.commonui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,16 +18,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rokoblak.chatbackup.commonui.PreviewDataUtils.mockConversations
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
+import com.rokoblak.chatbackup.ui.theme.alpha
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 sealed interface ConversationsListingUIState {
     object Empty : ConversationsListingUIState
     object Loading : ConversationsListingUIState
-    data class Loaded(val items: ImmutableList<ConversationDisplayData>) :
+    data class Loaded(
+        val items: ImmutableList<ConversationDisplayData>,
+        val headerTitle: String? = null
+    ) :
         ConversationsListingUIState
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ConversationsListing(
     state: ConversationsListingUIState,
@@ -59,16 +66,30 @@ fun ConversationsListing(
                 }
             }
             is ConversationsListingUIState.Loaded -> {
+                if (state.headerTitle != null) {
+                    stickyHeader {
+                        Text(
+                            modifier = Modifier
+                                .background(MaterialTheme.colors.background.alpha(0.8f))
+                                .padding(12.dp)
+                                .fillMaxWidth(), text = state.headerTitle
+                        )
+                    }
+                }
                 items(
                     count = state.items.size,
                     key = { state.items[it].id },
                     itemContent = { idx ->
                         val data = state.items[idx]
-                        ConversationDisplay(modifier = Modifier.clickable {
-                            onItemClicked(data.contactId)
-                        }, data = data, onCheckedChanged = { checked ->
-                            onCheckedChanged(data.contactId, checked)
-                        })
+                        ConversationDisplay(modifier = Modifier
+                            .clickable {
+                                onItemClicked(data.contactId)
+                            }
+                            .animateItemPlacement(),
+                            data = data,
+                            onCheckedChanged = { checked ->
+                                onCheckedChanged(data.contactId, checked)
+                            })
 
                         if (idx < state.items.lastIndex) {
                             Divider(color = MaterialTheme.colors.primary, thickness = 1.dp)
@@ -85,7 +106,9 @@ fun ConversationsListing(
 fun ConversationListingPreview() {
     ChatBackupTheme {
         ConversationsListing(
-            state = ConversationsListingUIState.Loaded(mockConversations.toImmutableList()),
+            state = ConversationsListingUIState.Loaded(
+                mockConversations.toImmutableList(),
+            ),
             onItemClicked = {}, onCheckedChanged = { _, _ -> }, onImportClicked = {})
 
     }

@@ -18,7 +18,7 @@ data class Conversations(
     val mapping: Map<Contact, Conversation>,
     val sortedContactsByLastMsg: List<Contact>,
 ) {
-    private val idMapping = mapping.mapKeys { it.key.id }
+    val idMapping = mapping.mapKeys { it.key.id }
 
     val sortedConversations by lazy {
         sortedContactsByLastMsg.map {

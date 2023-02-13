@@ -47,6 +47,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     Effects(viewModel, launcher)
 
     val state = viewModel.uiState.collectAsState().value
+    val query = viewModel.queries.collectAsState().value
 
     val contentPermissions = if (permissionsState.allPermissionsGranted) {
         HomeContentUIPermissionsState.PermissionsGiven(
@@ -62,7 +63,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
 
     val mappedState = HomeScaffoldUIState(state.appBar, state.drawer, contentPermissions)
 
-    HomeScaffold(mappedState, onAction = {
+    HomeScaffold(query, mappedState, onAction = {
         viewModel.handleAction(it)
     }, onLaunchPermissions = {
         permissionsState.launchMultiplePermissionRequest()

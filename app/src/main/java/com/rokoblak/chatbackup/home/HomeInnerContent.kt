@@ -1,11 +1,8 @@
 package com.rokoblak.chatbackup.home
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ImportExport
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,6 +23,7 @@ data class HomeContentUIState(
 
 @Composable
 fun HomeInnerContent(
+    searchQuery: String?,
     state: HomeContentUIState,
     onAction: (HomeAction) -> Unit,
 ) {
@@ -54,6 +52,12 @@ fun HomeInnerContent(
                     onAction(HomeAction.ExportClicked)
                 }
             }
+        }
+
+        if (searchQuery != null && innerState is ConversationsListingUIState.Loaded) {
+            SearchBar(text = searchQuery, onChange = {
+                onAction(HomeAction.QueryChanged(it))
+            }, modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
         }
 
         ConversationsListing(state = innerState, onItemClicked = { cId ->
@@ -89,6 +93,6 @@ fun HomeInnerContentPreview() {
             exportEnabled = true,
         )
 
-        HomeInnerContent(state = state, onAction = {})
+        HomeInnerContent(state = state, searchQuery = "Search query", onAction = {})
     }
 }

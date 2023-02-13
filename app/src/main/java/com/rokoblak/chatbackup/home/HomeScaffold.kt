@@ -22,6 +22,7 @@ data class HomeScaffoldUIState(
 
 @Composable
 fun HomeScaffold(
+    searchQuery: String?,
     state: HomeScaffoldUIState,
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     onAction: (HomeAction) -> Unit,
@@ -52,7 +53,7 @@ fun HomeScaffold(
             }
         }, content = {
             it.calculateBottomPadding()
-            HomeContent(state.contentPermissions, onAction, onLaunchPermissions)
+            HomeContent(searchQuery, state.contentPermissions, onAction, onLaunchPermissions)
         })
 }
 
@@ -72,6 +73,7 @@ private fun HomeScaffoldPreview() {
         val state = ConversationsListingUIState.Loading
         val scaffoldState = ScaffoldState(DrawerState(drawerOpenState), SnackbarHostState())
         HomeScaffold(
+            searchQuery = "",
             scaffoldState = scaffoldState,
             state = HomeScaffoldUIState(
                 appbarState,

@@ -16,4 +16,5 @@ sealed interface HomeAction {
     object OpenRepoUrl : HomeAction
     object OpenSetAsDefaultClicked : HomeAction
     object SetAsDefaultUpdated : HomeAction
+    data class QueryChanged(val query: String) : HomeAction
 }

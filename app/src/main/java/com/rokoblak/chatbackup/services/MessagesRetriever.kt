@@ -80,7 +80,10 @@ class MessagesRetriever @Inject constructor(
         }
     }
 
-    private suspend fun saveMessagesForUri(messages: List<Message>, uri: Uri): Flow<OperationResult<Int>> =
+    private suspend fun saveMessagesForUri(
+        messages: List<Message>,
+        uri: Uri
+    ): Flow<OperationResult<Int>> =
         withContext(Dispatchers.IO) {
             val allValues = messages.map { it.values() }
             val cr = appScope.appContext.contentResolver
@@ -107,37 +110,38 @@ class MessagesRetriever @Inject constructor(
         put("date", timestamp.toEpochMilli())
     }
 
-    suspend fun deleteMessages(ids: Set<String>): OperationResult<Unit> = withContext(Dispatchers.IO) {
-        val cr = appScope.appContext.contentResolver
+    suspend fun deleteMessages(ids: Set<String>): OperationResult<Unit> =
+        withContext(Dispatchers.IO) {
+            val cr = appScope.appContext.contentResolver
 
-        val ops = ids.map {
-            val deleteUri = Uri.parse("${Telephony.Sms.CONTENT_URI}/${it}")
-            ContentProviderOperation.newDelete(deleteUri)
-                .withSelection(null, null).build()
-        }
-        try {
-            val results = cr.applyBatch("sms", ArrayList(ops))
-            val anyFailed = results.any {
-                it.count != 1
+            val ops = ids.map {
+                val deleteUri = Uri.parse("${Telephony.Sms.CONTENT_URI}/${it}")
+                ContentProviderOperation.newDelete(deleteUri)
+                    .withSelection(null, null).build()
             }
-            if (anyFailed) {
-                val totalDeleted = results.sumOf { it.count ?: 0 }
-                OperationResult.Error("Error deleting ${ids.size} messages: only deleted $totalDeleted")
-            } else {
-                OperationResult.Done(Unit)
+            try {
+                val results = cr.applyBatch("sms", ArrayList(ops))
+                val anyFailed = results.any {
+                    it.count != 1
+                }
+                if (anyFailed) {
+                    val totalDeleted = results.sumOf { it.count ?: 0 }
+                    OperationResult.Error("Error deleting ${ids.size} messages: only deleted $totalDeleted")
+                } else {
+                    OperationResult.Done(Unit)
+                }
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                OperationResult.Error(e.message ?: "Error deleting: unknown error")
             }
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            OperationResult.Error(e.message ?: "Error deleting: unknown error")
         }
-    }
 
     companion object {
         const val CHUNK_SIZE = 250
     }
 }
 
-sealed interface OperationResult<out T: Any?> {
-    data class Done<out T: Any>(val data: T) : OperationResult<T>
+sealed interface OperationResult<out T : Any?> {
+    data class Done<out T : Any>(val data: T) : OperationResult<T>
     data class Error(val msg: String) : OperationResult<Nothing>
 }

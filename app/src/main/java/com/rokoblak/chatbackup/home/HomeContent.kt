@@ -30,6 +30,7 @@ sealed interface HomeContentUIPermissionsState {
 
 @Composable
 fun HomeContent(
+    searchQuery: String?,
     state: HomeContentUIPermissionsState,
     onAction: (HomeAction) -> Unit,
     onLaunchPermissions: () -> Unit,
@@ -45,7 +46,7 @@ fun HomeContent(
     when (state) {
         is HomeContentUIPermissionsState.PermissionsGiven -> {
             val innerState = state.content
-            HomeInnerContent(state = innerState, onAction)
+            HomeInnerContent(state = innerState, searchQuery = searchQuery, onAction = onAction)
         }
         is HomeContentUIPermissionsState.PermissionsNeeded -> {
             Column(
@@ -101,6 +102,6 @@ private fun HomeContentNoPermissionsPreview() {
             shouldShowSettingsBtn = true
         )
 
-        HomeContent(state = state, onAction = {}, onLaunchPermissions = {})
+        HomeContent(state = state, onAction = {}, onLaunchPermissions = {}, searchQuery = "")
     }
 }

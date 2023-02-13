@@ -6,15 +6,49 @@ import com.rokoblak.chatbackup.commonui.InitialsAvatarData
 import com.rokoblak.chatbackup.data.Contact
 import com.rokoblak.chatbackup.data.Conversations
 import com.rokoblak.chatbackup.util.formatRelative
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import javax.inject.Inject
 import kotlin.random.Random
 
 class ConversationUIMapper @Inject constructor() {
 
-    fun map(
+    fun mapToUI(
         conversations: Conversations,
         selections: Map<String, Boolean>? = null,
-    ): List<ConversationDisplayData> {
+        searchResults: SearchResults? = null,
+    ): ImmutableList<ConversationDisplayData> {
+        val memoized = memoizedMappings[conversations]
+        if (searchResults == null && memoized != null) {
+            if (memoized.selections == selections) {
+                return memoized.displays
+            }
+            return memoized.displays.map { convDisplay ->
+                val checked = selections?.let { it[convDisplay.contactId] }
+                convDisplay.copy(
+                    checked = checked,
+                )
+            }.toImmutableList()
+        }
+
+        if (searchResults != null) {
+            val mappedFromSearch = searchResults.matchingContacts.mapNotNull { c ->
+                when (c) {
+                    is MatchedContact.MatchingInMessage -> {
+                        // TODO: construct search-specific UI: bold the message part
+                        mapSingle(c.contact, selections, conversations)
+                    }
+                    is MatchedContact.MatchingInName -> {
+                        // TODO: construct search-specific UI: bold the name part
+                        mapSingle(c.contact, selections, conversations)
+                    }
+                    MatchedContact.NotMatched -> null
+                }
+            }.toImmutableList()
+
+            return mappedFromSearch
+        }
+
         val mapped = conversations.sortedContactsByLastMsg.map { contact ->
             val msgs = conversations.mapping[contact]!!.messages
             val lastMsg = msgs.last()
@@ -30,9 +64,39 @@ class ConversationUIMapper @Inject constructor() {
                 checked = checked,
                 avatarData = contact.avatar(),
             )
-        }
+        }.toImmutableList()
+
+        memoizedMappings[conversations] = MemoizedDisplays(selections, mapped)
 
         return mapped
+    }
+
+    private val memoizedMappings = mutableMapOf<Conversations, MemoizedDisplays>()
+
+    data class MemoizedDisplays(
+        val selections: Map<String, Boolean>?,
+        val displays: ImmutableList<ConversationDisplayData>
+    )
+
+    private fun mapSingle(
+        contact: Contact,
+        selections: Map<String, Boolean>?,
+        conversations: Conversations
+    ): ConversationDisplayData {
+        val msgs = conversations.mapping[contact]!!.messages
+        val lastMsg = msgs.last()
+        val dateString = lastMsg.timestamp.formatRelative()
+        val id = contact.number + msgs.size + lastMsg.timestamp.toString()
+        val checked = selections?.let { it[contact.id] }
+        return ConversationDisplayData(
+            contactId = contact.id,
+            id = id,
+            title = "${contact.displayName} (${msgs.size} total)",
+            subtitle = lastMsg.content,
+            date = dateString,
+            checked = checked,
+            avatarData = contact.avatar(),
+        )
     }
 
     private fun Contact.avatar(): InitialsAvatarData {
