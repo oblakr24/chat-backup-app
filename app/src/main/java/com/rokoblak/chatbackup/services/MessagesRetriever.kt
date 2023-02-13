@@ -9,7 +9,11 @@ import com.rokoblak.chatbackup.data.Message
 import com.rokoblak.chatbackup.data.MinimalContact
 import com.rokoblak.chatbackup.di.AppScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.time.Instant
 import javax.inject.Inject
 
@@ -66,24 +70,33 @@ class MessagesRetriever @Inject constructor(
         }
     }
 
-    suspend fun saveMessages(messages: List<Message>): OperationResult {
+    suspend fun saveMessages(messages: List<Message>): Flow<OperationResult<Int>> {
         val (incomingMsgs, sentMsgs) = messages.partition { it.incoming }
         val incomingUrl = Telephony.Sms.Inbox.CONTENT_URI
         val sentUrl = Telephony.Sms.Sent.CONTENT_URI
-        val res = saveMessagesForUri(incomingMsgs, incomingUrl)
-        if (res !is OperationResult.Done) return res
-        return saveMessagesForUri(sentMsgs, sentUrl)
+        return flow {
+            emitAll(saveMessagesForUri(incomingMsgs, incomingUrl))
+            emitAll(saveMessagesForUri(sentMsgs, sentUrl))
+        }
     }
 
-    private suspend fun saveMessagesForUri(messages: List<Message>, uri: Uri): OperationResult =
+    private suspend fun saveMessagesForUri(messages: List<Message>, uri: Uri): Flow<OperationResult<Int>> =
         withContext(Dispatchers.IO) {
-            val values = messages.map { it.values() }.toTypedArray()
+            val allValues = messages.map { it.values() }
             val cr = appScope.appContext.contentResolver
-            val inseted = cr.bulkInsert(uri, values)
-            if (inseted == messages.size) {
-                OperationResult.Done
-            } else {
-                OperationResult.Error("Save error: inserted $inseted out of ${messages.size} total")
+
+            flow {
+                allValues.chunked(CHUNK_SIZE).forEach { valuesList ->
+                    val inserted = cr.bulkInsert(uri, valuesList.toTypedArray()).also {
+                        Timber.i("Inserted: $it out of ${valuesList.size}")
+                    }
+                    if (inserted != valuesList.size) {
+                        emit(OperationResult.Error("Failed to insert messages: $inserted out of ${valuesList.size}"))
+                        return@forEach
+                    } else {
+                        emit(OperationResult.Done(inserted))
+                    }
+                }
             }
         }
 
@@ -94,7 +107,7 @@ class MessagesRetriever @Inject constructor(
         put("date", timestamp.toEpochMilli())
     }
 
-    suspend fun deleteMessages(ids: Set<String>): OperationResult = withContext(Dispatchers.IO) {
+    suspend fun deleteMessages(ids: Set<String>): OperationResult<Unit> = withContext(Dispatchers.IO) {
         val cr = appScope.appContext.contentResolver
 
         val ops = ids.map {
@@ -111,16 +124,20 @@ class MessagesRetriever @Inject constructor(
                 val totalDeleted = results.sumOf { it.count ?: 0 }
                 OperationResult.Error("Error deleting ${ids.size} messages: only deleted $totalDeleted")
             } else {
-                OperationResult.Done
+                OperationResult.Done(Unit)
             }
         } catch (e: Throwable) {
             e.printStackTrace()
             OperationResult.Error(e.message ?: "Error deleting: unknown error")
         }
     }
+
+    companion object {
+        const val CHUNK_SIZE = 250
+    }
 }
 
-sealed interface OperationResult {
-    object Done : OperationResult
-    data class Error(val msg: String) : OperationResult
+sealed interface OperationResult<out T: Any?> {
+    data class Done<out T: Any>(val data: T) : OperationResult<T>
+    data class Error(val msg: String) : OperationResult<Nothing>
 }

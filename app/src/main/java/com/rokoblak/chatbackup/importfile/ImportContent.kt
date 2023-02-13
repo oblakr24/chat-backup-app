@@ -1,17 +1,20 @@
 package com.rokoblak.chatbackup.importfile
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DataArray
 import androidx.compose.material.icons.filled.DataObject
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rokoblak.chatbackup.commonui.*
 import com.rokoblak.chatbackup.commonui.PreviewDataUtils.mockConversations
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
+import com.rokoblak.chatbackup.ui.theme.LocalTypography
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
@@ -20,6 +23,7 @@ sealed interface ImportScreenUIState {
     object Loading : ImportScreenUIState
     data class Loaded(
         val title: String,
+        val downloadLoadingLabel: String?,
         val toolbar: ImportTopToolbarUIState,
         val listing: ImmutableList<ConversationDisplayData>
     ) : ImportScreenUIState
@@ -58,6 +62,18 @@ fun ImportContent(
             }
             is ImportScreenUIState.Loaded -> {
                 ImportTopToolbar(state = state.toolbar, onAction = onAction)
+                if (state.downloadLoadingLabel != null) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CircularProgressIndicator(modifier = Modifier
+                            .padding(8.dp)
+                            .size(20.dp))
+                        Text(state.downloadLoadingLabel, style = LocalTypography.current.subheadRegular)
+                    }
+                }
                 val conversationsState = ConversationsListingUIState.Loaded(state.listing)
                 ConversationsListing(
                     conversationsState,
@@ -80,6 +96,7 @@ fun ImportContentPreview() {
             title = "1234.json",
             toolbar = ImportTopToolbarUIState(showEdit = true, downloadShowsPrompt = true),
             listing = mockConversations.toImmutableList(),
+            downloadLoadingLabel = "450/4000 downloaded",
         )
         ImportContent(state = state, onBackPressed = {}, onAction = {})
     }

@@ -66,7 +66,7 @@ class ConversationsRepo @Inject constructor(
         deviceLoadConvsFlow
     }.stateIn(scope, SharingStarted.WhileSubscribed(5000), null)
 
-    suspend fun deleteDeviceConvs(contactIds: Set<String>): OperationResult {
+    suspend fun deleteDeviceConvs(contactIds: Set<String>): OperationResult<Unit> {
         deletionsFlow.update { contactIds }
 
         val msgIds = contactIds.flatMap {

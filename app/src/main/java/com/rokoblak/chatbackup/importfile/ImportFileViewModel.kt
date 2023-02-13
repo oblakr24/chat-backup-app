@@ -19,9 +19,9 @@ import com.rokoblak.chatbackup.util.StringUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -40,6 +40,7 @@ class ImportFileViewModel @Inject constructor(
     val effects = SingleEventFlow<ImportEffect>()
 
     private val loading = MutableStateFlow(false)
+    private val downloading = MutableStateFlow<DownloadProgress?>(null)
     private val editState = MutableStateFlow(EditState())
     private val selections = MutableStateFlow(emptyMap<String, Boolean>())
     private val isDefaultSMSApp = MutableStateFlow(appScope.isDefaultSMSApp())
@@ -47,7 +48,14 @@ class ImportFileViewModel @Inject constructor(
 
     val uiState: StateFlow<ImportScreenUIState> by lazy {
         scope.launchMolecule(clock = RecompositionClock.ContextClock) {
-            ImportPresenter(importedConvs, selections, editState, isDefaultSMSApp, loading)
+            ImportPresenter(
+                importedConvs,
+                selections,
+                editState,
+                isDefaultSMSApp,
+                loading,
+                downloading
+            )
         }
     }
 
@@ -59,6 +67,7 @@ class ImportFileViewModel @Inject constructor(
         editStateFlow: StateFlow<EditState>,
         isDefaultSMSAppFlow: StateFlow<Boolean>,
         loadingFlow: StateFlow<Boolean>,
+        downloadingFlow: StateFlow<DownloadProgress?>,
     ): ImportScreenUIState {
         val isLoading = loadingFlow.collectAsState().value
         if (isLoading) {
@@ -79,6 +88,7 @@ class ImportFileViewModel @Inject constructor(
         val selections = selectionsFlow.collectAsState().value
         val editState = editStateFlow.collectAsState().value
         val isDefaultSMSApp = isDefaultSMSAppFlow.collectAsState().value
+        val downloadProgress = downloadingFlow.collectAsState().value
         val mappedItems = uiMapper.map(convs, selections.takeIf { editState.editing })
 
         val toolbar = ImportTopToolbarUIState(
@@ -88,7 +98,10 @@ class ImportFileViewModel @Inject constructor(
         return ImportScreenUIState.Loaded(
             title = StringUtils.coerceFilename(res.filename),
             toolbar = toolbar,
-            listing = mappedItems.toImmutableList()
+            listing = mappedItems.toImmutableList(),
+            downloadLoadingLabel = downloadProgress?.let {
+                "${it.done}/${it.total} downloaded"
+            }
         )
     }
 
@@ -122,24 +135,39 @@ class ImportFileViewModel @Inject constructor(
         importedConvs.value = res.copy(convs = removed)
     }
 
-    private fun downloadSelected() = viewModelScope.launch {
+    private fun downloadSelected() = viewModelScope.launch(Dispatchers.IO) {
         val res = importedConvs.value as? ImportResult.Success ?: return@launch
         val convs = res.convs
         val selected = selections.value
         val ids = selected.filter { it.value }.keys
-        effects.send(ImportEffect.ShowToast("Saving ${ids.size} messages..."))
-
         val selectedMsgs = convs.retrieveMessages(selected.filter { it.value }.keys)
-        when (val saveRes = retriever.saveMessages(selectedMsgs)) {
-            OperationResult.Done -> {
-                effects.send(ImportEffect.ShowToast("Messages saved to device"))
-                repo.triggerReload()
-                navigateUp()
-            }
-            is OperationResult.Error -> {
-                effects.send(ImportEffect.ShowToast(saveRes.msg))
-            }
+        val total = selectedMsgs.size
+        if (total > MessagesRetriever.CHUNK_SIZE) {
+            effects.send(ImportEffect.ShowToast("Saving $total messages..."))
         }
+
+        var done = 0
+        downloading.update { DownloadProgress(0, total = total) }
+        retriever.saveMessages(selectedMsgs).onEach { chunkRes ->
+            when (chunkRes) {
+                is OperationResult.Done -> {
+                    done += chunkRes.data
+                    downloading.update { DownloadProgress(done, total = total) }
+                }
+                is OperationResult.Error -> {
+                    effects.send(ImportEffect.ShowToast(chunkRes.msg))
+                }
+            }
+        }.collect()
+        if (done < total) {
+            effects.send(ImportEffect.ShowToast("Some messages might not be saved - only saved $done out of $total"))
+        }
+        delay(1000)
+        downloading.update { null }
+        effects.send(ImportEffect.ShowToast("Messages saved to device"))
+        repo.triggerReload()
+        delay(1000)
+        navigateUp()
     }
 
     private fun clearSelections() {
@@ -210,3 +238,5 @@ class ImportFileViewModel @Inject constructor(
 private data class EditState(
     val editing: Boolean = false,
 )
+
+private data class DownloadProgress(val done: Int, val total: Int)

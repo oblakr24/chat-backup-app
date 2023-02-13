@@ -47,8 +47,8 @@ fun HomeInnerContent(
                         .wrapContentHeight()
                         .padding(12.dp)
                 ) {
-                    Text(text = state.title)
-                    Text(text = state.subtitle, style = LocalTypography.current.subheadRegular)
+                    Text(text = state.title, style = LocalTypography.current.subheadRegular)
+                    Text(text = state.subtitle, style = LocalTypography.current.captionRegular)
                 }
                 ButtonWithIcon("Export", Icons.Filled.Upload, enabled = state.exportEnabled) {
                     onAction(HomeAction.ExportClicked)

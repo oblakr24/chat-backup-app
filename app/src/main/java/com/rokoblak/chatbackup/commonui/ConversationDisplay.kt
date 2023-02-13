@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
 import com.rokoblak.chatbackup.ui.theme.LocalTypography
 
@@ -77,6 +78,8 @@ fun ConversationDisplay(
             modifier = Modifier.constrainAs(subtitle) {
                 start.linkTo(avatar.end, 12.dp)
                 top.linkTo(title.bottom)
+                end.linkTo(parent.end)
+                width = Dimension.fillToConstraints
             },
             text = data.subtitle,
             style = LocalTypography.current.captionRegular,
@@ -101,7 +104,7 @@ fun ConversationDisplayPreview() {
                 contactId = "C_id1",
                 id = "id1",
                 title = "Conv title",
-                subtitle = "conv subtitle long message to make it really long",
+                subtitle = "conv subtitle long message to make it really long and fit more than one line",
                 date = "13th Mar 2022 19:45:44",
                 checked = true,
                 avatarData = InitialsAvatarData("CO", Color.Blue),
