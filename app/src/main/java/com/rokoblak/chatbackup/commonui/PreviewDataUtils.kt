@@ -70,7 +70,15 @@ object PreviewDataUtils {
     }.toImmutableList()
 
     val mockChats = (0..20).map {
+        val date = LocalDate.of(2022, 1 + it.mod(11), 2 + it).atTime(15, 34, 34)
+            .atZone(ZoneId.systemDefault())
+        val dateFormatted = date.toInstant().formatRelative()
         val isMine = it.mod(2) == 0
-        ChatDisplayData(it.toString(), content = "content $it long text", date = "date for $it", alignedLeft = isMine.not())
+        val content = sentences.takeAtMod(it)
+        ChatDisplayData(it.toString(), content = content, date = dateFormatted, alignedLeft = isMine.not())
     }.toImmutableList()
+
+    private fun <T> List<T>.takeAtMod(idx: Int): T {
+        return get(idx.mod(size))
+    }
 }

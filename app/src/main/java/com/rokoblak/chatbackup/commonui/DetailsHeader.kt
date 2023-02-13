@@ -81,7 +81,7 @@ fun DetailsHeader(
             },
             text = text,
             textAlign = TextAlign.Center,
-            style = LocalTypography.current.titleSemiBold,
+            style = if (text.length > 28) LocalTypography.current.bodySemiBold else LocalTypography.current.titleSemiBold,
             color = MaterialTheme.colors.secondary,
             maxLines = 1,
         )

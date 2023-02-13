@@ -51,7 +51,7 @@ fun ConversationScreenPreview() {
         val state = ConversationScreenUIState(
             items = PreviewDataUtils.mockChats,
             title = "Conversation with Firstlongname Surnamelong",
-            subtitle = "subtitle",
+            subtitle = "9 messages (May 19 2022 to Jun 23 2022)",
         )
         ConversationScreenContent(state = state, onNavigateUp = {})
     }

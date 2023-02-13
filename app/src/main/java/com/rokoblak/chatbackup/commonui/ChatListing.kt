@@ -9,7 +9,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun ChatListing(items: ImmutableList<ChatDisplayData>) {
@@ -28,10 +27,6 @@ fun ChatListing(items: ImmutableList<ChatDisplayData>) {
 @Composable
 fun ChatListingPreview() {
     ChatBackupTheme {
-        val mockChats = (0..20).map {
-            val isMine = it.mod(2) == 0
-            ChatDisplayData(it.toString(), content = "content $it long text", date = "date for $it", alignedLeft = isMine.not())
-        }
-        ChatListing(items = mockChats.toImmutableList())
+        ChatListing(items = PreviewDataUtils.mockChats)
     }
 }
