@@ -16,14 +16,14 @@ import com.rokoblak.chatbackup.commonui.PreviewDataUtils.mockConversations
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
 import com.rokoblak.chatbackup.ui.theme.LocalTypography
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 
 sealed interface ImportScreenUIState {
     object Initial : ImportScreenUIState
     object Loading : ImportScreenUIState
     data class Loaded(
         val title: String,
-        val downloadLoadingLabel: String?,
+        val subtitle: String?,
+        val showLoading: Boolean,
         val toolbar: ImportTopToolbarUIState,
         val listing: ImmutableList<ConversationDisplayData>
     ) : ImportScreenUIState
@@ -62,16 +62,23 @@ fun ImportContent(
             }
             is ImportScreenUIState.Loaded -> {
                 ImportTopToolbar(state = state.toolbar, onAction = onAction)
-                if (state.downloadLoadingLabel != null) {
+                if (state.subtitle != null) {
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        CircularProgressIndicator(modifier = Modifier
-                            .padding(8.dp)
-                            .size(20.dp))
-                        Text(state.downloadLoadingLabel, style = LocalTypography.current.subheadRegular)
+                        if (state.showLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .size(20.dp),
+                                strokeWidth = 2.dp
+                            )
+                        }
+                        Text(state.subtitle, style = LocalTypography.current.subheadRegular)
                     }
                 }
                 val conversationsState = ConversationsListingUIState.Loaded(state.listing)
@@ -94,9 +101,15 @@ fun ImportContentPreview() {
     ChatBackupTheme {
         val state = ImportScreenUIState.Loaded(
             title = "1234.json",
-            toolbar = ImportTopToolbarUIState(showEdit = true, downloadShowsPrompt = true),
+            toolbar = ImportTopToolbarUIState(
+                showEdit = true,
+                downloadShowsPrompt = true,
+                deleteEnabled = true,
+                downloadEnabled = true
+            ),
             listing = mockConversations,
-            downloadLoadingLabel = "450/4000 downloaded",
+            subtitle = "450/4000 downloaded",
+            showLoading = true,
         )
         ImportContent(state = state, onBackPressed = {}, onAction = {})
     }

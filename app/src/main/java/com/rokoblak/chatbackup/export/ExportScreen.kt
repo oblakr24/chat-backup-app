@@ -29,7 +29,6 @@ data class ExportScreenUIState(
 
 @Composable
 fun ExportScreen(viewModel: ExportViewModel) {
-
     val state = viewModel.uiState.collectAsState().value
 
     ExportScreenContent(state = state, onNavigateBack = {
@@ -39,7 +38,6 @@ fun ExportScreen(viewModel: ExportViewModel) {
     })
 
     Effects(viewModel)
-
 }
 
 @Composable

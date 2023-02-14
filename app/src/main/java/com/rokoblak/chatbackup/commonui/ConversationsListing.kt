@@ -58,7 +58,6 @@ fun ConversationsListing(
                         }
                     }
                 }
-
             }
             ConversationsListingUIState.Loading -> {
                 item {
@@ -97,6 +96,11 @@ fun ConversationsListing(
                                 onItemClicked(data.contactId)
                             }
                             .animateItemPlacement(),
+                            background = if (idx.mod(2) == 1) {
+                                MaterialTheme.colors.primaryVariant.alpha(0.16f)
+                            } else {
+                                MaterialTheme.colors.background
+                            },
                             data = data,
                             onCheckedChanged = { checked ->
                                 onCheckedChanged(data.contactId, checked)

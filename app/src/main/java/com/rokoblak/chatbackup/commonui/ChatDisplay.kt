@@ -10,15 +10,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
-import com.rokoblak.chatbackup.ui.theme.LocalTypography
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
+import com.rokoblak.chatbackup.ui.theme.LocalTypography
 
 data class ChatDisplayData(
     val id: String,
     val content: String,
     val date: String,
-    val alignedLeft: Boolean
+    val alignedLeft: Boolean,
+    val avatarData: InitialsAvatarData?,
 )
 
 @Composable
@@ -31,27 +31,39 @@ fun ChatDisplay(modifier: Modifier = Modifier, data: ChatDisplayData) {
         horizontalAlignment = alignment
     ) {
 
-        Column(
-            modifier = Modifier
-                .wrapContentWidth()
-                .padding(4.dp)
-        ) {
-            Text(
+        Row(modifier = Modifier.wrapContentWidth()) {
+            if (data.avatarData != null) {
+                InitialsAvatar(
+                    data = data.avatarData,
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .size(28.dp),
+                    textStyle = LocalTypography.current.subheadSemiBold
+                )
+            }
+            Column(
                 modifier = Modifier
-                    .background(backgroundColor, RoundedCornerShape(8.dp))
-                    .align(alignment)
-                    .widthIn(min = 20.dp, max = 220.dp)
-                    .padding(8.dp),
-                text = data.content,
-                style = LocalTypography.current.bodyRegular,
-                color = textColor,
-            )
-            Text(
-                modifier = Modifier.padding(2.dp),
-                text = data.date,
-                style = LocalTypography.current.subheadRegular
-            )
+                    .wrapContentWidth()
+                    .padding(4.dp)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .background(backgroundColor, RoundedCornerShape(8.dp))
+                        .align(alignment)
+                        .widthIn(min = 20.dp, max = 220.dp)
+                        .padding(8.dp),
+                    text = data.content,
+                    style = LocalTypography.current.bodyRegular,
+                    color = textColor,
+                )
+                Text(
+                    modifier = Modifier.padding(2.dp),
+                    text = data.date,
+                    style = LocalTypography.current.subheadRegular
+                )
+            }
         }
+
 
     }
 }
@@ -66,7 +78,8 @@ fun ChatDisplayOtherPreview() {
                 id = "id1",
                 content = "Content Looong Content Looooong Looong Looong",
                 date = "Sun 14th Dec 2022, 13:44:55",
-                alignedLeft = true
+                alignedLeft = true,
+                avatarData = InitialsAvatarData("AB", Color.Blue),
             )
         )
     }
@@ -82,7 +95,8 @@ fun ChatDisplayMinePreview() {
                 id = "id1",
                 content = "Content",
                 date = "Sun 14th Dec 2022, 13:44:55",
-                alignedLeft = false
+                alignedLeft = false,
+                avatarData = null,
             )
         )
     }

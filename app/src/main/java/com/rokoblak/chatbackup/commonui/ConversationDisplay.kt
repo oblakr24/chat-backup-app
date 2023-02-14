@@ -30,6 +30,7 @@ data class ConversationDisplayData(
 @Composable
 fun ConversationDisplay(
     modifier: Modifier = Modifier,
+    background: Color = MaterialTheme.colors.background,
     data: ConversationDisplayData,
     onCheckedChanged: (Boolean) -> Unit
 ) {
@@ -37,7 +38,7 @@ fun ConversationDisplay(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(MaterialTheme.colors.background)
+            .background(background)
             .padding(8.dp),
     ) {
         val (avatar, checkbox, title, subtitle, date) = createRefs()

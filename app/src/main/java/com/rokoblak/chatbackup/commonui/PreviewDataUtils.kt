@@ -69,13 +69,14 @@ object PreviewDataUtils {
         )
     }.toImmutableList()
 
-    val mockChats = (0..20).map {
-        val date = LocalDate.of(2022, 1 + it.mod(11), 2 + it).atTime(15, 34, 34)
+    val mockChats = (0..20).map { idx ->
+        val date = LocalDate.of(2022, 1 + idx.mod(11), 2 + idx).atTime(15, 34, 34)
             .atZone(ZoneId.systemDefault())
         val dateFormatted = date.toInstant().formatRelative()
-        val isMine = it.mod(2) == 0
-        val content = sentences.takeAtMod(it)
-        ChatDisplayData(it.toString(), content = content, date = dateFormatted, alignedLeft = isMine.not())
+        val isMine = idx.mod(2) == 0
+        val content = sentences.takeAtMod(idx)
+        val avatar = if (isMine.not()) avatars.takeAtMod(idx) else null
+        ChatDisplayData(idx.toString(), content = content, date = dateFormatted, alignedLeft = isMine.not(), avatarData = avatar)
     }.toImmutableList()
 
     private fun <T> List<T>.takeAtMod(idx: Int): T {

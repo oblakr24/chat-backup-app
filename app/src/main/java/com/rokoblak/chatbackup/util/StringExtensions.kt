@@ -12,5 +12,4 @@ object StringUtils {
             filename
         }
     }
-
 }

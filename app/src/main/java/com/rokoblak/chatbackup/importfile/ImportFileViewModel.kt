@@ -17,6 +17,7 @@ import com.rokoblak.chatbackup.services.*
 import com.rokoblak.chatbackup.util.SingleEventFlow
 import com.rokoblak.chatbackup.util.StringUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -90,17 +91,24 @@ class ImportFileViewModel @Inject constructor(
         val downloadProgress = downloadingFlow.collectAsState().value
         val mappedItems = uiMapper.mapToUI(convs, selections.takeIf { editState.editing })
 
+        val hasAnySelections = selections.any { it.value }
         val toolbar = ImportTopToolbarUIState(
             showEdit = editState.editing.not(),
             downloadShowsPrompt = isDefaultSMSApp.not(),
+            downloadEnabled = hasAnySelections,
+            deleteEnabled = hasAnySelections,
         )
+        val selectedContactIds = selections.filter { it.value }.keys
+        val selectedMsgs = convs.retrieveMessages(selectedContactIds)
+        val subtitle = downloadProgress?.let {
+            "${it.done}/${it.total} downloaded"
+        } ?: "${selectedContactIds.size} selected (${selectedMsgs.size} total messages)"
         return ImportScreenUIState.Loaded(
             title = StringUtils.coerceFilename(res.filename),
             toolbar = toolbar,
-            listing = mappedItems,
-            downloadLoadingLabel = downloadProgress?.let {
-                "${it.done}/${it.total} downloaded"
-            }
+            listing = mappedItems.toImmutableList(),
+            subtitle = subtitle,
+            showLoading = downloadProgress != null,
         )
     }
 

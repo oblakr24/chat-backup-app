@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
@@ -23,7 +24,11 @@ data class InitialsAvatarData(
 )
 
 @Composable
-fun InitialsAvatar(data: InitialsAvatarData, modifier: Modifier = Modifier) {
+fun InitialsAvatar(
+    data: InitialsAvatarData,
+    modifier: Modifier = Modifier,
+    textStyle: TextStyle = LocalTypography.current.bodySemiBold,
+) {
     Surface(
         modifier = modifier
             .size(36.dp)
@@ -36,7 +41,7 @@ fun InitialsAvatar(data: InitialsAvatarData, modifier: Modifier = Modifier) {
             Text(
                 text = data.initials,
                 color = data.color,
-                style = LocalTypography.current.bodySemiBold,
+                style = textStyle,
             )
         }
     }

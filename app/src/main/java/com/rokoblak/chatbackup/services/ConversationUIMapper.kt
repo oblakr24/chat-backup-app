@@ -1,13 +1,14 @@
 package com.rokoblak.chatbackup.services
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
+import com.rokoblak.chatbackup.commonui.ChatDisplayData
 import com.rokoblak.chatbackup.commonui.ConversationDisplayData
 import com.rokoblak.chatbackup.commonui.InitialsAvatarData
 import com.rokoblak.chatbackup.data.Contact
@@ -44,7 +45,6 @@ class ConversationUIMapper @Inject constructor() {
             val mappedFromSearch = searchResults.matchingContacts.mapNotNull { c ->
                 when (c) {
                     is MatchedContact.MatchingInMessage -> {
-                        // TODO: construct search-specific UI: bold the message part
                         mapSingle(
                             c.contact,
                             selections,
@@ -54,7 +54,6 @@ class ConversationUIMapper @Inject constructor() {
                         )
                     }
                     is MatchedContact.MatchingInName -> {
-                        // TODO: construct search-specific UI: bold the name part
                         mapSingle(
                             c.contact,
                             selections,
@@ -80,6 +79,21 @@ class ConversationUIMapper @Inject constructor() {
         return mapped
     }
 
+    fun mapMessageToUI(message: Message, contact: Contact): ChatDisplayData = with(message) {
+        val date = timestamp.formatRelative()
+        return ChatDisplayData(
+            id = id,
+            content = content,
+            date = date,
+            alignedLeft = incoming,
+            avatarData = if (incoming) {
+                contact.avatar()
+            } else {
+                null
+            }
+        )
+    }
+
     private val memoizedMappings = mutableMapOf<Conversations, MemoizedDisplays>()
 
     data class MemoizedDisplays(
@@ -103,13 +117,13 @@ class ConversationUIMapper @Inject constructor() {
 
         val baseTitle = "${contact.displayName} (${msgs.size} total)"
         val title = if (query != null && matchingInName) {
-            baseTitle.annotateOccurrences(query)
+            baseTitle.highlightOccurrences(query)
         } else {
             AnnotatedString(baseTitle)
         }
 
         val subtitle = if (query != null && matchingMessage != null) {
-            matchingMessage.content.annotateOccurrences(query)
+            matchingMessage.content.highlightOccurrences(query)
         } else {
             AnnotatedString(lastMsg.content)
         }
@@ -138,7 +152,7 @@ class ConversationUIMapper @Inject constructor() {
         )
     }
 
-    private fun String.annotateOccurrences(substring: String): AnnotatedString {
+    private fun String.highlightOccurrences(substring: String): AnnotatedString {
         val builder = AnnotatedString.Builder()
         var startIdx = 0
         var idx: Int
@@ -151,6 +165,7 @@ class ConversationUIMapper @Inject constructor() {
                         SpanStyle(
                             fontWeight = FontWeight.Black,
                             textDecoration = TextDecoration.Underline,
+                            shadow = Shadow(),
                         )
                     ) {
                         append(substring(idx, idx + substring.length))

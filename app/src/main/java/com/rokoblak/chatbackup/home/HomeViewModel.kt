@@ -60,7 +60,7 @@ class HomeViewModel @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    private val searchStates: Flow<SearchState> = searchQuery.debounce(200L).flatMapLatest { q ->
+    private val searchStates: Flow<SearchState> = searchQuery.debounce(100L).flatMapLatest { q ->
         if (q.isBlank()) return@flatMapLatest flowOf(SearchState.NoSearch)
         val convs = conversations.value ?: return@flatMapLatest flowOf(SearchState.NoSearch)
         flow<SearchState> {

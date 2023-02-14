@@ -25,6 +25,8 @@ import com.rokoblak.chatbackup.ui.theme.alpha
 data class ImportTopToolbarUIState(
     val showEdit: Boolean,
     val downloadShowsPrompt: Boolean,
+    val downloadEnabled: Boolean,
+    val deleteEnabled: Boolean,
 )
 
 @Composable
@@ -122,7 +124,7 @@ fun ImportTopToolbar(
                         contentDescription = "Show more options"
                     )
                 }
-                IconButton(
+                IconButton(enabled = state.deleteEnabled,
                     onClick = {
                         onAction(ImportAction.DeleteClicked)
                     }
@@ -149,7 +151,7 @@ fun ImportTopToolbar(
                     })
             }
 
-            IconButton(
+            IconButton(enabled = state.downloadEnabled,
                 onClick = {
                     if (state.downloadShowsPrompt) {
                         openSMSDefaultPrompt = true
@@ -237,6 +239,8 @@ fun ImportTopAppBarPreview() {
     val state = ImportTopToolbarUIState(
         showEdit = true,
         downloadShowsPrompt = true,
+        downloadEnabled = true,
+        deleteEnabled = true,
     )
     ChatBackupTheme {
         ImportTopToolbar(state = state, onAction = {})

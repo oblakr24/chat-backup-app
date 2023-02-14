@@ -5,11 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rokoblak.chatbackup.commonui.ChatDisplayData
 import com.rokoblak.chatbackup.data.Conversation
-import com.rokoblak.chatbackup.data.Message
 import com.rokoblak.chatbackup.navigation.RouteNavigator
+import com.rokoblak.chatbackup.services.ConversationUIMapper
 import com.rokoblak.chatbackup.services.ConversationsRepo
 import com.rokoblak.chatbackup.util.formatDateOnly
-import com.rokoblak.chatbackup.util.formatRelative
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,6 +22,7 @@ class ConversationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val routeNavigator: RouteNavigator,
     private val conversationsRepo: ConversationsRepo,
+    private val uiMapper: ConversationUIMapper,
 ) :
     ViewModel(), RouteNavigator by routeNavigator {
 
@@ -42,7 +42,7 @@ class ConversationViewModel @Inject constructor(
         val items = if (this == null) {
             emptyList()
         } else {
-            messages.map { it.mapToDisplay() }
+            messages.map { uiMapper.mapMessageToUI(it, contact) }
         }
         val msgs = this?.messages ?: emptyList()
         val msgsCount = this?.messages?.size ?: 0
@@ -61,16 +61,6 @@ class ConversationViewModel @Inject constructor(
             items.toImmutableList(),
             title = this?.let { "Conversation with ${contact.displayName}" }.orEmpty(),
             subtitle = this?.messages?.size?.let { "$it messages $msgInfo" }.orEmpty()
-        )
-    }
-
-    private fun Message.mapToDisplay(): ChatDisplayData {
-        val date = timestamp.formatRelative()
-        return ChatDisplayData(
-            id = id,
-            content = content,
-            date = date,
-            alignedLeft = incoming
         )
     }
 }
