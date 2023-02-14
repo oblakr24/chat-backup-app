@@ -12,6 +12,10 @@ This is a tech-demonstration app showcasing the latest Android tech stack while 
 6. Open architecture allowing for future extensions and other formats
 7. Togglable dark-light theming
 
+
+https://user-images.githubusercontent.com/32245831/218789714-b8b6e5a7-6912-47c5-ba75-ef881dd8ea36.mov
+
+
 ## Tech stack
 
 This is a single-activity app fully built with Jetpack Compose screens.
