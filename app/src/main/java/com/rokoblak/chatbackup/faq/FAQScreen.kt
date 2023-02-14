@@ -73,7 +73,7 @@ private fun FAQScreenContent(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(start = 12.dp, bottom = 8.dp)
+                                    .padding(start = 16.dp, bottom = 8.dp, end = 12.dp)
                                     .animateItemPlacement(),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
@@ -113,7 +113,7 @@ fun FAQScreenPreview() {
             if (it.mod(2) == 0) {
                 FAQScreenUIState.Item.Title(it.toString(), it, "title $it", expanded = true)
             } else {
-                FAQScreenUIState.Item.Subtitle(it.toString(), "subtitle $it")
+                FAQScreenUIState.Item.Subtitle(it.toString(), "subtitle $it long long long long subtitle to make it go into two separate lines ")
             }
         }
         val state = FAQScreenUIState(mockItems.toImmutableList())

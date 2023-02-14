@@ -139,16 +139,12 @@ class ConversationUIMapper @Inject constructor() {
     }
 
     private fun Contact.avatar(): InitialsAvatarData {
-        val initials = name?.let { n ->
-            val split = n.split(" ")
-            split.joinToString(separator = "") { it.first().uppercase() }
-        } ?: "?"
-        val color = name?.let {
+        val color = initials?.let {
             avatarColors.random(Random(id.hashCode()))
         } ?: Color.Gray
 
         return InitialsAvatarData(
-            initials, color,
+            initials ?: "?", color,
         )
     }
 
