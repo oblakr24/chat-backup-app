@@ -40,7 +40,8 @@ fun ConversationsListing(
     onCheckedChanged: (contactId: String, checked: Boolean) -> Unit,
     onImportClicked: () -> Unit,
 ) {
-    LazyColumn(state = rememberLazyListState()) {
+    val lazyListState = rememberLazyListState()
+    LazyColumn(state = lazyListState, modifier = Modifier.verticalScrollbar(lazyListState)) {
         when (state) {
             ConversationsListingUIState.Empty -> {
                 item {

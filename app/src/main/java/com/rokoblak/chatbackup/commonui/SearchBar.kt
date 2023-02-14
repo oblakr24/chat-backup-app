@@ -58,16 +58,18 @@ fun SearchBar(text: String, modifier: Modifier = Modifier, onChange: (String) ->
                     .background(MaterialTheme.colors.background)
             )
 
-            IconButton(
-                onClick = {
-                    keyboardController?.hide()
-                    onChange("")
+            if (text.isNotBlank()) {
+                IconButton(
+                    onClick = {
+                        keyboardController?.hide()
+                        onChange("")
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = "Clear search query"
+                    )
                 }
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Close,
-                    contentDescription = "Clear search query"
-                )
             }
         }
     }

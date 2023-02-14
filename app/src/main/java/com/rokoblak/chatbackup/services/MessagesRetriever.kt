@@ -37,7 +37,6 @@ class MessagesRetriever @Inject constructor(
                     val smsDateStr = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.DATE))
                     val number = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.ADDRESS))
                     val body = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.BODY))
-                    val threadId = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.BODY))
 
                     val typeCol = Telephony.TextBasedSmsColumns.TYPE
 
@@ -87,7 +86,7 @@ class MessagesRetriever @Inject constructor(
         withContext(Dispatchers.IO) {
             val allValues = messages.map { it.values() }
             val cr = appScope.appContext.contentResolver
-
+            // For some reason, the content resolver operation will fail when bulk inserts are too big, so we chunk them
             flow {
                 allValues.chunked(CHUNK_SIZE).forEach { valuesList ->
                     val inserted = cr.bulkInsert(uri, valuesList.toTypedArray()).also {

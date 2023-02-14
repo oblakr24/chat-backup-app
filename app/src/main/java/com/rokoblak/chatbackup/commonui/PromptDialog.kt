@@ -20,7 +20,7 @@ fun PromptDialog(
     AlertDialog(
         onDismissRequest = dismiss,
         title = {
-            Text(text = title, style = LocalTypography.current.title)
+            Text(text = title, style = LocalTypography.current.titleSemiBold)
         },
         text = {
             Column(
