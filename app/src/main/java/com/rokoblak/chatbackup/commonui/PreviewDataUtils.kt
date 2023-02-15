@@ -2,6 +2,8 @@ package com.rokoblak.chatbackup.commonui
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
+import com.rokoblak.chatbackup.data.Contact
+import com.rokoblak.chatbackup.data.Message
 import com.rokoblak.chatbackup.ui.theme.*
 import com.rokoblak.chatbackup.util.formatRelative
 import kotlinx.collections.immutable.toImmutableList
@@ -82,4 +84,13 @@ object PreviewDataUtils {
     private fun <T> List<T>.takeAtMod(idx: Int): T {
         return get(idx.mod(size))
     }
+
+    fun Message.obfuscateContent() = copy(
+        content = sentences.takeAtMod(content.hashCode())
+    )
+
+    fun Contact.obfuscateName() = copy(
+        name = name?.let { names.takeAtMod(id.hashCode()) },
+        number = names.takeAtMod(id.hashCode()),
+    )
 }
