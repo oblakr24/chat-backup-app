@@ -29,7 +29,6 @@ class ConversationSearcher @Inject constructor() {
         return MatchedContact.NotMatched
     }
 
-
     private fun Message.matches(query: String): Boolean {
         return content.contains(query, ignoreCase = true)
     }

@@ -14,6 +14,8 @@ import com.rokoblak.chatbackup.conversation.ConversationRoute
 import com.rokoblak.chatbackup.di.AppScope
 import com.rokoblak.chatbackup.navigation.RouteNavigator
 import com.rokoblak.chatbackup.services.*
+import com.rokoblak.chatbackup.services.parsing.ConversationsImporter
+import com.rokoblak.chatbackup.services.parsing.ImportResult
 import com.rokoblak.chatbackup.util.SingleEventFlow
 import com.rokoblak.chatbackup.util.StringUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -146,7 +148,6 @@ class ImportFileViewModel @Inject constructor(
         val res = importedConvs.value as? ImportResult.Success ?: return@launch
         val convs = res.convs
         val selected = selections.value
-        val ids = selected.filter { it.value }.keys
         val selectedMsgs = convs.retrieveMessages(selected.filter { it.value }.keys)
         val total = selectedMsgs.size
         if (total > MessagesRetriever.CHUNK_SIZE) {

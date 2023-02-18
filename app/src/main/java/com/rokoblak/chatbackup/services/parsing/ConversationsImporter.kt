@@ -1,4 +1,4 @@
-package com.rokoblak.chatbackup.services
+package com.rokoblak.chatbackup.services.parsing
 
 import android.database.Cursor
 import android.net.Uri

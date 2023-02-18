@@ -1,6 +1,7 @@
 package com.rokoblak.chatbackup.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Switch
@@ -21,7 +22,7 @@ import com.rokoblak.chatbackup.ui.theme.LocalTypography
 
 
 data class HomeDrawerUIState(
-    val darkMode: Boolean,
+    val darkMode: Boolean?,
     val showDefaultSMSLabel: Boolean,
     val versionLabel: String,
 )
@@ -66,7 +67,7 @@ fun HomeDrawer(
 
                 Spacer(Modifier.width(8.dp))
                 Switch(
-                    checked = state.darkMode,
+                    checked = state.darkMode ?: isSystemInDarkTheme(),
                     onCheckedChange = { enabled ->
                         onAction(HomeAction.SetDarkMode(enabled))
                     },

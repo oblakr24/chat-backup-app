@@ -24,8 +24,8 @@ private val LightColorPalette = lightColors(
 
 @Composable
 fun ChatBackupTheme(
-    overrideDarkMode: Boolean = false,
-    darkTheme: Boolean = isSystemInDarkTheme() || overrideDarkMode,
+    overrideDarkMode: Boolean? = null,
+    darkTheme: Boolean = overrideDarkMode ?: isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     val colors = if (darkTheme) {

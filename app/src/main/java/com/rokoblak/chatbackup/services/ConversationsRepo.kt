@@ -21,7 +21,7 @@ class ConversationsRepo @Inject constructor(
 
     private val scope = CoroutineScope(Dispatchers.Main + Job())
 
-    val deviceConversations: Conversations? get() = deviceConvsFlow.value
+    private val deviceConversations: Conversations? get() = deviceConvsFlow.value
 
     private var importedConversations: Conversations? = null
 

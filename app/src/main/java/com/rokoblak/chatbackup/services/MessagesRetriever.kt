@@ -2,8 +2,10 @@ package com.rokoblak.chatbackup.services
 
 import android.content.ContentProviderOperation
 import android.content.ContentValues
+import android.database.Cursor
 import android.net.Uri
 import android.provider.Telephony
+import com.rokoblak.chatbackup.commonui.PreviewDataUtils.obfuscateContent
 import com.rokoblak.chatbackup.data.Conversations
 import com.rokoblak.chatbackup.data.Message
 import com.rokoblak.chatbackup.data.MinimalContact
@@ -33,30 +35,7 @@ class MessagesRetriever @Inject constructor(
 
             val messages = if (c.moveToFirst()) {
                 (0 until totalSMS).mapNotNull {
-                    val id = c.getString(c.getColumnIndexOrThrow("_id"))
-                    val smsDateStr = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.DATE))
-                    val number = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.ADDRESS))
-                    val body = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.BODY))
-
-                    val typeCol = Telephony.TextBasedSmsColumns.TYPE
-
-                    val typeColIdx =
-                        c.getInt(c.getColumnIndexOrThrow(typeCol))  // 1 - Inbox, 2 - Sent
-
-                    c.moveToNext()
-
-                    val epoch = smsDateStr.toLongOrNull()
-                    val timestamp = Instant.ofEpochMilli(epoch ?: return@mapNotNull null)
-
-                    val contactId = "C$number"
-                    val isInbox = typeColIdx == Telephony.Sms.MESSAGE_TYPE_INBOX
-                    Message(
-                        id = id,
-                        content = body,
-                        contact = MinimalContact(id = contactId, number = number),
-                        timestamp = timestamp,
-                        incoming = isInbox
-                    )
+                    c.readMessage().also { c.moveToNext() }
                 }
             } else {
                 return@withContext Conversations(emptyMap(), emptyList())
@@ -65,8 +44,33 @@ class MessagesRetriever @Inject constructor(
 
             builder.groupMessages(messages)
         } else {
+            Timber.e("Content SMS query returned null")
             Conversations(emptyMap(), emptyList())
         }
+    }
+
+    private fun Cursor.readMessage(): Message? {
+        val id = getString(getColumnIndexOrThrow("_id"))
+        val smsDateStr = getString(getColumnIndexOrThrow(Telephony.Sms.DATE))
+        val number = getString(getColumnIndexOrThrow(Telephony.Sms.ADDRESS))
+        val body = getString(getColumnIndexOrThrow(Telephony.Sms.BODY))
+
+        val typeCol = Telephony.TextBasedSmsColumns.TYPE
+
+        val typeColIdx = getInt(getColumnIndexOrThrow(typeCol))  // 1 - Inbox, 2 - Sent
+
+        val epoch = smsDateStr.toLongOrNull()
+        val timestamp = Instant.ofEpochMilli(epoch ?: return null)
+
+        val contactId = "C$number"
+        val isInbox = typeColIdx == Telephony.Sms.MESSAGE_TYPE_INBOX
+        return Message(
+            id = id,
+            content = body,
+            contact = MinimalContact(id = contactId, number = number),
+            timestamp = timestamp,
+            incoming = isInbox
+        )
     }
 
     suspend fun saveMessages(messages: List<Message>): Flow<OperationResult<Int>> {

@@ -1,7 +1,8 @@
-package com.rokoblak.chatbackup.services
+package com.rokoblak.chatbackup.services.parsing
 
 import com.rokoblak.chatbackup.data.Message
 import com.rokoblak.chatbackup.data.MinimalContact
+import com.rokoblak.chatbackup.services.ConversationBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.simpleframework.xml.Attribute
@@ -17,17 +18,14 @@ class XMLParser @Inject constructor(private val builder: ConversationBuilder) {
     suspend fun parse(file: InputStream, filename: String): ImportResult =
         withContext(Dispatchers.IO) {
             val serializer = Persister()
-
-            val dataFetch = try {
-
+            val wrapper = try {
                 serializer.read(SMSWrapper::class.java, file)
             } catch (e: Throwable) {
                 e.printStackTrace()
                 return@withContext ImportResult.Error(e.message ?: "Parse failure")
             }
 
-            val smses = dataFetch.smses
-
+            val smses = wrapper.smses
             val messages = smses.map {
                 val contactId = "C${it.address}"
 

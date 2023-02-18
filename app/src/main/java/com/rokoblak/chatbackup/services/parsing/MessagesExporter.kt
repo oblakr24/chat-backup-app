@@ -1,9 +1,8 @@
-package com.rokoblak.chatbackup.services
+package com.rokoblak.chatbackup.services.parsing
 
 import android.net.Uri
 import com.rokoblak.chatbackup.data.Conversation
-import com.rokoblak.chatbackup.data.Conversations
-import com.rokoblak.chatbackup.export.ExportViewModel
+import com.rokoblak.chatbackup.services.FileManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
