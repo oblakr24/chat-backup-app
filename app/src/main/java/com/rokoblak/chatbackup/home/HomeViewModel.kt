@@ -46,12 +46,15 @@ class HomeViewModel @Inject constructor(
 
     val effects = SingleEventFlow<HomeEffects>()
 
-    private val permissions = MutableStateFlow(appScope.hasMessagesPermissions())
-
+    private val permissions = MutableStateFlow(
+        PermissionsState(
+            hasPermissions = appScope.hasMessagesPermissions(),
+            isDefaultSMSHandlerApp = appScope.isDefaultSMSApp()
+        )
+    )
     private val searchQuery = MutableStateFlow("")
     private val editState = MutableStateFlow(EditState())
     private val selections = MutableStateFlow(emptyMap<String, Boolean>())
-    private val isDefaultSMSApp = MutableStateFlow(appScope.isDefaultSMSApp())
 
     private val conversations = conversationsRepo.deviceConvsFlow.onEach { conv ->
         conv?.let {
@@ -92,24 +95,22 @@ class HomeViewModel @Inject constructor(
         selectionsFlow: StateFlow<Map<String, Boolean>>,
         settingsFlow: Flow<AppStorage.Prefs>,
         editStateFlow: StateFlow<EditState>,
-        permissions: StateFlow<Boolean>,
-        isDefaultSMSAppFlow: StateFlow<Boolean>,
+        permissions: StateFlow<PermissionsState>,
         searchStatesFlow: Flow<SearchState>,
     ): HomeScreenUIState {
         val settings = settingsFlow.collectAsState(initial = AppStorage.defaultSettings).value
         val editState = editStateFlow.collectAsState().value
         val selections = selectionsFlow.collectAsState().value
         val selectionsIfEditing = selections.takeIf { editState.editing }
-        val hasPerms = permissions.collectAsState().value
-        val isDefaultSMSApp = isDefaultSMSAppFlow.collectAsState().value
+        val perms = permissions.collectAsState().value
 
         val drawerState = HomeDrawerUIState(
             darkMode = settings.darkMode,
-            showDefaultSMSLabel = isDefaultSMSApp,
+            showDefaultSMSLabel = perms.isDefaultSMSHandlerApp,
             versionLabel = "Version ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})"
         )
 
-        val conversations = if (hasPerms) {
+        val conversations = if (perms.hasPermissions) {
             conversationsFlow.collectAsState(initial = null).value
         } else {
             null
@@ -149,32 +150,38 @@ class HomeViewModel @Inject constructor(
         val exportEnabled = selectionsEmpty.not()
         val convsAreEmpty = conversations?.mapping.isNullOrEmpty()
         val appbarState = HomeAppbarUIState(
-            hideIcons = hasPerms.not() || convsAreEmpty,
+            hideIcons = perms.hasPermissions.not() || convsAreEmpty,
             showDelete = editState.editing,
             showEdit = editState.editing.not(),
             deleteEnabled = deleteEnabled,
-            deleteShowsPrompt = isDefaultSMSApp.not(),
+            deleteShowsPrompt = perms.isDefaultSMSHandlerApp.not(),
         )
 
-        val title = if (conversations != null) {
-            "${conversations.totalChats} conversations, ${conversations.totalMessages} messages"
+        val contentState = if (perms.isDefaultSMSHandlerApp.not()) {
+            HomeScreenUIState.InnerContent.NotDefaultSMSHandlerApp
         } else {
-            ""
-        }
-        val subtitle = if (conversations != null && editState.editing) {
-            val selectedCount = selections.values.count { it }
-            "$selectedCount selected"
-        } else {
-            ""
-        }
-        return HomeScreenUIState(
-            appbarState, drawerState, HomeContentUIState(
-                state = conversationsState,
-                title = title,
-                subtitle = subtitle,
-                exportEnabled = exportEnabled,
+            val title = if (conversations != null) {
+                "${conversations.totalChats} conversations, ${conversations.totalMessages} messages"
+            } else {
+                ""
+            }
+            val subtitle = if (conversations != null && editState.editing) {
+                val selectedCount = selections.values.count { it }
+                "$selectedCount selected"
+            } else {
+                ""
+            }
+            HomeScreenUIState.InnerContent.Content(
+                HomeContentUIState(
+                    state = conversationsState,
+                    title = title,
+                    subtitle = subtitle,
+                    exportEnabled = exportEnabled,
+                )
             )
-        )
+        }
+
+        return HomeScreenUIState(appbarState, drawerState, contentState)
     }
 
     val uiState: StateFlow<HomeScreenUIState> by lazy {
@@ -186,7 +193,6 @@ class HomeViewModel @Inject constructor(
                 storage.prefsFlow(),
                 editState,
                 permissions,
-                isDefaultSMSApp,
                 searchStates,
             )
         }
@@ -204,9 +210,9 @@ class HomeViewModel @Inject constructor(
             is HomeAction.SetDarkMode -> setDarkMode(act.enabled)
             HomeAction.CloseEditClicked -> editState.update { it.copy(editing = false) }
             HomeAction.EditClicked -> enterEdit()
-            HomeAction.PermissionsUpdated -> permissions.value = appScope.hasMessagesPermissions()
+            HomeAction.PermissionsUpdated -> updatePermissions()
             is HomeAction.OpenSetAsDefaultClicked -> effects.send(HomeEffects.ShowSetAsDefaultPrompt)
-            HomeAction.SetAsDefaultUpdated -> isDefaultSMSApp.value = appScope.isDefaultSMSApp()
+            HomeAction.SetAsDefaultUpdated -> updatePermissions()
             HomeAction.DeleteClicked -> deleteSelected()
             HomeAction.ClearSelection -> clearSelections()
             HomeAction.SelectAll -> selectAll()
@@ -217,7 +223,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun enterEdit() {
+    private fun updatePermissions() {
+        permissions.value = PermissionsState(
+            hasPermissions = appScope.hasMessagesPermissions(),
+            isDefaultSMSHandlerApp = appScope.isDefaultSMSApp()
+        )
+    }
+
+    private fun enterEdit() {
         effects.send(HomeEffects.HideKeyboard)
         editState.update { it.copy(editing = true) }
     }
@@ -271,3 +284,7 @@ sealed interface SearchState {
     data class ResultsFound(val results: SearchResults) : SearchState
 }
 
+data class PermissionsState(
+    val hasPermissions: Boolean,
+    val isDefaultSMSHandlerApp: Boolean,
+)

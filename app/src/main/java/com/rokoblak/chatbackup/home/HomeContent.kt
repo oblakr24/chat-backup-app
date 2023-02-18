@@ -8,7 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PermPhoneMsg
+import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,6 +26,7 @@ sealed interface HomeContentUIPermissionsState {
     ) : HomeContentUIPermissionsState
 
     data class PermissionsGiven(val content: HomeContentUIState) : HomeContentUIPermissionsState
+    object NotDefaultSMSHandlerApp : HomeContentUIPermissionsState
 }
 
 @Composable
@@ -60,7 +61,7 @@ fun HomeContent(
                     // then gently explain why the app requires this permission
                     Text("The app needs to read messages and contacts in order to list and export the data. Please grant the necessary permissions.")
 
-                    ButtonWithIcon("Grant permissions", icon = Icons.Filled.PermPhoneMsg) {
+                    ButtonWithIcon("Grant permissions", icon = Icons.Filled.Message) {
                         onLaunchPermissions()
                     }
                 } else {
@@ -83,10 +84,25 @@ fun HomeContent(
                             )
                         }
                     } else {
-                        ButtonWithIcon("Grant permissions", icon = Icons.Filled.PermPhoneMsg) {
+                        ButtonWithIcon("Grant permissions", icon = Icons.Filled.Message) {
                             onLaunchPermissions()
                         }
                     }
+                }
+            }
+        }
+        HomeContentUIPermissionsState.NotDefaultSMSHandlerApp -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("This app needs to be set as a default SMS handler to be able to list your SMS messages.\n\nPress the button below to do so. You can change this any time in the settings.")
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                ButtonWithIcon("Set as default", icon = Icons.Filled.Message) {
+                    onAction(HomeAction.OpenSetAsDefaultClicked)
                 }
             }
         }
@@ -102,6 +118,15 @@ private fun HomeContentNoPermissionsPreview() {
             shouldShowSettingsBtn = true
         )
 
+        HomeContent(state = state, onAction = {}, onLaunchPermissions = {}, searchQuery = "")
+    }
+}
+
+@Preview
+@Composable
+private fun HomeContentNotDefaultSMSHandlerPreview() {
+    ChatBackupTheme {
+        val state = HomeContentUIPermissionsState.NotDefaultSMSHandlerApp
         HomeContent(state = state, onAction = {}, onLaunchPermissions = {}, searchQuery = "")
     }
 }
