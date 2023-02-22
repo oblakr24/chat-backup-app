@@ -1,10 +1,14 @@
 package com.rokoblak.chatbackup.services
 
+import com.rokoblak.chatbackup.data.Contact
 import com.rokoblak.chatbackup.data.Conversation
 import com.rokoblak.chatbackup.data.Conversations
+import com.rokoblak.chatbackup.data.PhoneType
 import com.rokoblak.chatbackup.di.AppScope
+import com.rokoblak.chatbackup.di.SMSEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
@@ -12,15 +16,14 @@ import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Singleton
 class ConversationsRepo @Inject constructor(
     private val appScope: AppScope,
     private val smsRetriever: MessagesRetriever,
+    private val contactsRepo: ContactsRepository,
 ) {
-
     private val scope = CoroutineScope(Dispatchers.Main + Job())
-
-    private val deviceConversations: Conversations? get() = deviceConvsFlow.value
 
     private var importedConversations: Conversations? = null
 
@@ -40,16 +43,25 @@ class ConversationsRepo @Inject constructor(
         }
     }
 
-    fun retrieveConversation(contactId: String): Conversation? =
-        deviceConversations?.resolveConvByContactId(contactId)
-            ?: importedConversations?.resolveConvByContactId(contactId)
+    fun conversationFor(contactId: String?, number: String, isImport: Boolean) = flow {
+        val matching = contactsRepo.resolveContact(number)
+        val contact = matching ?: Contact(name = null, number = number, avatarUri = null, phoneType = PhoneType.HOME)
+        if (isImport) {
+            val conv = importedConversations?.resolveConv(contactId = contactId, number = number)
+            emit(conv ?: Conversation(contact, emptyList()))
+        } else {
+            emitAll(deviceConvsFlow.mapNotNull {
+                it?.resolveConv(contactId = contactId, number = number) ?: Conversation(contact, emptyList())
+            })
+        }
+    }
 
-    private val loadTypeFlow = MutableStateFlow(ConvLoadType())
+    private val loadTypeFlow = MutableStateFlow(ConvLoadType(emitInitial = true))
 
     private val deletionsFlow = MutableStateFlow<Set<String>?>(null)
 
-    private val deviceLoadConvsFlow: Flow<Conversations?> = flow {
-        emit(null)
+    private fun deviceLoadConvsFlow(emitInitial: Boolean): Flow<Conversations?> = flow {
+        if (emitInitial) emit(null)
         val conv = if (appScope.hasMessagesPermissions()) {
             smsRetriever.retrieveMessages()
         } else {
@@ -62,8 +74,11 @@ class ConversationsRepo @Inject constructor(
         emitAll(deletions)
     }
 
-    val deviceConvsFlow = loadTypeFlow.flatMapLatest {
-        deviceLoadConvsFlow
+    private val externalReloadEvents = appScope.smsEvents.filter { it is SMSEvent.NewReceived }.map { ConvLoadType(emitInitial = false) }
+    private val mergedReloadEvents= listOf(loadTypeFlow, externalReloadEvents).merge()
+
+    val deviceConvsFlow = mergedReloadEvents.flatMapLatest {
+        deviceLoadConvsFlow(it.emitInitial)
     }.stateIn(scope, SharingStarted.WhileSubscribed(5000), null)
 
     suspend fun deleteDeviceConvs(contactIds: Set<String>): OperationResult<Unit> {
@@ -81,7 +96,7 @@ class ConversationsRepo @Inject constructor(
 
     fun triggerReload() {
         deletionsFlow.value = null
-        loadTypeFlow.value = ConvLoadType()
+        loadTypeFlow.value = ConvLoadType(emitInitial = true)
     }
 
     private fun getSmsIdsForConversation(contactId: String): Set<String> {
@@ -91,5 +106,5 @@ class ConversationsRepo @Inject constructor(
         }?.toSet() ?: emptySet()
     }
 
-    private class ConvLoadType(val ts: Long = Instant.now().toEpochMilli())
+    private class ConvLoadType(val emitInitial: Boolean, val ts: Long = Instant.now().toEpochMilli())
 }

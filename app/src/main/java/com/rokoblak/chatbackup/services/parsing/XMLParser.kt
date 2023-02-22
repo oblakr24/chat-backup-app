@@ -2,6 +2,7 @@ package com.rokoblak.chatbackup.services.parsing
 
 import com.rokoblak.chatbackup.data.Message
 import com.rokoblak.chatbackup.data.MinimalContact
+import com.rokoblak.chatbackup.services.ContactsRepository
 import com.rokoblak.chatbackup.services.ConversationBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,7 +14,7 @@ import java.io.InputStream
 import java.time.Instant
 import javax.inject.Inject
 
-class XMLParser @Inject constructor(private val builder: ConversationBuilder) {
+class XMLParser @Inject constructor(private val builder: ConversationBuilder, private val contactsRepo: ContactsRepository) {
 
     suspend fun parse(file: InputStream, filename: String): ImportResult =
         withContext(Dispatchers.IO) {
@@ -27,21 +28,23 @@ class XMLParser @Inject constructor(private val builder: ConversationBuilder) {
 
             val smses = wrapper.smses
             val messages = smses.map {
-                val contactId = "C${it.address}"
+                val num = it.address ?: "/"
+                val contact = MinimalContact(num)
 
                 val timestampMs = it.date?.toLongOrNull() ?: Instant.EPOCH.toEpochMilli()
-                val msgId = contactId + it.body.hashCode() + timestampMs
-                val num = it.address ?: "/"
+                val msgId = contact.id + it.body.hashCode() + timestampMs
                 Message(
                     id = msgId,
                     content = it.body.orEmpty(),
-                    contact = MinimalContact(num, id = contactId),
+                    contact = MinimalContact(num),
                     timestamp = Instant.ofEpochMilli(timestampMs),
                     incoming = it.type == "1",
                 )
             }
 
-            ImportResult.Success(filename, builder.groupMessages(messages))
+            ImportResult.Success(filename, builder.groupMessages(messages, contactRetriever = { num ->
+                contactsRepo.resolveContact(num)
+            }))
         }
 }
 

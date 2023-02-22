@@ -36,7 +36,7 @@ sealed interface ConversationsListingUIState {
 @Composable
 fun ConversationsListing(
     state: ConversationsListingUIState,
-    onItemClicked: (contactId: String) -> Unit,
+    onItemClicked: (contactId: String, number: String) -> Unit,
     onCheckedChanged: (contactId: String, checked: Boolean) -> Unit,
     onImportClicked: () -> Unit,
 ) {
@@ -94,7 +94,7 @@ fun ConversationsListing(
                         val data = state.items[idx]
                         ConversationDisplay(modifier = Modifier
                             .clickable {
-                                onItemClicked(data.contactId)
+                                onItemClicked(data.contactId, data.number)
                             }
                             .animateItemPlacement(),
                             background = if (idx.mod(2) == 1) {
@@ -125,7 +125,9 @@ fun ConversationListingPreview() {
             state = ConversationsListingUIState.Loaded(
                 mockConversations.toImmutableList(),
             ),
-            onItemClicked = {}, onCheckedChanged = { _, _ -> }, onImportClicked = {})
+            onItemClicked = { _, _ ->
+
+            }, onCheckedChanged = { _, _ -> }, onImportClicked = {})
 
     }
 }

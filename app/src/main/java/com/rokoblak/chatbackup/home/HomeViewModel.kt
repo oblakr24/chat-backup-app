@@ -14,9 +14,11 @@ import com.rokoblak.chatbackup.AppConstants
 import com.rokoblak.chatbackup.BuildConfig
 import com.rokoblak.chatbackup.commonui.ConversationsListingUIState
 import com.rokoblak.chatbackup.conversation.ConversationRoute
+import com.rokoblak.chatbackup.createchat.CreateChatRoute
 import com.rokoblak.chatbackup.data.Conversations
 import com.rokoblak.chatbackup.di.AppScope
 import com.rokoblak.chatbackup.di.AppStorage
+import com.rokoblak.chatbackup.di.SMSEvent
 import com.rokoblak.chatbackup.export.ExportRoute
 import com.rokoblak.chatbackup.faq.FAQRoute
 import com.rokoblak.chatbackup.importfile.ImportRoute
@@ -43,6 +45,17 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel(), RouteNavigator by routeNavigator {
 
     private val scope = CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
+
+    init {
+        appScope.smsEvents.onEach { event ->
+            when (event) {
+                SMSEvent.NewReceived -> Unit
+                is SMSEvent.OpenCreateChat -> {
+                    navigateToRoute(CreateChatRoute.route)
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
 
     val effects = SingleEventFlow<HomeEffects>()
 
@@ -203,8 +216,9 @@ class HomeViewModel @Inject constructor(
     fun handleAction(act: HomeAction) {
         when (act) {
             is HomeAction.ConversationChecked -> updateCheckedState(act.contactId, act.checked)
-            is HomeAction.ConversationClicked -> navigateToRoute(ConversationRoute.get(act.contactId))
+            is HomeAction.ConversationClicked -> openConversation(act.contactId, act.number)
             is HomeAction.ImportClicked -> navigateToRoute(ImportRoute.route)
+            is HomeAction.ComposeClicked -> navigateToRoute(CreateChatRoute.route)
             is HomeAction.ExportClicked -> navigateToExport()
             HomeAction.FAQClicked -> navigateToRoute(FAQRoute.route)
             is HomeAction.SetDarkMode -> setDarkMode(act.enabled)
@@ -221,6 +235,15 @@ class HomeViewModel @Inject constructor(
             }))
             is HomeAction.QueryChanged -> searchQuery.value = act.query
         }
+    }
+
+    private fun openConversation(contactId: String, number: String) {
+        val input = ConversationRoute.Input(
+            resolvedContactId = contactId,
+            address = number,
+            isImport = false
+        )
+        navigateToRoute(ConversationRoute.get(input))
     }
 
     private fun updatePermissions() {

@@ -18,7 +18,7 @@ data class ChatDisplayData(
     val content: String,
     val date: String,
     val alignedLeft: Boolean,
-    val avatarData: InitialsAvatarData?,
+    val avatar: AvatarData?,
 )
 
 @Composable
@@ -30,11 +30,10 @@ fun ChatDisplay(modifier: Modifier = Modifier, data: ChatDisplayData) {
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = alignment
     ) {
-
         Row(modifier = Modifier.wrapContentWidth()) {
-            if (data.avatarData != null) {
-                InitialsAvatar(
-                    data = data.avatarData,
+            if (data.avatar != null) {
+                AvatarBadge(
+                    data = data.avatar,
                     modifier = Modifier
                         .padding(top = 4.dp)
                         .size(28.dp),
@@ -48,7 +47,7 @@ fun ChatDisplay(modifier: Modifier = Modifier, data: ChatDisplayData) {
             ) {
                 Text(
                     modifier = Modifier
-                        .background(backgroundColor, RoundedCornerShape(8.dp))
+                        .background(backgroundColor, RoundedCornerShape(12.dp))
                         .align(alignment)
                         .widthIn(min = 20.dp, max = 220.dp)
                         .padding(8.dp),
@@ -79,7 +78,7 @@ fun ChatDisplayOtherPreview() {
                 content = "Content Looong Content Looooong Looong Looong",
                 date = "Sun 14th Dec 2022, 13:44:55",
                 alignedLeft = true,
-                avatarData = InitialsAvatarData("AB", Color.Blue),
+                avatar = AvatarData.Initials("AB", Color.Blue),
             )
         )
     }
@@ -96,7 +95,7 @@ fun ChatDisplayMinePreview() {
                 content = "Content",
                 date = "Sun 14th Dec 2022, 13:44:55",
                 alignedLeft = false,
-                avatarData = null,
+                avatar = null,
             )
         )
     }

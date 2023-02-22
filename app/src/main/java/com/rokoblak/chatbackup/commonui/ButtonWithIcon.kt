@@ -20,8 +20,8 @@ import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
 fun ButtonWithIcon(
     text: String,
     icon: ImageVector,
-    enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     onClick: () -> Unit
 ) {
     Button(

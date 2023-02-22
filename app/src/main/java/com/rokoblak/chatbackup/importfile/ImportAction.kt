@@ -8,7 +8,7 @@ sealed interface ImportAction {
     object ImportXMLClicked : ImportAction
     data class JSONFileSelected(val uri: Uri) : ImportAction
     data class XMLFileSelected(val uri: Uri) : ImportAction
-    data class ConversationClicked(val contactId: String) : ImportAction
+    data class ConversationClicked(val contactId: String, val number: String) : ImportAction
     data class ConversationChecked(val contactId: String, val checked: Boolean) : ImportAction
     object SelectAll: ImportAction
     object ClearSelection: ImportAction

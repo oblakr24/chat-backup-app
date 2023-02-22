@@ -43,17 +43,17 @@ object PreviewDataUtils {
     )
 
     private val avatars = listOf(
-        InitialsAvatarData("?", Color.DarkGray),
-        InitialsAvatarData("AB", DarkRed),
-        InitialsAvatarData("BC", Color.Blue),
-        InitialsAvatarData("CD", DarkGreen),
-        InitialsAvatarData("DE", DarkYellow),
-        InitialsAvatarData("FG", DarkBrown),
-        InitialsAvatarData("GH", DarkOrange),
-        InitialsAvatarData("HI", DarkRed),
-        InitialsAvatarData("JK", DarkOrange),
-        InitialsAvatarData("KI", Color.Blue),
-        InitialsAvatarData("IJ", DarkOrange),
+        AvatarData.Initials("?", Color.DarkGray),
+        AvatarData.Initials("AB", DarkRed),
+        AvatarData.Initials("BC", Color.Blue),
+        AvatarData.Initials("CD", DarkGreen),
+        AvatarData.Initials("DE", DarkYellow),
+        AvatarData.Initials("FG", DarkBrown),
+        AvatarData.Initials("GH", DarkOrange),
+        AvatarData.Initials("HI", DarkRed),
+        AvatarData.Initials("JK", DarkOrange),
+        AvatarData.Initials("KI", Color.Blue),
+        AvatarData.Initials("IJ", DarkOrange),
     )
 
     val mockConversations = (0..10).map {
@@ -63,11 +63,12 @@ object PreviewDataUtils {
         ConversationDisplayData(
             contactId = "C_id1",
             id = "id$it",
+            number = "num$it",
             title = AnnotatedString(names[it]),
             subtitle = AnnotatedString(sentences[it]),
             date = dateFormatted,
             checked = true,
-            avatarData = avatars[it],
+            avatar = avatars[it],
         )
     }.toImmutableList()
 
@@ -78,7 +79,7 @@ object PreviewDataUtils {
         val isMine = idx.mod(2) == 0
         val content = sentences.takeAtMod(idx)
         val avatar = if (isMine.not()) avatars.takeAtMod(idx) else null
-        ChatDisplayData(idx.toString(), content = content, date = dateFormatted, alignedLeft = isMine.not(), avatarData = avatar)
+        ChatDisplayData(idx.toString(), content = content, date = dateFormatted, alignedLeft = isMine.not(), avatar = avatar)
     }.toImmutableList()
 
     private fun <T> List<T>.takeAtMod(idx: Int): T {

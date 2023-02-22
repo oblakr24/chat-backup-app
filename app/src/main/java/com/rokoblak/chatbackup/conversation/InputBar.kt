@@ -1,4 +1,4 @@
-package com.rokoblak.chatbackup.commonui
+package com.rokoblak.chatbackup.conversation
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -8,11 +8,12 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.filled.Send
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,62 +21,64 @@ import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
 import com.rokoblak.chatbackup.ui.theme.LocalTypography
 import com.rokoblak.chatbackup.ui.theme.alpha
 
+
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun SearchBar(
-    text: String,
-    placeholder: String,
+fun InputBar(
+    input: String,
     modifier: Modifier = Modifier,
-    onChange: (String) -> Unit
+    onSend: (String) -> Unit,
+    onChange: (String) -> Unit,
 ) {
+    val bgColor = MaterialTheme.colors.primaryVariant
     Surface(
         modifier = modifier
-            .padding(horizontal = 16.dp, vertical = 4.dp)
             .fillMaxWidth()
-            .height(50.dp).clip(RoundedCornerShape(25.dp)),
+            .height(50.dp),
         elevation = 4.dp,
-        border = BorderStroke(1.dp, MaterialTheme.colors.onPrimary.alpha(0.5f)),
+        border = BorderStroke(1.dp, Color.Transparent),
         shape = RoundedCornerShape(25.dp),
-        color = MaterialTheme.colors.background
+        color = Color.Transparent,
     ) {
         Row(
-            modifier = Modifier.background(MaterialTheme.colors.background),
+            modifier = Modifier.background(bgColor),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             val keyboardController = LocalSoftwareKeyboardController.current
             Spacer(modifier = Modifier.width(12.dp))
-            Icon(
-                imageVector = Icons.Filled.Search,
-                contentDescription = "Enter Edit mode",
-            )
             TextField(
-                value = text,
+                value = input,
                 onValueChange = onChange,
                 maxLines = 1,
-                colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.background),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = bgColor,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                ),
                 placeholder = {
                     Text(
-                        text = placeholder,
+                        text = "Text message",
                         style = LocalTypography.current.subheadRegular
                     )
                 },
                 textStyle = LocalTypography.current.subheadRegular,
                 modifier = Modifier
                     .weight(1f)
-                    .background(MaterialTheme.colors.background)
+                    .background(bgColor)
             )
 
-            if (text.isNotBlank()) {
+            if (input.isNotBlank()) {
                 IconButton(
                     onClick = {
                         keyboardController?.hide()
-                        onChange("")
+                        onSend(input)
                     }
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = "Clear search query"
+                        imageVector = Icons.Filled.Send,
+                        contentDescription = "Clear input"
                     )
                 }
             }
@@ -87,6 +90,8 @@ fun SearchBar(
 @Composable
 fun SearchBarPreview() {
     ChatBackupTheme {
-        SearchBar(text = "search query", placeholder = "Filter conversations", onChange = {})
+        InputBar(input = "New SMS to be sent", onChange = {}, onSend = {
+
+        })
     }
 }

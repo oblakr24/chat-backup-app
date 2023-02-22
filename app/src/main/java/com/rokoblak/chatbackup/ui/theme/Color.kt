@@ -5,8 +5,8 @@ import androidx.annotation.IntRange
 import androidx.compose.ui.graphics.Color
 
 val PrimaryDark = Color.DarkGray
-val PrimaryLight = Color(0xFFCCCCE6)
-val PrimaryVariantLight = Color(0xFFB8B8CE)
+val PrimaryLight = Color(0xFFD6D6EC)
+val PrimaryVariantLight = Color(0xFFDBDBEC)
 val PrimaryVariantDark = Color(0xFF303030)
 
 val SecondaryLight = Color.DarkGray

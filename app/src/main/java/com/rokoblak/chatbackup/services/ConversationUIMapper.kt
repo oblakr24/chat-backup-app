@@ -8,9 +8,9 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
+import com.rokoblak.chatbackup.commonui.AvatarData
 import com.rokoblak.chatbackup.commonui.ChatDisplayData
 import com.rokoblak.chatbackup.commonui.ConversationDisplayData
-import com.rokoblak.chatbackup.commonui.InitialsAvatarData
 import com.rokoblak.chatbackup.data.Contact
 import com.rokoblak.chatbackup.data.Conversations
 import com.rokoblak.chatbackup.data.Message
@@ -86,7 +86,7 @@ class ConversationUIMapper @Inject constructor() {
             content = content,
             date = date,
             alignedLeft = incoming,
-            avatarData = if (incoming) {
+            avatar = if (incoming) {
                 contact.avatar()
             } else {
                 null
@@ -134,16 +134,22 @@ class ConversationUIMapper @Inject constructor() {
             subtitle = subtitle,
             date = dateString,
             checked = checked,
-            avatarData = contact.avatar(),
+            avatar = contact.avatar(),
+            number = contact.number,
         )
     }
 
-    private fun Contact.avatar(): InitialsAvatarData {
+    fun mapAvatar(contact: Contact) = contact.avatar()
+
+    private fun Contact.avatar(): AvatarData {
+        if (avatarUri != null) {
+            return AvatarData.LocalPhoto(avatarUri)
+        }
         val color = initials?.let {
             avatarColors.random(Random(id.hashCode()))
         } ?: Color.Gray
 
-        return InitialsAvatarData(
+        return AvatarData.Initials(
             initials ?: "?", color,
         )
     }

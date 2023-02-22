@@ -5,11 +5,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Message
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.rokoblak.chatbackup.commonui.ButtonWithIcon
 import com.rokoblak.chatbackup.commonui.ConversationsListingUIState
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
 import kotlinx.coroutines.launch
@@ -54,6 +57,13 @@ fun HomeScaffold(
         }, content = {
             it.calculateBottomPadding()
             HomeContent(searchQuery, state.contentPermissions, onAction, onLaunchPermissions)
+        }, floatingActionButton = {
+            if (state.contentPermissions is HomeContentUIPermissionsState.PermissionsGiven) {
+                ButtonWithIcon(modifier = Modifier,
+                    text = "Compose",
+                    icon = Icons.Filled.Message,
+                    onClick = { onAction(HomeAction.ComposeClicked) })
+            }
         })
 }
 
