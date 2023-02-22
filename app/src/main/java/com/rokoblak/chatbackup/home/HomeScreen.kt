@@ -20,8 +20,13 @@ import com.rokoblak.chatbackup.util.showToast
 data class HomeScreenUIState(
     val appBar: HomeAppbarUIState,
     val drawer: HomeDrawerUIState,
-    val content: HomeContentUIState,
-)
+    val innerContent: InnerContent,
+) {
+    sealed interface InnerContent {
+        object NotDefaultSMSHandlerApp : InnerContent
+        data class Content(val content: HomeContentUIState) : InnerContent
+    }
+}
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -51,16 +56,23 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val state = viewModel.uiState.collectAsState().value
     val query = viewModel.queries.collectAsState().value
 
-    val contentPermissions = if (permissionsState.allPermissionsGranted) {
-        HomeContentUIPermissionsState.PermissionsGiven(
-            state.content
-        )
-    } else {
-        val shouldShowRationale = permissionsState.shouldShowRationale
-        HomeContentUIPermissionsState.PermissionsNeeded(
-            shouldShowRationale = shouldShowRationale,
-            shouldShowSettingsBtn = deniedPermissions && !shouldShowRationale,
-        )
+    val contentPermissions = when (state.innerContent) {
+        is HomeScreenUIState.InnerContent.Content -> {
+            if (permissionsState.allPermissionsGranted) {
+                HomeContentUIPermissionsState.PermissionsGiven(
+                    state.innerContent.content
+                )
+            } else {
+                val shouldShowRationale = permissionsState.shouldShowRationale
+                HomeContentUIPermissionsState.PermissionsNeeded(
+                    shouldShowRationale = shouldShowRationale,
+                    shouldShowSettingsBtn = deniedPermissions && !shouldShowRationale,
+                )
+            }
+        }
+        HomeScreenUIState.InnerContent.NotDefaultSMSHandlerApp -> {
+            HomeContentUIPermissionsState.NotDefaultSMSHandlerApp
+        }
     }
 
     val mappedState = HomeScaffoldUIState(state.appBar, state.drawer, contentPermissions)

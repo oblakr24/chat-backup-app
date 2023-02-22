@@ -57,7 +57,7 @@ fun ImportContent(
             ImportScreenUIState.Loading -> {
                 ConversationsListing(
                     ConversationsListingUIState.Loading,
-                    onItemClicked = {},
+                    onItemClicked = { _, _ -> },
                     onCheckedChanged = { _, _ -> }, onImportClicked = {})
             }
             is ImportScreenUIState.Loaded -> {
@@ -84,8 +84,8 @@ fun ImportContent(
                 val conversationsState = ConversationsListingUIState.Loaded(state.listing)
                 ConversationsListing(
                     conversationsState,
-                    onItemClicked = { cId ->
-                        onAction(ImportAction.ConversationClicked(cId))
+                    onItemClicked = { cId, num ->
+                        onAction(ImportAction.ConversationClicked(cId, num))
                     },
                     onCheckedChanged = { cId, checked ->
                         onAction(ImportAction.ConversationChecked(cId, checked))

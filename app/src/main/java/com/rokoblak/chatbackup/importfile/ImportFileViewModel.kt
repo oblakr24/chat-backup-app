@@ -14,6 +14,8 @@ import com.rokoblak.chatbackup.conversation.ConversationRoute
 import com.rokoblak.chatbackup.di.AppScope
 import com.rokoblak.chatbackup.navigation.RouteNavigator
 import com.rokoblak.chatbackup.services.*
+import com.rokoblak.chatbackup.services.parsing.ConversationsImporter
+import com.rokoblak.chatbackup.services.parsing.ImportResult
 import com.rokoblak.chatbackup.util.SingleEventFlow
 import com.rokoblak.chatbackup.util.StringUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -118,7 +120,7 @@ class ImportFileViewModel @Inject constructor(
             is ImportAction.XMLFileSelected -> importXMLFile(act.uri)
             ImportAction.ImportJSONClicked -> openJSONFilePicker()
             ImportAction.ImportXMLClicked -> openXMLFilePicker()
-            is ImportAction.ConversationClicked -> openConversation(act.contactId)
+            is ImportAction.ConversationClicked -> openConversation(act.contactId, act.number)
             ImportAction.ClearSelection -> clearSelections()
             ImportAction.CloseEditClicked -> editState.update { it.copy(editing = false) }
             ImportAction.EditClicked -> editState.update { it.copy(editing = true) }
@@ -137,8 +139,10 @@ class ImportFileViewModel @Inject constructor(
         val res = importedConvs.value as? ImportResult.Success ?: return@launch
         val convs = res.convs
         val selected = selections.value
-        val removed = convs.removeConvs(selected.filter { it.value }.keys)
+        val keys = selected.filter { it.value }.keys
+        val removed = convs.removeConvs(keys)
         repo.setImportedConversations(removed)
+        selections.update { it.toMutableMap().filterKeys { k -> keys.contains(k).not() } }
         importedConvs.value = res.copy(convs = removed)
     }
 
@@ -146,7 +150,6 @@ class ImportFileViewModel @Inject constructor(
         val res = importedConvs.value as? ImportResult.Success ?: return@launch
         val convs = res.convs
         val selected = selections.value
-        val ids = selected.filter { it.value }.keys
         val selectedMsgs = convs.retrieveMessages(selected.filter { it.value }.keys)
         val total = selectedMsgs.size
         if (total > MessagesRetriever.CHUNK_SIZE) {
@@ -237,8 +240,9 @@ class ImportFileViewModel @Inject constructor(
         effects.send(ImportEffect.OpenXMLFilePicker(intent))
     }
 
-    private fun openConversation(contactId: String) {
-        routeNavigator.navigateToRoute(ConversationRoute.get(contactId))
+    private fun openConversation(contactId: String, number: String) {
+        val input = ConversationRoute.Input(contactId, address = number, isImport = true)
+        routeNavigator.navigateToRoute(ConversationRoute.get(input))
     }
 }
 

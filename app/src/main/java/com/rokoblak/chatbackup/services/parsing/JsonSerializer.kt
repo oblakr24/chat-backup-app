@@ -1,4 +1,4 @@
-package com.rokoblak.chatbackup.services
+package com.rokoblak.chatbackup.services.parsing
 
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -11,7 +11,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalSerializationApi::class)
 class JsonSerializer @Inject constructor() {
 
-    val json = Json {
+    private val json = Json {
         isLenient =
             true // Reason: In case some formats don't conform to the strict RFC-4627 standard
         ignoreUnknownKeys = true // Allows to specify minimal models

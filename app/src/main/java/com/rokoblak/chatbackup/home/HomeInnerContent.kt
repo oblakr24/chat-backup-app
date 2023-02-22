@@ -1,11 +1,15 @@
 package com.rokoblak.chatbackup.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rokoblak.chatbackup.commonui.*
@@ -41,7 +45,8 @@ fun HomeInnerContent(
             ) {
                 Column(
                     modifier = Modifier
-                        .wrapContentHeight().padding(top = 8.dp)
+                        .wrapContentHeight()
+                        .padding(top = 8.dp)
                 ) {
                     Text(text = state.title, style = LocalTypography.current.subheadRegular)
                     Text(text = state.subtitle, style = LocalTypography.current.captionRegular)
@@ -53,13 +58,16 @@ fun HomeInnerContent(
         }
 
         if (searchQuery != null && innerState is ConversationsListingUIState.Loaded) {
-            SearchBar(text = searchQuery, onChange = {
-                onAction(HomeAction.QueryChanged(it))
-            }, modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp))
+            SearchBar(
+                text = searchQuery, placeholder = "Filter conversations",
+                onChange = {
+                    onAction(HomeAction.QueryChanged(it))
+                }, modifier = Modifier
+            )
         }
 
-        ConversationsListing(state = innerState, onItemClicked = { cId ->
-            onAction(HomeAction.ConversationClicked(cId))
+        ConversationsListing(state = innerState, onItemClicked = { cId, num ->
+            onAction(HomeAction.ConversationClicked(cId, num))
         }, onCheckedChanged = { cId, checked ->
             onAction(HomeAction.ConversationChecked(cId, checked))
         }, onImportClicked = {

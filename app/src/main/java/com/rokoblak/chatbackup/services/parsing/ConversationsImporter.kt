@@ -1,4 +1,4 @@
-package com.rokoblak.chatbackup.services
+package com.rokoblak.chatbackup.services.parsing
 
 import android.database.Cursor
 import android.net.Uri
@@ -27,27 +27,25 @@ class ConversationsImporter @Inject constructor(
         val parsed = serializer.decodeStream(ConversationsDTO.serializer(), inputStream)
 
         val conversations = parsed.conversations.map { conv ->
-            val contactId = "import_C${conv.contactNumber}"
+            val contact = Contact(
+                name = conv.contactName,
+                number = conv.contactNumber,
+                avatarUri = null,
+                phoneType = PhoneType.HOME,
+            )
             val messages = conv.messages.map { msg ->
                 val body = msg.content
                 val timestampMs = msg.timestampMs
-                val msgId = contactId + body.hashCode() + timestampMs
+                val msgId = contact.id + body.hashCode() + timestampMs
                 Message(
                     id = msgId,
                     content = body,
-                    contact = MinimalContact(conv.contactNumber, contactId),
+                    contact = MinimalContact(conv.contactNumber),
                     timestamp = Instant.ofEpochMilli(timestampMs),
                     incoming = msg.incoming
                 )
             }
-
-            Conversation(
-                Contact(
-                    id = contactId,
-                    name = conv.contactName,
-                    number = conv.contactNumber
-                ), messages = messages
-            )
+            Conversation(contact, messages = messages)
         }
 
         val sortedConversations = conversations.sortedBy { it.messages.maxOf { it.timestamp } }

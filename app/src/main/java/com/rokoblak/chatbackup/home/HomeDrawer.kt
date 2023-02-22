@@ -1,15 +1,13 @@
 package com.rokoblak.chatbackup.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.Message
-import androidx.compose.material.icons.filled.OpenInNew
-import androidx.compose.material.icons.filled.QuestionAnswer
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +19,7 @@ import com.rokoblak.chatbackup.ui.theme.LocalTypography
 
 
 data class HomeDrawerUIState(
-    val darkMode: Boolean,
+    val darkMode: Boolean?,
     val showDefaultSMSLabel: Boolean,
     val versionLabel: String,
 )
@@ -36,6 +34,11 @@ fun HomeDrawer(
             .padding(top = 16.dp)
             .fillMaxWidth(), horizontalAlignment = Alignment.Start
     ) {
+        ButtonWithIcon(modifier = Modifier.padding(horizontal = 16.dp),
+            text = "Compose",
+            icon = Icons.Filled.Message,
+            onClick = { onAction(HomeAction.ComposeClicked) })
+        Spacer(modifier = Modifier.height(8.dp))
         ButtonWithIcon(modifier = Modifier.padding(horizontal = 16.dp),
             text = "Import",
             icon = Icons.Filled.OpenInNew,
@@ -66,7 +69,7 @@ fun HomeDrawer(
 
                 Spacer(Modifier.width(8.dp))
                 Switch(
-                    checked = state.darkMode,
+                    checked = state.darkMode ?: isSystemInDarkTheme(),
                     onCheckedChange = { enabled ->
                         onAction(HomeAction.SetDarkMode(enabled))
                     },

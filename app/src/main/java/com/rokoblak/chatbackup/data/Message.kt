@@ -10,7 +10,9 @@ data class Message(
     val incoming: Boolean
 )
 
-data class MinimalContact(val number: String, val id: String)
+data class MinimalContact(val number: String) {
+    val id: String = Contact.idFromNumber(number)
+}
 
 data class Conversation(val contact: Contact, val messages: List<Message>)
 
@@ -19,6 +21,7 @@ data class Conversations(
     val sortedContactsByLastMsg: List<Contact>,
 ) {
     val idMapping = mapping.mapKeys { it.key.id }
+    val numberMapping = mapping.mapKeys { it.key.number }
 
     val sortedConversations by lazy {
         sortedContactsByLastMsg.map {
@@ -40,6 +43,13 @@ data class Conversations(
 
     fun resolveConvByContactId(contactId: String): Conversation? {
         return idMapping[contactId]
+    }
+
+    fun resolveConv(contactId: String?, number: String): Conversation? {
+        val resolved = contactId?.let {
+            idMapping[contactId]
+        }
+        return resolved ?: numberMapping[number]
     }
 
     fun removeConvs(contactIds: Set<String>): Conversations {

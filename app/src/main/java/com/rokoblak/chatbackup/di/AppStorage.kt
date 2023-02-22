@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.rokoblak.chatbackup.services.JsonSerializer
+import com.rokoblak.chatbackup.services.parsing.JsonSerializer
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
@@ -30,7 +30,7 @@ class AppStorage @Inject constructor(
 
     @kotlinx.serialization.Serializable
     data class Prefs(
-        val darkMode: Boolean
+        val darkMode: Boolean?
     )
 
     suspend fun updateDarkMode(enabled: Boolean) {
@@ -63,7 +63,7 @@ class AppStorage @Inject constructor(
         private const val KEY_SETTINGS = "settings_v1"
 
         val defaultSettings = Prefs(
-            darkMode = false,
+            darkMode = null,
         )
     }
 

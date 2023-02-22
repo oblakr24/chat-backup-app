@@ -19,12 +19,13 @@ import com.rokoblak.chatbackup.ui.theme.LocalTypography
 
 data class ConversationDisplayData(
     val contactId: String,
+    val number: String,
     val id: String,
     val title: AnnotatedString,
     val subtitle: AnnotatedString,
     val date: String,
     val checked: Boolean?,
-    val avatarData: InitialsAvatarData,
+    val avatar: AvatarData,
 )
 
 @Composable
@@ -64,7 +65,7 @@ fun ConversationDisplay(
                 })
         }
 
-        InitialsAvatar(data = data.avatarData, modifier = Modifier.constrainAs(avatar) {
+        AvatarBadge(data = data.avatar, modifier = Modifier.constrainAs(avatar) {
             start.linkTo(checkbox.end)
             top.linkTo(parent.top)
         })
@@ -105,11 +106,12 @@ fun ConversationDisplayPreview() {
             data = ConversationDisplayData(
                 contactId = "C_id1",
                 id = "id1",
+                number = "num1",
                 title = AnnotatedString("Conv title"),
                 subtitle = AnnotatedString("conv subtitle long message to make it really long and fit more than one line"),
                 date = "13th Mar 2022 19:45:44",
                 checked = true,
-                avatarData = InitialsAvatarData("CO", Color.Blue),
+                avatar = AvatarData.Initials("CO", Color.Blue),
             ),
             onCheckedChanged = {}
         )

@@ -1,13 +1,41 @@
 package com.rokoblak.chatbackup.data
 
-data class Contact(val id: String, val name: String?, val number: String) {
-    val displayName: String = name ?: number
-    private val displayNameOfLetters: String? = name ?: number.takeIf { it.firstOrNull()?.isLetter() == true }
+import com.rokoblak.chatbackup.util.StringUtils
+import java.util.*
+
+data class Contact(
+    val name: String?,
+    val number: String,
+    val avatarUri: String?,
+    val phoneType: PhoneType,
+) {
+    // TODO: more reliable way of normalizing numbers?
+
+    val id: String = idFromNumber(number)
+
+    val displayName: String = name ?: StringUtils.normalizePhoneNumber(number) ?: number
+
+    private val displayNameOfLetters: String? =
+        name ?: number.takeIf { it.firstOrNull()?.isLetter() == true }
 
     val initials: String? by lazy {
         val display = displayNameOfLetters ?: return@lazy null
-        display.split(" ", limit = 2).joinToString(separator = "") {
-            it.first().uppercase()
-        }
+        display.split(" ").filter { it.firstOrNull()?.isLetter() == true }.take(2)
+            .joinToString(separator = "") {
+                it.first().uppercase()
+            }
+    }
+
+    companion object {
+        fun idFromNumber(number: String) = "C_${StringUtils.normalizePhoneNumber(number) ?: number}"
+    }
+}
+
+enum class PhoneType {
+    MOBILE, HOME, WORK, OTHER, PAGER, ASSISTANT, CAR, FAX_HOME, FAX_WORK, MAIN;
+
+    fun displayName() = this.name.split("_").joinToString(separator = " ") { word ->
+        word.lowercase()
+            .replaceFirstChar { it.titlecase(Locale.US) }
     }
 }

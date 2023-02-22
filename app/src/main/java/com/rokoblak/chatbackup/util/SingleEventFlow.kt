@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import timber.log.Timber
 
+// Used for communicating single event effects to a single consumer.
+// Should *NOT* be used for things that *must* be processed, as there is always a possibility of a hot flow emission not being collected.
 class SingleEventFlow<T> {
 
     private val channel = Channel<T>(capacity = 1)

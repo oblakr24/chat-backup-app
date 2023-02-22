@@ -13,8 +13,8 @@ import com.rokoblak.chatbackup.home.*
 import com.rokoblak.chatbackup.navigation.RouteNavigator
 import com.rokoblak.chatbackup.services.ConversationsRepo
 import com.rokoblak.chatbackup.services.FileManager
-import com.rokoblak.chatbackup.services.MessagesExporter
-import com.rokoblak.chatbackup.services.MessagesExporter.*
+import com.rokoblak.chatbackup.services.parsing.MessagesExporter
+import com.rokoblak.chatbackup.services.parsing.MessagesExporter.*
 import com.rokoblak.chatbackup.util.SingleEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope

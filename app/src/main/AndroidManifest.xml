@@ -2,7 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_MMS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
@@ -38,20 +42,15 @@
         </receiver>
 
         <activity
-            android:name="com.rokoblak.chatbackup.MainActivity"
+            android:name="com.rokoblak.chatbackup.main.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.ChatBackup">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Activity that allows the user to send new SMS/MMS messages -->
-        <activity
-            android:name=".smsutils.ComposeSMSActivity"
-            android:exported="true">
+            <!-- Activity that allows the user to send new SMS/MMS messages -->
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SENDTO" />

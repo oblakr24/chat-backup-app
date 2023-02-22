@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,8 +41,7 @@ fun DetailsHeader(
         modifier = modifier.shadow(4.dp)
             .background(background)
             .wrapContentHeight()
-            .fillMaxWidth()
-            .padding(horizontal = 4.dp),
+            .fillMaxWidth(),
     ) {
         val (backBtn, title, icon) = createRefs()
         Box(
@@ -59,7 +57,7 @@ fun DetailsHeader(
             contentAlignment = Alignment.CenterStart
         ) {
             Image(
-                imageVector = Icons.Filled.KeyboardArrowLeft,
+                imageVector = Icons.Filled.ArrowBack,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxHeight()
