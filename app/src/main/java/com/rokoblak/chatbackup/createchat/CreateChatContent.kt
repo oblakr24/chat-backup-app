@@ -36,10 +36,10 @@ fun CreateChatContent(
         when (state.content) {
             is CreateChatUIState.Content.Contacts -> {
                 SearchBar(
-                    text = searchQuery, placeholder = "Filter contacts",
+                    text = searchQuery, placeholder = "Search contacts",
                     onChange = {
                         onAction(CreateChatAction.QueryChanged(it))
-                    }, modifier = Modifier
+                    }, modifier = Modifier.padding(top = 8.dp)
                 )
 
                 ContactsListing(data = state.content.items, onItemClicked = { cId, num ->
@@ -61,7 +61,7 @@ fun CreateChatContent(
 @Composable
 fun CreateChatContentPreview() {
     ChatBackupTheme {
-        val items = listOf("A", "B").map { section ->
+        val items = listOf("A", "B", "C").map { section ->
             section to (0..3).map {
                 ContactDisplayData(
                     id = section + it.toString(),
@@ -73,7 +73,8 @@ fun CreateChatContentPreview() {
                 )
             }.toImmutableList()
         }.toImmutableList()
-        val state = CreateChatUIState(CreateChatUIState.Content.Contacts(ContactsListingData(items)))
+        val state =
+            CreateChatUIState(CreateChatUIState.Content.Contacts(ContactsListingData(items)))
         CreateChatContent(state = state, searchQuery = "", onNavigateUp = {}, onAction = {})
     }
 }
