@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import com.rokoblak.chatbackup.data.Contact
 import com.rokoblak.chatbackup.data.Message
+import com.rokoblak.chatbackup.data.MinimalContact
 import com.rokoblak.chatbackup.ui.theme.*
 import com.rokoblak.chatbackup.util.formatRelative
 import kotlinx.collections.immutable.toImmutableList
@@ -13,20 +14,33 @@ import java.time.ZoneId
 
 object PreviewDataUtils {
 
+    private val firstNames =
+        "John,Jessica,Su,Jane,Jacob,Rok,Rick,Omar,Hans,Anita,Christie,Christina,Peter,Franz,T.,Ursula,Richard,James,Maria,Mike,M.,Michael,Ana,Eve,Eva,Dwayne,Aaron,Euna,Matthew,Eugene"
+    private val lastNames =
+        "Smith,Doe,Anderson,Bay,Sue,Oblak,Zimmerman,Schwarzenegger,Tannenberg,Li,Kim,A.,B.,C.,D.,E.,F.,G."
+
+    private val combinedNames = firstNames.split(",").flatMap { fn ->
+        lastNames.split(",").map { ln ->
+            "$fn $ln"
+        }
+    }
+
     private val names = listOf(
         "John Doe",
         "Jane Sue",
         "John McLane",
         "Unknown",
-        "+66 11 22 33 44",
+        "Google",
         "Mary Smith",
-        "Someone I Used To Know",
+        "Someone With A Long Name",
         "Michael A.",
         "Jessica B.",
-        "+12 13 14 15 16",
+        "Sandra Bullock",
         "Mister Anderson",
-        "+123 1234 4231"
-    )
+        "TheRock",
+        "Michael Bay",
+        "T Mobile",
+    ) + combinedNames
 
     private val sentences = listOf(
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris lobortis vitae mi nec aliquet. Morbi ligula massa, vulputate sit amet cursus at, varius vitae enim. ",
@@ -80,7 +94,13 @@ object PreviewDataUtils {
         val isMine = idx.mod(2) == 0
         val content = sentences.takeAtMod(idx)
         val avatar = if (isMine.not()) avatars.takeAtMod(idx) else null
-        ChatDisplayData(idx.toString(), content = content, date = dateFormatted, alignedLeft = isMine.not(), avatar = avatar)
+        ChatDisplayData(
+            idx.toString(),
+            content = content,
+            date = dateFormatted,
+            alignedLeft = isMine.not(),
+            avatar = avatar
+        )
     }.toImmutableList()
 
     private fun <T> List<T>.takeAtMod(idx: Int): T {
@@ -88,13 +108,21 @@ object PreviewDataUtils {
     }
 
     @VisibleForTesting
-    fun Message.obfuscateContent() = copy(
-        content = sentences.takeAtMod(content.hashCode())
+    fun Message.obfuscate() = copy(
+        content = sentences.takeAtMod(content.hashCode()),
+        contact = contact.obfuscate(),
     )
 
     @VisibleForTesting
-    fun Contact.obfuscateName() = copy(
-        name = name?.let { names.takeAtMod(id.hashCode()) },
-        number = names.takeAtMod(id.hashCode()),
+    fun Contact.obfuscate() = Contact(
+        name = names.takeAtMod(id.hashCode()),
+        orgNumber = orgNumber,
+        avatarUri = avatarUri,
+        phoneType = phoneType,
+    )
+
+    @VisibleForTesting
+    fun MinimalContact.obfuscate() = MinimalContact(
+        orgNumber = orgNumber,
     )
 }

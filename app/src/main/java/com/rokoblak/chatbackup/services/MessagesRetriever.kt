@@ -69,7 +69,7 @@ class MessagesRetriever @Inject constructor(
         return Message(
             id = id,
             content = body,
-            contact = MinimalContact(number = number),
+            contact = MinimalContact(orgNumber = number),
             timestamp = timestamp,
             incoming = isInbox
         )

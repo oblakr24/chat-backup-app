@@ -29,9 +29,7 @@ class ConversationsImporter @Inject constructor(
         val conversations = parsed.conversations.map { conv ->
             val contact = Contact(
                 name = conv.contactName,
-                number = conv.contactNumber,
-                avatarUri = null,
-                phoneType = PhoneType.HOME,
+                orgNumber = conv.contactNumber,
             )
             val messages = conv.messages.map { msg ->
                 val body = msg.content

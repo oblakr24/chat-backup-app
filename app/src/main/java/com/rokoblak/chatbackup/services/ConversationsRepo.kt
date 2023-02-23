@@ -47,9 +47,7 @@ class ConversationsRepo @Inject constructor(
         val matching = contactsRepo.resolveContact(number)
         val contact = matching ?: Contact(
             name = null,
-            number = number,
-            avatarUri = null,
-            phoneType = PhoneType.MOBILE
+            orgNumber = number,
         )
         if (isImport) {
             val conv = importedConversations?.resolveConv(contactId = contactId, number = number)
