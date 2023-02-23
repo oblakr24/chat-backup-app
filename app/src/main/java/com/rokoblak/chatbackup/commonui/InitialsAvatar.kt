@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
 import com.rokoblak.chatbackup.ui.theme.LocalTypography
+import com.rokoblak.chatbackup.ui.theme.alpha
 
 sealed interface AvatarData {
     data class Initials(
@@ -28,8 +29,6 @@ sealed interface AvatarData {
 
     data class LocalPhoto(val uri: String): AvatarData
 }
-
-
 
 @Composable
 fun AvatarBadge(
@@ -43,9 +42,9 @@ fun AvatarBadge(
                 modifier = modifier
                     .size(36.dp)
                     .border(1.dp, data.color, CircleShape),
-                color = MaterialTheme.colors.background,
+                color = data.color.alpha(0.15f),
                 shape = CircleShape,
-                elevation = 2.dp,
+                elevation = 0.dp,
             ) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(

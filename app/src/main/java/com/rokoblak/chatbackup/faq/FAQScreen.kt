@@ -1,6 +1,7 @@
 package com.rokoblak.chatbackup.faq
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -84,7 +85,10 @@ private fun FAQScreenContent(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .animateItemPlacement(),
+                                    .animateItemPlacement()
+                                    .clickable {
+                                        onAction(FAQAction.ItemExpandedCollapsed(item.idx))
+                                    },
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 IconButton(onClick = {
@@ -113,7 +117,10 @@ fun FAQScreenPreview() {
             if (it.mod(2) == 0) {
                 FAQScreenUIState.Item.Title(it.toString(), it, "title $it", expanded = true)
             } else {
-                FAQScreenUIState.Item.Subtitle(it.toString(), "subtitle $it long long long long subtitle to make it go into two separate lines ")
+                FAQScreenUIState.Item.Subtitle(
+                    it.toString(),
+                    "subtitle $it long long long long subtitle to make it go into two separate lines "
+                )
             }
         }
         val state = FAQScreenUIState(mockItems.toImmutableList())
