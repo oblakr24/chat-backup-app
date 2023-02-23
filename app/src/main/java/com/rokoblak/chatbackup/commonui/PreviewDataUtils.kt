@@ -1,5 +1,6 @@
 package com.rokoblak.chatbackup.commonui
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import com.rokoblak.chatbackup.data.Contact
@@ -86,10 +87,12 @@ object PreviewDataUtils {
         return get(idx.mod(size))
     }
 
+    @VisibleForTesting
     fun Message.obfuscateContent() = copy(
         content = sentences.takeAtMod(content.hashCode())
     )
 
+    @VisibleForTesting
     fun Contact.obfuscateName() = copy(
         name = name?.let { names.takeAtMod(id.hashCode()) },
         number = names.takeAtMod(id.hashCode()),

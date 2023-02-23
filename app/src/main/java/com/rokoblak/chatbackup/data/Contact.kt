@@ -16,7 +16,7 @@ data class Contact(
     val displayName: String = name ?: StringUtils.normalizePhoneNumber(number) ?: number
 
     private val displayNameOfLetters: String? =
-        name ?: number.takeIf { it.firstOrNull()?.isLetter() == true }
+        name?.takeIfStartsWithLetter() ?: number.takeIfStartsWithLetter()
 
     val initials: String? by lazy {
         val display = displayNameOfLetters ?: return@lazy null
@@ -25,6 +25,8 @@ data class Contact(
                 it.first().uppercase()
             }
     }
+
+    private fun String.takeIfStartsWithLetter() = takeIf { it.firstOrNull()?.isLetter() == true }
 
     companion object {
         fun idFromNumber(number: String) = "C_${StringUtils.normalizePhoneNumber(number) ?: number}"
