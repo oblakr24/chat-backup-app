@@ -17,18 +17,17 @@ https://github.com/oblakr24/chat-backup-app/blob/main/app/src/main/AndroidManife
 
 <br/>
 
-| Permission | Reason                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| :---: |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `android.permission.READ_SMS` | Reading of SMS messages to display them in the app and export them                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `android.permission.READ_CONTACTS` | Reading of contacts to resolve the display names of the displayed numbers, and to export them in the file.                                                                                                                                                                                                                                                                             |
+| Permission | Reason                                                                                                                       |
+| :---: |------------------------------------------------------------------------------------------------------------------------------|
+| `android.permission.READ_SMS` | Reading of SMS messages to display them in the app and export them                                                           |
+| `android.permission.READ_CONTACTS` | Reading of contacts to resolve the display names of the displayed numbers, and to export them in the file.                   |
+| `android.permission.RECEIVE_SMS` | Receiving of SMS messages.                                                                                                   |
+| `android.permission.SEND_SMS` | Sending SMS messages.                                                                                                        |
+| `android.permission.RECEIVE_MMS` | Receiving MMS messages. |
 
  <hr style="border:1px solid gray">
 
 Note the absence of a permission to access the internet, as this app makes no communication with any external service.
 
-Certain actions:
-- deleting device messages
-- storing imported messages to the device
-
-Require the application to be set as the default SMS messaging application.
+Functionalities listed in the permissions section require the application to be set as the default SMS messaging application.
 For this reason, a system prompt is displayed upon interacting with any such action. The user is then presented with the choice to pick the desired default SMS messaging application.
