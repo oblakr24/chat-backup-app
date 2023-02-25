@@ -47,3 +47,32 @@ The app currently does not support other formats. However, you can submit an iss
 <b>Does this app send any of my data?</b>
 No - this app does not communicate with any servers.
 It is up to you how to share the exported file.
+
+
+## Screenshots
+
+SMS Browsing
+
+![1](https://user-images.githubusercontent.com/32245831/221346215-c8fd26b6-0804-4422-a714-f2fbe3f53957.png)
+![2](https://user-images.githubusercontent.com/32245831/221346211-a51e034a-a146-477f-9e7d-5b99483fcf25.png)
+
+Search
+
+![3](https://user-images.githubusercontent.com/32245831/221346312-514253cc-4041-4798-87a2-de04083b72ff.png)
+
+Dark Mode
+
+![6](https://user-images.githubusercontent.com/32245831/221346292-feacc6d6-66d2-46d8-b6e5-65e952003830.png)
+![5](https://user-images.githubusercontent.com/32245831/221346295-61eb898d-46de-49b5-aec7-d5406406701a.png)
+
+Conversation
+
+![7](https://user-images.githubusercontent.com/32245831/221346339-62391c22-b76e-451f-8be4-ba14526dd2d0.png)
+
+Import
+
+![import](https://user-images.githubusercontent.com/32245831/221346348-d9b4d778-28cf-4efc-bb9b-4f03dbe27ed4.png)
+
+Compose
+
+![4](https://user-images.githubusercontent.com/32245831/221346366-8f779fb1-98c7-4528-8bfb-d26c805e63ae.png)
