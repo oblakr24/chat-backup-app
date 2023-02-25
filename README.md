@@ -51,19 +51,13 @@ It is up to you how to share the exported file.
 
 ## Screenshots
 
-SMS Browsing
-
-![1](https://user-images.githubusercontent.com/32245831/221346215-c8fd26b6-0804-4422-a714-f2fbe3f53957.png)
-![2](https://user-images.githubusercontent.com/32245831/221346211-a51e034a-a146-477f-9e7d-5b99483fcf25.png)
+SMS Browsing & Search
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/32245831/221346215-c8fd26b6-0804-4422-a714-f2fbe3f53957.png" width="256" height="455">
-  <img src="https://user-images.githubusercontent.com/32245831/221346211-a51e034a-a146-477f-9e7d-5b99483fcf25.png" width="256" height="455">
+  <img src="https://user-images.githubusercontent.com/32245831/221346215-c8fd26b6-0804-4422-a714-f2fbe3f53957.png" width="256" height="512">
+  <img src="https://user-images.githubusercontent.com/32245831/221346211-a51e034a-a146-477f-9e7d-5b99483fcf25.png" width="256" height="512">
+  <img src="https://user-images.githubusercontent.com/32245831/221346312-514253cc-4041-4798-87a2-de04083b72ff.png" width="256" height="512">
 </p>
-
-Search
-
-![3](https://user-images.githubusercontent.com/32245831/221346312-514253cc-4041-4798-87a2-de04083b72ff.png)
 
 Dark Mode
 
