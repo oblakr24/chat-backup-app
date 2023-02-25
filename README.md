@@ -51,17 +51,15 @@ It is up to you how to share the exported file.
 
 ## Screenshots
 
-<img src="[icon.jpg](https://user-images.githubusercontent.com/32245831/221346215-c8fd26b6-0804-4422-a714-f2fbe3f53957.png)" width="324" height="324">
-
-<p align="center">
-  <img src="[screen1.png](https://user-images.githubusercontent.com/32245831/221346215-c8fd26b6-0804-4422-a714-f2fbe3f53957.png)" width="256" height="455">
-  <img src="[screen2.png](https://user-images.githubusercontent.com/32245831/221346215-c8fd26b6-0804-4422-a714-f2fbe3f53957.png)" width="256" height="455">
-</p>
-
 SMS Browsing
 
 ![1](https://user-images.githubusercontent.com/32245831/221346215-c8fd26b6-0804-4422-a714-f2fbe3f53957.png)
 ![2](https://user-images.githubusercontent.com/32245831/221346211-a51e034a-a146-477f-9e7d-5b99483fcf25.png)
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/32245831/221346215-c8fd26b6-0804-4422-a714-f2fbe3f53957.png" width="256" height="455">
+  <img src="https://user-images.githubusercontent.com/32245831/221346211-a51e034a-a146-477f-9e7d-5b99483fcf25.png" width="256" height="455">
+</p>
 
 Search
 
