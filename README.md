@@ -14,6 +14,8 @@ This is a tech-demonstration app showcasing the latest Android tech stack while 
 8. Open architecture allowing for future extensions and other formats
 9. Togglable dark-light theming
 
+## Video
+
 https://user-images.githubusercontent.com/32245831/221344724-336c23ea-c49e-4ca9-9392-284b9ed760f4.mov
 
 ## Tech stack
@@ -82,4 +84,5 @@ It is up to you how to share the exported file.
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/32245831/221346366-8f779fb1-98c7-4528-8bfb-d26c805e63ae.png" width="256" height="512">
+  <img src="https://user-images.githubusercontent.com/32245831/221346718-5a931a40-9387-4e9a-857b-e835675d870c.png" width="256" height="512">
 </p>
