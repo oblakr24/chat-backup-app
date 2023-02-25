@@ -56,35 +56,35 @@ It is up to you how to share the exported file.
 <b>SMS Browsing & Search</b>
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/32245831/221346215-c8fd26b6-0804-4422-a714-f2fbe3f53957.png" width="256" height="512">
-  <img src="https://user-images.githubusercontent.com/32245831/221346211-a51e034a-a146-477f-9e7d-5b99483fcf25.png" width="256" height="512">
-  <img src="https://user-images.githubusercontent.com/32245831/221346312-514253cc-4041-4798-87a2-de04083b72ff.png" width="256" height="512">
+  <img src="https://user-images.githubusercontent.com/32245831/221346215-c8fd26b6-0804-4422-a714-f2fbe3f53957.png" width="270" height="570">
+  <img src="https://user-images.githubusercontent.com/32245831/221346211-a51e034a-a146-477f-9e7d-5b99483fcf25.png" width="270" height="570">
+  <img src="https://user-images.githubusercontent.com/32245831/221346312-514253cc-4041-4798-87a2-de04083b72ff.png" width="270" height="570">
 </p>
 
 <b>Dark Mode</b>
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/32245831/221346292-feacc6d6-66d2-46d8-b6e5-65e952003830.png" width="256" height="512">
-  <img src="https://user-images.githubusercontent.com/32245831/221346295-61eb898d-46de-49b5-aec7-d5406406701a.png" width="256" height="512">
+  <img src="https://user-images.githubusercontent.com/32245831/221346292-feacc6d6-66d2-46d8-b6e5-65e952003830.png" width="270" height="570">
+  <img src="https://user-images.githubusercontent.com/32245831/221346295-61eb898d-46de-49b5-aec7-d5406406701a.png" width="270" height="570">
 </p>
 
 <b>Conversation</b>
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/32245831/221346339-62391c22-b76e-451f-8be4-ba14526dd2d0.png" width="256" height="512">
-  <img src="https://user-images.githubusercontent.com/32245831/221346821-5dc7d7b5-4069-4ee9-b6d2-749a17e4b63b.png" width="256" height="512">
+  <img src="https://user-images.githubusercontent.com/32245831/221346339-62391c22-b76e-451f-8be4-ba14526dd2d0.png" width="270" height="570">
+  <img src="https://user-images.githubusercontent.com/32245831/221346821-5dc7d7b5-4069-4ee9-b6d2-749a17e4b63b.png" width="270" height="570">
 </p>
 
 <b>Import</b>
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/32245831/221346348-d9b4d778-28cf-4efc-bb9b-4f03dbe27ed4.png" width="256" height="512">
-  <img src="https://user-images.githubusercontent.com/32245831/221346849-995eddab-1d3c-4913-a11b-61993b658088.png" width="256" height="512">
+  <img src="https://user-images.githubusercontent.com/32245831/221346348-d9b4d778-28cf-4efc-bb9b-4f03dbe27ed4.png" width="270" height="570">
+  <img src="https://user-images.githubusercontent.com/32245831/221346849-995eddab-1d3c-4913-a11b-61993b658088.png" width="270" height="570">
 </p>
 
 <b>Compose</b>
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/32245831/221346366-8f779fb1-98c7-4528-8bfb-d26c805e63ae.png" width="256" height="512">
-  <img src="https://user-images.githubusercontent.com/32245831/221346718-5a931a40-9387-4e9a-857b-e835675d870c.png" width="256" height="512">
+  <img src="https://user-images.githubusercontent.com/32245831/221346366-8f779fb1-98c7-4528-8bfb-d26c805e63ae.png" width="270" height="570">
+  <img src="https://user-images.githubusercontent.com/32245831/221346718-5a931a40-9387-4e9a-857b-e835675d870c.png" width="270" height="570">
 </p>
