@@ -39,14 +39,18 @@ Specific dependencies:
 
 ## FAQ
 <b>How do you use this app?</b>
+</br>
 1. Use it as your default SMS app
 2. Use the app on any phone to export the selected messages
 3. Share the messages to another device
 4. Use the app on another device to open the file
 5. Click the "Save" button on selected conversations to save them to the device.
+</br>
 <b>What if I want a different export/import format?</b>
 The app currently does not support other formats. However, you can submit an issue request on github or contribute.
+</br>
 <b>Does this app send any of my data?</b>
+</br>
 No - this app does not communicate with any servers.
 It is up to you how to share the exported file.
 
