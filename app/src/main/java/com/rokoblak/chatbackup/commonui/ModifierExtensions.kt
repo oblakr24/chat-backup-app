@@ -17,7 +17,7 @@ import com.rokoblak.chatbackup.ui.theme.alpha
 
 fun Modifier.verticalScrollbar(
     state: LazyListState,
-    width: Dp = 8.dp
+    width: Dp = 6.dp
 ): Modifier = composed {
     val targetAlpha = if (state.isScrollInProgress) 1f else 0f
     val duration = if (state.isScrollInProgress) 150 else 500

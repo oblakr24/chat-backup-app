@@ -5,6 +5,9 @@ import android.os.Build
 
 object AppConstants {
 
+    // For preview purposes - used by mappers to obfuscate the content
+    const val OBFUSCATE = false
+
     const val REPO_URL = "https://github.com/oblakr24/chat-backup-app"
 
     val MESSAGES_PEFRMISSIONS: List<String> = listOfNotNull(

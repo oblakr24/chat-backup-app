@@ -45,13 +45,19 @@ class ConversationsRepo @Inject constructor(
 
     fun conversationFor(contactId: String?, number: String, isImport: Boolean) = flow {
         val matching = contactsRepo.resolveContact(number)
-        val contact = matching ?: Contact(name = null, number = number, avatarUri = null, phoneType = PhoneType.HOME)
+        val contact = matching ?: Contact(
+            name = null,
+            orgNumber = number,
+        )
         if (isImport) {
             val conv = importedConversations?.resolveConv(contactId = contactId, number = number)
             emit(conv ?: Conversation(contact, emptyList()))
         } else {
             emitAll(deviceConvsFlow.mapNotNull {
-                it?.resolveConv(contactId = contactId, number = number) ?: Conversation(contact, emptyList())
+                it?.resolveConv(contactId = contactId, number = number) ?: Conversation(
+                    contact,
+                    emptyList()
+                )
             })
         }
     }
@@ -74,8 +80,9 @@ class ConversationsRepo @Inject constructor(
         emitAll(deletions)
     }
 
-    private val externalReloadEvents = appScope.smsEvents.filter { it is SMSEvent.NewReceived }.map { ConvLoadType(emitInitial = false) }
-    private val mergedReloadEvents= listOf(loadTypeFlow, externalReloadEvents).merge()
+    private val externalReloadEvents = appScope.smsEvents.filter { it is SMSEvent.NewReceived }
+        .map { ConvLoadType(emitInitial = false) }.onEach { appScope.markEventConsumed() }
+    private val mergedReloadEvents = listOf(loadTypeFlow, externalReloadEvents).merge()
 
     val deviceConvsFlow = mergedReloadEvents.flatMapLatest {
         deviceLoadConvsFlow(it.emitInitial)
@@ -106,5 +113,8 @@ class ConversationsRepo @Inject constructor(
         }?.toSet() ?: emptySet()
     }
 
-    private class ConvLoadType(val emitInitial: Boolean, val ts: Long = Instant.now().toEpochMilli())
+    private class ConvLoadType(
+        val emitInitial: Boolean,
+        val ts: Long = Instant.now().toEpochMilli()
+    )
 }

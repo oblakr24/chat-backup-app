@@ -5,7 +5,7 @@
 
     <string-array name="faq_items">
         <item>How do you use this app?</item>
-        <item>1. Use the app on any phone to export the selected messages\n2. Share the messages to another device\3. Use the app on another device to open the file\n4. Click the "Save" button on selected conversations to save them to the device.</item>
+        <item>1. Use the app on any phone to export the selected messages\n2. Share the messages to another device\n3. Use the app on another device to open the file\n4. Click the "Save" button on selected conversations to save them to the device.</item>
         <item>What if I want a different export/import format?</item>
         <item>The app currently does not support other formats. However, you can submit an issue request on github or contribute.</item>
         <item>Does this app send any of my data?</item>

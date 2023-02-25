@@ -29,11 +29,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val appScope: AppScope,
@@ -51,7 +54,17 @@ class HomeViewModel @Inject constructor(
             when (event) {
                 SMSEvent.NewReceived -> Unit
                 is SMSEvent.OpenCreateChat -> {
-                    navigateToRoute(CreateChatRoute.route)
+                    appScope.markEventConsumed()
+                    if (event.address != null) {
+                        val input = ConversationRoute.Input(
+                            resolvedContactId = null,
+                            address = event.address,
+                            isImport = false
+                        )
+                        navigateToRoute(ConversationRoute.get(input))
+                    } else {
+                        navigateToRoute(CreateChatRoute.route)
+                    }
                 }
             }
         }.launchIn(viewModelScope)

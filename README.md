@@ -1,17 +1,18 @@
 # Chat Backup
-<b>An app used to list, export and import your SMS conversations.</b>
+<b>An fully-featured SMS app with ability to export and import your SMS conversations.</b>
 
 This is a tech-demonstration app showcasing the latest Android tech stack while solving a real-world use-case.
 
 ## Features:
 1. Fully offline
-2. No ads or payments
-3. Listing of current conversations and messages
-4. Search with highlighting, select, delete and export functionalities for conversations
-5. Import a previously exported file to preview and (selectively) save the messages to the device
-6. Open architecture allowing for future extensions and other formats
-7. Togglable dark-light theming
-
+2. Send, receive SMS messages
+3. Quick reply to an SMS
+4. No ads or payments
+5. Listing of current conversations and messages
+6. Search with highlighting, select, delete and export functionalities for conversations
+7. Import a previously exported file to preview and (selectively) save the messages to the device
+8. Open architecture allowing for future extensions and other formats
+9. Togglable dark-light theming
 
 https://user-images.githubusercontent.com/32245831/221344724-336c23ea-c49e-4ca9-9392-284b9ed760f4.mov
 
@@ -36,10 +37,11 @@ Specific dependencies:
 
 ## FAQ
 <b>How do you use this app?</b>
-1. Use the app on any phone to export the selected messages
-2. Share the messages to another device
-3. Use the app on another device to open the file
-4. Click the "Save" button on selected conversations to save them to the device.
+1. Use it as your default SMS app
+2. Use the app on any phone to export the selected messages
+3. Share the messages to another device
+4. Use the app on another device to open the file
+5. Click the "Save" button on selected conversations to save them to the device.
 <b>What if I want a different export/import format?</b>
 The app currently does not support other formats. However, you can submit an issue request on github or contribute.
 <b>Does this app send any of my data?</b>

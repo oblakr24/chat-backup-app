@@ -4,6 +4,8 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds.Phone
+import com.rokoblak.chatbackup.AppConstants
+import com.rokoblak.chatbackup.commonui.PreviewDataUtils.obfuscate
 import com.rokoblak.chatbackup.data.Contact
 import com.rokoblak.chatbackup.data.PhoneType
 import com.rokoblak.chatbackup.di.AppScope
@@ -35,12 +37,11 @@ class ContactsRepository @Inject constructor(
         }
         val resolvedName = resolveContactName(number)
         if (resolvedName != null) {
-            return Contact(
+            val contact =  Contact(
                 name = resolvedName,
-                number = number,
-                avatarUri = null,
-                phoneType = PhoneType.HOME
-            )
+                orgNumber = number,
+            ).let { if (AppConstants.OBFUSCATE) it.obfuscate() else it }
+            return contact
         }
         return null
     }
@@ -87,7 +88,9 @@ class ContactsRepository @Inject constructor(
             val cursor =
                 createCursor() ?: return@withContext OperationResult.Error("Could not open cursor")
             OperationResult.Done(
-                cursor.parseContacts()
+                cursor.parseContacts().let { contacts ->
+                    if (AppConstants.OBFUSCATE) contacts.map { it.obfuscate() } else contacts
+                }
             )
         }
 
@@ -139,7 +142,7 @@ class ContactsRepository @Inject constructor(
         if (contactName != null && phoneNumber != null) {
             return Contact(
                 name = contactName,
-                number = phoneNumber,
+                orgNumber = phoneNumber,
                 avatarUri = localThumbUri,
                 phoneType = phoneType?.let { mapPhoneType(it.toInt()) } ?: PhoneType.HOME
             )
