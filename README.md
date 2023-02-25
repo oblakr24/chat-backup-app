@@ -75,13 +75,6 @@ It is up to you how to share the exported file.
   <img src="https://user-images.githubusercontent.com/32245831/221346821-5dc7d7b5-4069-4ee9-b6d2-749a17e4b63b.png" width="270" height="570">
 </p>
 
-<b>Import</b>
-
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/32245831/221346348-d9b4d778-28cf-4efc-bb9b-4f03dbe27ed4.png" width="270" height="570">
-  <img src="https://user-images.githubusercontent.com/32245831/221346849-995eddab-1d3c-4913-a11b-61993b658088.png" width="270" height="570">
-</p>
-
 <b>Compose</b>
 
 <p align="center">
