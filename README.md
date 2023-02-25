@@ -51,7 +51,7 @@ It is up to you how to share the exported file.
 
 ## Screenshots
 
-SMS Browsing & Search
+<b>SMS Browsing & Search</b>
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/32245831/221346215-c8fd26b6-0804-4422-a714-f2fbe3f53957.png" width="256" height="512">
@@ -59,19 +59,27 @@ SMS Browsing & Search
   <img src="https://user-images.githubusercontent.com/32245831/221346312-514253cc-4041-4798-87a2-de04083b72ff.png" width="256" height="512">
 </p>
 
-Dark Mode
+<b>Dark Mode</b>
 
-![6](https://user-images.githubusercontent.com/32245831/221346292-feacc6d6-66d2-46d8-b6e5-65e952003830.png)
-![5](https://user-images.githubusercontent.com/32245831/221346295-61eb898d-46de-49b5-aec7-d5406406701a.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/32245831/221346292-feacc6d6-66d2-46d8-b6e5-65e952003830.png" width="256" height="512">
+  <img src="https://user-images.githubusercontent.com/32245831/221346295-61eb898d-46de-49b5-aec7-d5406406701a.png" width="256" height="512">
+</p>
 
-Conversation
+<b>Conversation</b>
 
-![7](https://user-images.githubusercontent.com/32245831/221346339-62391c22-b76e-451f-8be4-ba14526dd2d0.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/32245831/221346339-62391c22-b76e-451f-8be4-ba14526dd2d0.png" width="256" height="512">
+</p>
 
-Import
+<b>Import</b>
 
-![import](https://user-images.githubusercontent.com/32245831/221346348-d9b4d778-28cf-4efc-bb9b-4f03dbe27ed4.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/32245831/221346348-d9b4d778-28cf-4efc-bb9b-4f03dbe27ed4.png" width="256" height="512">
+</p>
 
-Compose
+<b>Compose</b>
 
-![4](https://user-images.githubusercontent.com/32245831/221346366-8f779fb1-98c7-4528-8bfb-d26c805e63ae.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/32245831/221346366-8f779fb1-98c7-4528-8bfb-d26c805e63ae.png" width="256" height="512">
+</p>
