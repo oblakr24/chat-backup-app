@@ -72,12 +72,14 @@ It is up to you how to share the exported file.
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/32245831/221346339-62391c22-b76e-451f-8be4-ba14526dd2d0.png" width="256" height="512">
+  <img src="https://user-images.githubusercontent.com/32245831/221346821-5dc7d7b5-4069-4ee9-b6d2-749a17e4b63b.png" width="256" height="512">
 </p>
 
 <b>Import</b>
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/32245831/221346348-d9b4d778-28cf-4efc-bb9b-4f03dbe27ed4.png" width="256" height="512">
+  <img src="https://user-images.githubusercontent.com/32245831/221346849-995eddab-1d3c-4913-a11b-61993b658088.png" width="256" height="512">
 </p>
 
 <b>Compose</b>
