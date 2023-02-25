@@ -47,6 +47,7 @@ Specific dependencies:
 5. Click the "Save" button on selected conversations to save them to the device.
 </br>
 <b>What if I want a different export/import format?</b>
+</br>
 The app currently does not support other formats. However, you can submit an issue request on github or contribute.
 </br>
 <b>Does this app send any of my data?</b>
