@@ -13,8 +13,7 @@ This is a tech-demonstration app showcasing the latest Android tech stack while 
 7. Togglable dark-light theming
 
 
-https://user-images.githubusercontent.com/32245831/218789714-b8b6e5a7-6912-47c5-ba75-ef881dd8ea36.mov
-
+https://user-images.githubusercontent.com/32245831/221344724-336c23ea-c49e-4ca9-9392-284b9ed760f4.mov
 
 ## Tech stack
 
