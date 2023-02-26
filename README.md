@@ -29,13 +29,13 @@ The sharing (exporting and importing of app-generated files) is delegated to sys
 
 Specific dependencies:
 
-- Jetpack Compose and Compose Navigation: UI
-- Hilt: Dependency injection
-- Molecule: using of Compose Compiler in the VM layer for reactive state construction
-- KotlinX serialization for serialization and deserialization of models into and from files
-- Extended Material icons for vector images
-- Accompanist Permissions for Composable permission handling
-- DataStore for persisting user preferences
+- [Jetpack Compose](https://developer.android.com/jetpack/compose) and [Compose Navigation](https://developer.android.com/jetpack/compose/navigation): UI
+- [Hilt](https://dagger.dev/hilt/): Dependency injection
+- [Molecule](https://github.com/cashapp/molecule): using of Compose Compiler in the VM layer for reactive state construction
+- [KotlinX Serialization](https://github.com/Kotlin/kotlinx.serialization) for serialization and deserialization of models into and from files
+- [Extended Material icons](https://developer.android.com/jetpack/androidx/releases/compose-material) for vector images
+- [Accompanist Permissions](https://github.com/google/accompanist/tree/main/permissions) for Composable permission handling
+- [DataStore](https://developer.android.com/topic/libraries/architecture/datastore) for persisting user preferences
 
 ## FAQ
 <b>How do you use this app?</b>
