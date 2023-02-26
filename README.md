@@ -31,7 +31,7 @@ Specific dependencies:
 
 - [Jetpack Compose](https://developer.android.com/jetpack/compose) and [Compose Navigation](https://developer.android.com/jetpack/compose/navigation): UI
 - [Hilt](https://dagger.dev/hilt/): Dependency injection
-- [Molecule](https://github.com/cashapp/molecule): using of Compose Compiler in the VM layer for reactive state construction
+- [Molecule](https://github.com/cashapp/molecule): usage of Compose Compiler in the VM layer for reactive state construction
 - [KotlinX Serialization](https://github.com/Kotlin/kotlinx.serialization) for serialization and deserialization of models into and from files
 - [Extended Material icons](https://developer.android.com/jetpack/androidx/releases/compose-material) for vector images
 - [Accompanist Permissions](https://github.com/google/accompanist/tree/main/permissions) for Composable permission handling
