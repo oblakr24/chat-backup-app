@@ -38,11 +38,11 @@ android {
     compileOptions {
         // Flag to enable support for the new language APIs
         coreLibraryDesugaringEnabled true
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
     buildFeatures {
         compose true
@@ -62,17 +62,17 @@ dependencies {
     def nav_version = "2.5.3"
 
     // Core/activity/lifecycle
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.activity:activity-compose:1.6.1'
+    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.activity:activity-compose:1.7.1'
 
     // Hilt
-    implementation "com.google.dagger:hilt-android:2.44.2"
-    kapt "com.google.dagger:hilt-compiler:2.44.2"
+    implementation "com.google.dagger:hilt-android:2.45"
+    kapt "com.google.dagger:hilt-compiler:2.45"
 
     // Compose
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
-    implementation 'androidx.compose.material:material:1.3.1'
+    implementation 'androidx.compose.material:material:1.4.2'
     // Compose constraint layout
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
     // Compose tooling
@@ -84,7 +84,7 @@ dependencies {
     // Compose permissions
     implementation "com.google.accompanist:accompanist-permissions:0.29.1-alpha"
     // Compose extended material icons
-    implementation "androidx.compose.material:material-icons-extended:1.3.1"
+    implementation "androidx.compose.material:material-icons-extended:1.4.2"
     // Coil
     implementation "io.coil-kt:coil-compose:2.2.2"
 
@@ -99,10 +99,10 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
 
     // Java8 desugaring
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.2'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 
     // KotlinX Serialization
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0-RC"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0"
 
     // SimpleXML parser
     implementation group: 'org.simpleframework', name: 'simple-xml', version: '2.7.1'
