@@ -11,6 +11,7 @@ import com.google.android.mms.pdu_alt.PduParser
 import com.google.android.mms.pdu_alt.PduPart
 import com.google.android.mms.pdu_alt.RetrieveConf
 import com.rokoblak.chatbackup.di.AppScope
+import com.rokoblak.chatbackup.di.SMSEvent
 import com.rokoblak.chatbackup.services.MessagesRetriever
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -60,5 +61,7 @@ class MMSReceiver  : HiltBroadcastReceiver() {
             title = "MMS from $address",
             address = address,
         )
+
+        appScope.onNewEvent(SMSEvent.NewReceived)
     }
 }
