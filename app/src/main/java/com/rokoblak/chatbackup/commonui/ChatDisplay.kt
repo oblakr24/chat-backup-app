@@ -1,15 +1,23 @@
 package com.rokoblak.chatbackup.commonui
 
+import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
 import com.rokoblak.chatbackup.ui.theme.LocalTypography
 
@@ -19,6 +27,7 @@ data class ChatDisplayData(
     val date: String,
     val alignedLeft: Boolean,
     val avatar: AvatarData?,
+    val imageUri: String?,
 )
 
 @Composable
@@ -55,6 +64,19 @@ fun ChatDisplay(modifier: Modifier = Modifier, data: ChatDisplayData) {
                     style = LocalTypography.current.bodyRegular,
                     color = textColor,
                 )
+                if (data.imageUri != null) {
+                    Surface(
+                        modifier = modifier
+                            .size(220.dp)
+                            .padding(vertical = 8.dp)
+                            .border(1.dp, MaterialTheme.colors.background, CircleShape),
+                        color = MaterialTheme.colors.background,
+                    ) {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            AsyncImage(model = Uri.parse(data.imageUri), contentDescription = null)
+                        }
+                    }
+                }
                 Text(
                     modifier = Modifier.padding(2.dp),
                     text = data.date,
@@ -62,8 +84,6 @@ fun ChatDisplay(modifier: Modifier = Modifier, data: ChatDisplayData) {
                 )
             }
         }
-
-
     }
 }
 
@@ -79,6 +99,7 @@ fun ChatDisplayOtherPreview() {
                 date = "Sun 14th Dec 2022, 13:44:55",
                 alignedLeft = true,
                 avatar = AvatarData.Initials("AB", Color.Blue),
+                imageUri = null,
             )
         )
     }
@@ -96,6 +117,7 @@ fun ChatDisplayMinePreview() {
                 date = "Sun 14th Dec 2022, 13:44:55",
                 alignedLeft = false,
                 avatar = null,
+                imageUri = null,
             )
         )
     }

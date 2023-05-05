@@ -99,7 +99,8 @@ object PreviewDataUtils {
             content = content,
             date = dateFormatted,
             alignedLeft = isMine.not(),
-            avatar = avatar
+            avatar = avatar,
+            imageUri = null,
         )
     }.toImmutableList()
 

@@ -107,6 +107,9 @@ dependencies {
     // SimpleXML parser
     implementation group: 'org.simpleframework', name: 'simple-xml', version: '2.7.1'
 
+    // SMS-MMS parsing lib, used for MMS
+    implementation 'com.klinkerapps:android-smsmms:5.2.6'
+
     // Test dependencies
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

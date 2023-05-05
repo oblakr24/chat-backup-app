@@ -39,6 +39,7 @@ class XMLParser @Inject constructor(private val builder: ConversationBuilder, pr
                     contact = MinimalContact(num),
                     timestamp = Instant.ofEpochMilli(timestampMs),
                     incoming = it.type == "1",
+                    imageUri = null,
                 )
             }
 
