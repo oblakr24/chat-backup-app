@@ -15,8 +15,8 @@ android {
         applicationId "com.rokoblak.chatbackup"
         minSdk 29
         targetSdk 33
-        versionCode 5
-        versionName "1.0.2"
+        versionCode 6
+        versionName "1.0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -72,7 +72,7 @@ dependencies {
     // Compose
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
-    implementation 'androidx.compose.material:material:1.4.2'
+    implementation 'androidx.compose.material:material:1.4.3'
     // Compose constraint layout
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
     // Compose tooling
@@ -84,7 +84,7 @@ dependencies {
     // Compose permissions
     implementation "com.google.accompanist:accompanist-permissions:0.29.1-alpha"
     // Compose extended material icons
-    implementation "androidx.compose.material:material-icons-extended:1.4.2"
+    implementation "androidx.compose.material:material-icons-extended:1.4.3"
     // Coil
     implementation "io.coil-kt:coil-compose:2.2.2"
 
@@ -106,6 +106,9 @@ dependencies {
 
     // SimpleXML parser
     implementation group: 'org.simpleframework', name: 'simple-xml', version: '2.7.1'
+
+    // SMS-MMS parsing lib, used for MMS
+    implementation 'com.klinkerapps:android-smsmms:5.2.6'
 
     // Test dependencies
     testImplementation 'junit:junit:4.13.2'

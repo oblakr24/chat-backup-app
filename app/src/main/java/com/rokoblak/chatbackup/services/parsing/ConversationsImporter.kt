@@ -40,7 +40,8 @@ class ConversationsImporter @Inject constructor(
                     content = body,
                     contact = MinimalContact(conv.contactNumber),
                     timestamp = Instant.ofEpochMilli(timestampMs),
-                    incoming = msg.incoming
+                    incoming = msg.incoming,
+                    imageUri = null,
                 )
             }
             Conversation(contact, messages = messages)

@@ -1,11 +1,13 @@
 package com.rokoblak.chatbackup.data
 
+import android.net.Uri
 import java.time.Instant
 
 data class Message(
     val id: String,
     val content: String,
     val contact: MinimalContact,
+    val imageUri: Uri?,
     val timestamp: Instant,
     val incoming: Boolean
 )

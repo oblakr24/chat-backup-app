@@ -20,40 +20,44 @@ abstract class HiltBroadcastReceiver : BroadcastReceiver() {
 @AndroidEntryPoint
 class SMSReceiver : HiltBroadcastReceiver() {
 
-    @Inject lateinit var appScope: AppScope
+    @Inject
+    lateinit var appScope: AppScope
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
-        if (intent.action != null && intent.action == Telephony.Sms.Intents.SMS_DELIVER_ACTION) {
-            val bundle = intent.extras
-            if (bundle != null) {
-                val smsBytesArray = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    bundle.getSerializable(SMS_BUNDLE_PDUS, Array<java.io.Serializable>::class.java)
-                } else {
-                    bundle.getSerializable(SMS_BUNDLE_PDUS) as? Array<java.io.Serializable>
-                } ?: return
+        if (intent.action != Telephony.Sms.Intents.SMS_DELIVER_ACTION) return
+        val bundle = intent.extras ?: return
 
-                smsBytesArray.forEach {
-                    val format = bundle.getString("format")
-                    val sms = SmsMessage.createFromPdu(it as ByteArray, format)
+        val smsBytesArray = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            bundle.getSerializable(SMS_BUNDLE_PDUS, Array<java.io.Serializable>::class.java)
+        } else {
+            bundle.getSerializable(SMS_BUNDLE_PDUS) as? Array<java.io.Serializable>
+        } ?: return
 
-                    val msgBody = sms.messageBody.toString()
-                    val displayAddress = sms.displayOriginatingAddress.orEmpty()
-                    val orgAddress = sms.originatingAddress.orEmpty()
+        smsBytesArray.forEach {
+            val format = bundle.getString("format")
+            val sms = SmsMessage.createFromPdu(it as ByteArray, format)
 
-                    MessagesRetriever.saveSingle(context, incoming = true, body = msgBody, address = orgAddress)
+            val msgBody = sms.messageBody.toString()
+            val displayAddress = sms.displayOriginatingAddress.orEmpty()
+            val orgAddress = sms.originatingAddress.orEmpty()
 
-                    NotifUtils.showIncomingSMSNotif(
-                        context,
-                        body = msgBody,
-                        title = "Message from $displayAddress",
-                        address = orgAddress
-                    )
-                }
+            MessagesRetriever.saveSingle(
+                context,
+                incoming = true,
+                body = msgBody,
+                address = orgAddress,
+            )
 
-                appScope.onNewEvent(SMSEvent.NewReceived)
-            }
+            NotifUtils.showIncomingSMSNotif(
+                context,
+                body = msgBody,
+                title = "Message from $displayAddress",
+                address = orgAddress,
+            )
         }
+
+        appScope.onNewEvent(SMSEvent.NewReceived)
     }
 
     companion object {

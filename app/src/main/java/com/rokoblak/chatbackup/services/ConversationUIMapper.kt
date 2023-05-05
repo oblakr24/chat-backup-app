@@ -90,7 +90,8 @@ class ConversationUIMapper @Inject constructor() {
                 contact.avatar()
             } else {
                 null
-            }
+            },
+            imageUri = message.imageUri?.toString(),
         )
     }
 
