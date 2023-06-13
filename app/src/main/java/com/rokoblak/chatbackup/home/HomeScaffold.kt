@@ -71,7 +71,12 @@ fun HomeScaffold(
 @Composable
 private fun HomeScaffoldPreview() {
     val drawerOpenState = DrawerValue.Closed
-    val drawerState = HomeDrawerUIState(darkMode = true, showDefaultSMSLabel = true, versionLabel = "Version 1.0.0")
+    val drawerState = HomeDrawerUIState(
+        darkMode = true,
+        showDefaultSMSLabel = true,
+        versionLabel = "Version 1.0.0",
+        showComposeAndImport = true
+    )
     val appbarState = HomeAppbarUIState(
         hideIcons = false,
         showEdit = false,
@@ -89,7 +94,12 @@ private fun HomeScaffoldPreview() {
                 appbarState,
                 drawerState,
                 HomeContentUIPermissionsState.PermissionsGiven(
-                    HomeContentUIState(title = "title", subtitle = "subtitle", exportEnabled = true, state)
+                    HomeContentUIState(
+                        title = "title",
+                        subtitle = "subtitle",
+                        exportEnabled = true,
+                        state
+                    )
                 )
             ),
             onAction = {}, onLaunchPermissions = {})

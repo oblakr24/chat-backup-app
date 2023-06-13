@@ -133,7 +133,8 @@ class HomeViewModel @Inject constructor(
         val drawerState = HomeDrawerUIState(
             darkMode = settings.darkMode,
             showDefaultSMSLabel = perms.isDefaultSMSHandlerApp,
-            versionLabel = "Version ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})"
+            versionLabel = "Version ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})",
+            showComposeAndImport = perms.hasPermissions
         )
 
         val conversations = if (perms.hasPermissions) {

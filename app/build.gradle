@@ -104,9 +104,6 @@ dependencies {
     // KotlinX Serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0"
 
-    // SimpleXML parser
-    implementation group: 'org.simpleframework', name: 'simple-xml', version: '2.7.1'
-
     // SMS-MMS parsing lib, used for MMS
     implementation 'com.klinkerapps:android-smsmms:5.2.6'
 

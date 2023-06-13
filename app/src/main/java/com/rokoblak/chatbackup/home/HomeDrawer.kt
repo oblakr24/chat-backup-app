@@ -21,6 +21,7 @@ import com.rokoblak.chatbackup.ui.theme.LocalTypography
 data class HomeDrawerUIState(
     val darkMode: Boolean?,
     val showDefaultSMSLabel: Boolean,
+    val showComposeAndImport: Boolean,
     val versionLabel: String,
 )
 
@@ -34,16 +35,18 @@ fun HomeDrawer(
             .padding(top = 16.dp)
             .fillMaxWidth(), horizontalAlignment = Alignment.Start
     ) {
-        ButtonWithIcon(modifier = Modifier.padding(horizontal = 16.dp),
-            text = "Compose",
-            icon = Icons.Filled.Message,
-            onClick = { onAction(HomeAction.ComposeClicked) })
-        Spacer(modifier = Modifier.height(8.dp))
-        ButtonWithIcon(modifier = Modifier.padding(horizontal = 16.dp),
-            text = "Import",
-            icon = Icons.Filled.OpenInNew,
-            onClick = { onAction(HomeAction.ImportClicked) })
-        Spacer(modifier = Modifier.height(8.dp))
+        if (state.showComposeAndImport) {
+            ButtonWithIcon(modifier = Modifier.padding(horizontal = 16.dp),
+                text = "Compose",
+                icon = Icons.Filled.Message,
+                onClick = { onAction(HomeAction.ComposeClicked) })
+            Spacer(modifier = Modifier.height(8.dp))
+            ButtonWithIcon(modifier = Modifier.padding(horizontal = 16.dp),
+                text = "Import",
+                icon = Icons.Filled.OpenInNew,
+                onClick = { onAction(HomeAction.ImportClicked) })
+            Spacer(modifier = Modifier.height(8.dp))
+        }
         ButtonWithIcon(modifier = Modifier.padding(horizontal = 16.dp),
             text = "FAQ",
             icon = Icons.Filled.QuestionAnswer,
@@ -124,7 +127,8 @@ private fun HomeDrawerPreview() {
             HomeDrawerUIState(
                 darkMode = darkMode,
                 showDefaultSMSLabel = false,
-                versionLabel = "Version 1.0.0"
+                versionLabel = "Version 1.0.0",
+                showComposeAndImport = true,
             ),
             onAction = {})
     }
