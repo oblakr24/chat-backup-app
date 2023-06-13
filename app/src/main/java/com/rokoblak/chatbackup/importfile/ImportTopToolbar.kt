@@ -210,10 +210,6 @@ fun ImportTopToolbar(
                                     openMoreOptions = false
                                     onAction(ImportAction.ImportJSONClicked)
                                 },
-                                PopupOptions.Option("Open new XML") {
-                                    openMoreOptions = false
-                                    onAction(ImportAction.ImportXMLClicked)
-                                },
                             )
                         ),
                     )

@@ -117,9 +117,7 @@ class ImportFileViewModel @Inject constructor(
     fun handleAction(act: ImportAction) {
         when (act) {
             is ImportAction.JSONFileSelected -> importJSONFile(act.uri)
-            is ImportAction.XMLFileSelected -> importXMLFile(act.uri)
             ImportAction.ImportJSONClicked -> openJSONFilePicker()
-            ImportAction.ImportXMLClicked -> openXMLFilePicker()
             is ImportAction.ConversationClicked -> openConversation(act.contactId, act.number)
             ImportAction.ClearSelection -> clearSelections()
             ImportAction.CloseEditClicked -> editState.update { it.copy(editing = false) }
@@ -206,12 +204,6 @@ class ImportFileViewModel @Inject constructor(
         }
     }
 
-    private fun importXMLFile(uri: Uri) {
-        importFile {
-            importer.importXML(uri)
-        }
-    }
-
     private fun importFile(doImport: suspend () -> ImportResult) =
         viewModelScope.launch {
             loading.value = true
@@ -230,14 +222,6 @@ class ImportFileViewModel @Inject constructor(
             type = "application/json"
         }
         effects.send(ImportEffect.OpenJSONFilePicker(intent))
-    }
-
-    private fun openXMLFilePicker() {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE)
-            type = "*/*"
-        }
-        effects.send(ImportEffect.OpenXMLFilePicker(intent))
     }
 
     private fun openConversation(contactId: String, number: String) {

@@ -49,9 +49,9 @@ fun ImportContent(
                     ButtonWithIcon("Import JSON", icon = Icons.Filled.DataObject) {
                         onAction(ImportAction.ImportJSONClicked)
                     }
-                    ButtonWithIcon("Import XML", icon = Icons.Filled.DataArray) {
-                        onAction(ImportAction.ImportXMLClicked)
-                    }
+//                    ButtonWithIcon("Import XML", icon = Icons.Filled.DataArray) {
+//                        onAction(ImportAction.ImportXMLClicked)
+//                    }
                 }
             }
             ImportScreenUIState.Loading -> {

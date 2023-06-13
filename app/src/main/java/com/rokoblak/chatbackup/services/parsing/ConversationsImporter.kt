@@ -14,7 +14,6 @@ import javax.inject.Inject
 class ConversationsImporter @Inject constructor(
     private val appScope: AppScope,
     private val serializer: JsonSerializer,
-    private val xmlParser: XMLParser,
 ) {
 
     suspend fun importJson(uri: Uri): ImportResult = withContext(Dispatchers.IO) {
@@ -54,15 +53,6 @@ class ConversationsImporter @Inject constructor(
         }
         val convs = Conversations(mapping = mapping, sortedContactsByLastMsg = contacts)
         ImportResult.Success(filename, convs)
-    }
-
-    suspend fun importXML(uri: Uri): ImportResult = withContext(Dispatchers.IO) {
-        val cr = appScope.appContext.contentResolver
-        val inputStream = cr.openInputStream(uri)
-            ?: return@withContext ImportResult.Error("Failed to open input stream")
-        val filename = queryName(uri)
-        val convsResult = xmlParser.parse(inputStream, filename)
-        convsResult
     }
 
     private fun queryName(uri: Uri): String {

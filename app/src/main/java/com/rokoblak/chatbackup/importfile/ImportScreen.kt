@@ -18,9 +18,6 @@ fun ImportScreen(viewModel: ImportFileViewModel) {
     val jsonChooserLauncher = createChooserLauncher(onAction = {
         viewModel.handleAction(ImportAction.JSONFileSelected(it))
     })
-    val xmlChooserLauncher = createChooserLauncher(onAction = {
-        viewModel.handleAction(ImportAction.XMLFileSelected(it))
-    })
 
     val defaultAppLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
@@ -31,7 +28,6 @@ fun ImportScreen(viewModel: ImportFileViewModel) {
     Effects(
         viewModel = viewModel,
         jsonLauncher = jsonChooserLauncher,
-        xmlLauncher = xmlChooserLauncher,
         defaultAppLauncher = defaultAppLauncher,
     )
 
@@ -53,7 +49,6 @@ private fun createChooserLauncher(onAction: (Uri) -> Unit) = rememberLauncherFor
 private fun Effects(
     viewModel: ImportFileViewModel,
     jsonLauncher: ActivityResultLauncher<Intent>,
-    xmlLauncher: ActivityResultLauncher<Intent>,
     defaultAppLauncher: ActivityResultLauncher<Intent>,
 ) {
     val ctx = LocalContext.current
@@ -62,9 +57,6 @@ private fun Effects(
             when (effect) {
                 is ImportEffect.OpenJSONFilePicker -> {
                     jsonLauncher.launch(effect.intent)
-                }
-                is ImportEffect.OpenXMLFilePicker -> {
-                    xmlLauncher.launch(effect.intent)
                 }
                 is ImportEffect.ShowSetAsDefaultPrompt -> {
                     MessagingUtils.launchChangeDefaultPrompt(effect.owner, defaultAppLauncher)
