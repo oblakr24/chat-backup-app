@@ -14,7 +14,12 @@ import com.rokoblak.chatbackup.commonui.ConversationDisplayData
 import com.rokoblak.chatbackup.data.Contact
 import com.rokoblak.chatbackup.data.Conversations
 import com.rokoblak.chatbackup.data.Message
-import com.rokoblak.chatbackup.ui.theme.*
+import com.rokoblak.chatbackup.domain.usecases.EditState
+import com.rokoblak.chatbackup.ui.theme.DarkBrown
+import com.rokoblak.chatbackup.ui.theme.DarkGreen
+import com.rokoblak.chatbackup.ui.theme.DarkOrange
+import com.rokoblak.chatbackup.ui.theme.DarkRed
+import com.rokoblak.chatbackup.ui.theme.DarkYellow
 import com.rokoblak.chatbackup.util.formatRelative
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -22,6 +27,17 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 class ConversationUIMapper @Inject constructor() {
+
+    fun title(conversations: Conversations?) = conversations?.let {
+        "${it.totalChats} conversations, ${it.totalMessages} messages"
+    }.orEmpty()
+
+    fun subtitle(conversations: Conversations?, editing: Boolean, selections: Map<String, Boolean>) = if (conversations != null && editing) {
+        val selectedCount = selections.values.count { it }
+        "$selectedCount selected"
+    } else {
+        ""
+    }
 
     fun mapToUI(
         conversations: Conversations,
