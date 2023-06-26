@@ -11,6 +11,7 @@ import android.provider.Telephony
 import com.rokoblak.chatbackup.data.Conversations
 import com.rokoblak.chatbackup.data.Message
 import com.rokoblak.chatbackup.data.MinimalContact
+import com.rokoblak.chatbackup.data.model.OperationResult
 import com.rokoblak.chatbackup.di.AppScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -299,9 +300,4 @@ class MessagesRetriever @Inject constructor(
                 put("date", timestamp.toEpochMilli())
             }
     }
-}
-
-sealed interface OperationResult<out T : Any?> {
-    data class Done<out T : Any>(val data: T) : OperationResult<T>
-    data class Error(val msg: String) : OperationResult<Nothing>
 }

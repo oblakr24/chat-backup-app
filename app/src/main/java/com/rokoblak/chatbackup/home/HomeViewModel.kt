@@ -16,6 +16,7 @@ import com.rokoblak.chatbackup.commonui.ConversationsListingUIState.*
 import com.rokoblak.chatbackup.conversation.ConversationRoute
 import com.rokoblak.chatbackup.createchat.CreateChatRoute
 import com.rokoblak.chatbackup.data.Conversations
+import com.rokoblak.chatbackup.data.model.OperationResult
 import com.rokoblak.chatbackup.domain.usecases.ConversationsSearchUseCase
 import com.rokoblak.chatbackup.domain.usecases.ConvsState
 import com.rokoblak.chatbackup.domain.usecases.DarkModeToggleUseCase

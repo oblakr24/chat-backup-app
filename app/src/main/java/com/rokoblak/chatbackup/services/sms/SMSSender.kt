@@ -8,10 +8,10 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.telephony.SmsManager
 import androidx.core.content.ContextCompat
+import com.rokoblak.chatbackup.data.model.OperationResult
 import com.rokoblak.chatbackup.di.AppScope
 import com.rokoblak.chatbackup.di.SMSEvent
 import com.rokoblak.chatbackup.services.MessagesRetriever
-import com.rokoblak.chatbackup.services.OperationResult
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeoutOrNull
 import timber.log.Timber

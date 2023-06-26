@@ -4,6 +4,7 @@ import com.rokoblak.chatbackup.data.Contact
 import com.rokoblak.chatbackup.data.Conversation
 import com.rokoblak.chatbackup.data.Conversations
 import com.rokoblak.chatbackup.data.PhoneType
+import com.rokoblak.chatbackup.data.model.OperationResult
 import com.rokoblak.chatbackup.di.AppScope
 import com.rokoblak.chatbackup.di.SMSEvent
 import kotlinx.coroutines.CoroutineScope

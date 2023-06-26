@@ -1,9 +1,9 @@
 package com.rokoblak.chatbackup.domain.usecases
 
 import com.rokoblak.chatbackup.data.Conversations
+import com.rokoblak.chatbackup.data.model.OperationResult
 import com.rokoblak.chatbackup.services.ConversationSearcher
 import com.rokoblak.chatbackup.services.ConversationsRepo
-import com.rokoblak.chatbackup.services.OperationResult
 import com.rokoblak.chatbackup.services.SearchResults
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
