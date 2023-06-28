@@ -13,6 +13,9 @@ import app.cash.molecule.launchMolecule
 import com.rokoblak.chatbackup.conversation.ConversationRoute
 import com.rokoblak.chatbackup.data.model.OperationResult
 import com.rokoblak.chatbackup.di.AppScope
+import com.rokoblak.chatbackup.domain.usecases.DownloadConversationUseCase
+import com.rokoblak.chatbackup.domain.usecases.ImportDownloadState
+import com.rokoblak.chatbackup.importfile.ImportAction.*
 import com.rokoblak.chatbackup.navigation.RouteNavigator
 import com.rokoblak.chatbackup.services.*
 import com.rokoblak.chatbackup.services.parsing.ConversationsImporter
@@ -34,8 +37,7 @@ class ImportFileViewModel @Inject constructor(
     private val routeNavigator: RouteNavigator,
     private val importer: ConversationsImporter,
     private val uiMapper: ConversationUIMapper,
-    private val repo: ConversationsRepo,
-    private val retriever: MessagesRetriever,
+    private val downloadUseCase: DownloadConversationUseCase,
 ) : ViewModel(), RouteNavigator by routeNavigator {
 
     private val scope = CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
@@ -43,21 +45,16 @@ class ImportFileViewModel @Inject constructor(
     val effects = SingleEventFlow<ImportEffect>()
 
     private val loading = MutableStateFlow(false)
-    private val downloading = MutableStateFlow<DownloadProgress?>(null)
     private val editState = MutableStateFlow(EditState())
-    private val selections = MutableStateFlow(emptyMap<String, Boolean>())
     private val isDefaultSMSApp = MutableStateFlow(appScope.isDefaultSMSApp())
-    private val importedConvs = MutableStateFlow<ImportResult?>(null)
 
     val uiState: StateFlow<ImportScreenUIState> by lazy {
         scope.launchMolecule(clock = RecompositionClock.ContextClock) {
             ImportPresenter(
-                importedConvs,
-                selections,
+                downloadUseCase.state,
                 editState,
                 isDefaultSMSApp,
                 loading,
-                downloading
             )
         }
     }
@@ -65,19 +62,15 @@ class ImportFileViewModel @Inject constructor(
     @SuppressLint("ComposableNaming")
     @Composable
     private fun ImportPresenter(
-        importedConvsFlow: StateFlow<ImportResult?>,
-        selectionsFlow: StateFlow<Map<String, Boolean>>,
+        importStateFlow: Flow<ImportDownloadState>,
         editStateFlow: StateFlow<EditState>,
         isDefaultSMSAppFlow: StateFlow<Boolean>,
         loadingFlow: StateFlow<Boolean>,
-        downloadingFlow: StateFlow<DownloadProgress?>,
     ): ImportScreenUIState {
         val isLoading = loadingFlow.collectAsState().value
-        if (isLoading) {
-            return ImportScreenUIState.Loading
-        }
-        val importResult =
-            importedConvsFlow.collectAsState().value ?: return ImportScreenUIState.Initial
+        if (isLoading) return ImportScreenUIState.Loading
+        val importState = importStateFlow.collectAsState(initial = ImportDownloadState(null, emptyMap(), null)).value
+        val importResult = importState.importResult ?: return ImportScreenUIState.Initial
 
         val res = when (importResult) {
             is ImportResult.Error -> {
@@ -86,13 +79,12 @@ class ImportFileViewModel @Inject constructor(
             }
             is ImportResult.Success -> importResult
         }
-        val convs = res.convs
 
-        val selections = selectionsFlow.collectAsState().value
+        val selections = importState.selections
         val editState = editStateFlow.collectAsState().value
         val isDefaultSMSApp = isDefaultSMSAppFlow.collectAsState().value
-        val downloadProgress = downloadingFlow.collectAsState().value
-        val mappedItems = uiMapper.mapToUI(convs, selections.takeIf { editState.editing })
+        val downloadProgress = importState.progress
+        val mappedItems = uiMapper.mapToUI(res.convs, selections.takeIf { editState.editing })
 
         val hasAnySelections = selections.any { it.value }
         val toolbar = ImportTopToolbarUIState(
@@ -102,7 +94,7 @@ class ImportFileViewModel @Inject constructor(
             deleteEnabled = hasAnySelections,
         )
         val selectedContactIds = selections.filter { it.value }.keys
-        val selectedMsgs = convs.retrieveMessages(selectedContactIds)
+        val selectedMsgs = res.convs.retrieveMessages(selectedContactIds)
         val subtitle = downloadProgress?.let {
             "${it.done}/${it.total} downloaded"
         } ?: "${selectedContactIds.size} selected (${selectedMsgs.size} total messages)"
@@ -117,85 +109,26 @@ class ImportFileViewModel @Inject constructor(
 
     fun handleAction(act: ImportAction) {
         when (act) {
-            is ImportAction.JSONFileSelected -> importJSONFile(act.uri)
-            ImportAction.ImportJSONClicked -> openJSONFilePicker()
-            is ImportAction.ConversationClicked -> openConversation(act.contactId, act.number)
-            ImportAction.ClearSelection -> clearSelections()
-            ImportAction.CloseEditClicked -> editState.update { it.copy(editing = false) }
-            ImportAction.EditClicked -> editState.update { it.copy(editing = true) }
-            ImportAction.DeleteClicked -> deleteSelected()
-            ImportAction.DownloadConfirmed -> downloadSelected()
-            is ImportAction.OpenSetAsDefaultClicked -> {
+            is JSONFileSelected -> importJSONFile(act.uri)
+            ImportJSONClicked -> openJSONFilePicker()
+            is ConversationClicked -> openConversation(act.contactId, act.number)
+            ClearSelection -> downloadUseCase.clearSelections()
+            CloseEditClicked -> editState.update { it.copy(editing = false) }
+            EditClicked -> editState.update { it.copy(editing = true) }
+            DeleteClicked -> downloadUseCase.deleteSelected()
+            DownloadConfirmed -> downloadSelected()
+            is OpenSetAsDefaultClicked -> {
                 effects.send(ImportEffect.ShowSetAsDefaultPrompt(act.owner))
             }
-            ImportAction.SelectAll -> selectAll()
-            ImportAction.SetAsDefaultUpdated -> isDefaultSMSApp.value = appScope.isDefaultSMSApp()
-            is ImportAction.ConversationChecked -> updateCheckedState(act.contactId, act.checked)
+            SelectAll -> downloadUseCase.selectAll()
+            SetAsDefaultUpdated -> isDefaultSMSApp.value = appScope.isDefaultSMSApp()
+            is ConversationChecked -> downloadUseCase.updateCheckedState(act.contactId, act.checked)
         }
     }
 
-    private fun deleteSelected() = viewModelScope.launch {
-        val res = importedConvs.value as? ImportResult.Success ?: return@launch
-        val convs = res.convs
-        val selected = selections.value
-        val keys = selected.filter { it.value }.keys
-        val removed = convs.removeConvs(keys)
-        repo.setImportedConversations(removed)
-        selections.update { it.toMutableMap().filterKeys { k -> keys.contains(k).not() } }
-        importedConvs.value = res.copy(convs = removed)
-    }
-
-    private fun downloadSelected() = viewModelScope.launch(Dispatchers.IO) {
-        val res = importedConvs.value as? ImportResult.Success ?: return@launch
-        val convs = res.convs
-        val selected = selections.value
-        val selectedMsgs = convs.retrieveMessages(selected.filter { it.value }.keys)
-        val total = selectedMsgs.size
-        if (total > MessagesRetriever.CHUNK_SIZE) {
-            effects.send(ImportEffect.ShowToast("Saving $total messages..."))
-        }
-
-        var done = 0
-        downloading.update { DownloadProgress(0, total = total) }
-        retriever.saveMessages(selectedMsgs).onEach { chunkRes ->
-            when (chunkRes) {
-                is OperationResult.Done -> {
-                    done += chunkRes.data
-                    downloading.update { DownloadProgress(done, total = total) }
-                }
-                is OperationResult.Error -> {
-                    effects.send(ImportEffect.ShowToast(chunkRes.msg))
-                }
-            }
-        }.collect()
-        if (done < total) {
-            effects.send(ImportEffect.ShowToast("Some messages might not be saved - only saved $done out of $total"))
-        }
-        delay(1000)
-        downloading.update { null }
-        effects.send(ImportEffect.ShowToast("Messages saved to device"))
-        repo.triggerReload()
-        delay(1000)
-        navigateUp()
-    }
-
-    private fun clearSelections() {
-        selections.update {
-            it.toMutableMap().mapValues { false }.toMap()
-        }
-    }
-
-    private fun selectAll() {
-        selections.update {
-            it.toMutableMap().mapValues { true }.toMap()
-        }
-    }
-
-    private fun updateCheckedState(contactId: String, checked: Boolean) {
-        selections.update {
-            it.toMutableMap().apply {
-                put(contactId, checked)
-            }.toMap()
+    private fun downloadSelected() = viewModelScope.launch {
+        downloadUseCase.downloadSelected { msg ->
+            effects.send(ImportEffect.ShowToast(msg))
         }
     }
 
@@ -208,12 +141,7 @@ class ImportFileViewModel @Inject constructor(
     private fun importFile(doImport: suspend () -> ImportResult) =
         viewModelScope.launch {
             loading.value = true
-            importedConvs.value = doImport().also { res ->
-                if (res is ImportResult.Success) {
-                    selections.update { res.convs.mapping.map { it.key.id to true }.toMap() }
-                    repo.setImportedConversations(res.convs)
-                }
-            }
+            downloadUseCase.importFile(doImport)
             loading.value = false
         }
 
@@ -234,5 +162,3 @@ class ImportFileViewModel @Inject constructor(
 private data class EditState(
     val editing: Boolean = false,
 )
-
-private data class DownloadProgress(val done: Int, val total: Int)
