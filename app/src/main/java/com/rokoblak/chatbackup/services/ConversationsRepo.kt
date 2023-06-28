@@ -1,9 +1,7 @@
 package com.rokoblak.chatbackup.services
 
-import com.rokoblak.chatbackup.data.Contact
 import com.rokoblak.chatbackup.data.Conversation
 import com.rokoblak.chatbackup.data.Conversations
-import com.rokoblak.chatbackup.data.PhoneType
 import com.rokoblak.chatbackup.data.model.OperationResult
 import com.rokoblak.chatbackup.di.AppScope
 import com.rokoblak.chatbackup.di.SMSEvent
@@ -22,11 +20,11 @@ import javax.inject.Singleton
 class ConversationsRepo @Inject constructor(
     private val appScope: AppScope,
     private val smsRetriever: MessagesRetriever,
-    private val contactsRepo: ContactsRepository,
 ) {
     private val scope = CoroutineScope(Dispatchers.Main + Job())
 
-    private var importedConversations: Conversations? = null
+    var importedConversations: Conversations? = null
+        private set
 
     fun setImportedConversations(conversations: Conversations) {
         importedConversations = conversations
@@ -41,25 +39,6 @@ class ConversationsRepo @Inject constructor(
     fun retrieveExportedConvs(): List<Conversation>? {
         return deviceConvsFlow.value?.sortedConversations?.filter {
             deviceSelections.contains(it.contact.id)
-        }
-    }
-
-    fun conversationFor(contactId: String?, number: String, isImport: Boolean) = flow {
-        val matching = contactsRepo.resolveContact(number)
-        val contact = matching ?: Contact(
-            name = null,
-            orgNumber = number,
-        )
-        if (isImport) {
-            val conv = importedConversations?.resolveConv(contactId = contactId, number = number)
-            emit(conv ?: Conversation(contact, emptyList()))
-        } else {
-            emitAll(deviceConvsFlow.mapNotNull {
-                it?.resolveConv(contactId = contactId, number = number) ?: Conversation(
-                    contact,
-                    emptyList()
-                )
-            })
         }
     }
 

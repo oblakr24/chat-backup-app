@@ -30,24 +30,7 @@ class ContactsRepository @Inject constructor(
         contacts.filter { it.matches(query) }
     }
 
-    suspend fun resolveContact(number: String): Contact? {
-        val contacts = retrieveContacts()
-        val matching = contacts.firstOrNull { it.number == number }
-        if (matching != null) {
-            return matching
-        }
-        val resolvedName = resolveContactName(number)
-        if (resolvedName != null) {
-            val contact =  Contact(
-                name = resolvedName,
-                orgNumber = number,
-            ).let { if (AppConstants.OBFUSCATE) it.obfuscate() else it }
-            return contact
-        }
-        return null
-    }
-
-    private suspend fun retrieveContacts(): List<Contact> {
+    suspend fun retrieveContacts(): List<Contact> {
         return withTimeoutOrNull(6000L) {
             contactsFlow.mapNotNull { op ->
                 (op as? OperationResult.Done)?.data.takeIf { it?.isNotEmpty() == true }
@@ -55,7 +38,7 @@ class ContactsRepository @Inject constructor(
         } ?: emptyList()
     }
 
-    private fun resolveContactName(number: String): String? {
+    fun resolveContactName(number: String): String? {
         val lookupUri =
             Uri.withAppendedPath(
                 ContactsContract.PhoneLookup.CONTENT_FILTER_URI,

@@ -13,6 +13,7 @@ import com.rokoblak.chatbackup.data.Message
 import com.rokoblak.chatbackup.data.MinimalContact
 import com.rokoblak.chatbackup.data.model.OperationResult
 import com.rokoblak.chatbackup.di.AppScope
+import com.rokoblak.chatbackup.domain.usecases.RetrieveContactUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
@@ -27,7 +28,7 @@ import javax.inject.Inject
 class MessagesRetriever @Inject constructor(
     private val appScope: AppScope,
     private val builder: ConversationBuilder,
-    private val contactsRepo: ContactsRepository,
+    private val retrieveContactUseCase: RetrieveContactUseCase,
 ) {
 
     suspend fun retrieveMessages(): Conversations = withContext(Dispatchers.IO) {
@@ -35,7 +36,7 @@ class MessagesRetriever @Inject constructor(
 
         if (messages.isNotEmpty()) {
             builder.groupMessages(messages, contactRetriever = { num ->
-                contactsRepo.resolveContact(num)
+                retrieveContactUseCase.resolveContact(num)
             })
         } else {
             Conversations(emptyMap(), emptyList())

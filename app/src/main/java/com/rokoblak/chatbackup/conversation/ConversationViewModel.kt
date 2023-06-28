@@ -11,6 +11,7 @@ import app.cash.molecule.RecompositionClock
 import app.cash.molecule.launchMolecule
 import com.rokoblak.chatbackup.data.Conversation
 import com.rokoblak.chatbackup.di.AppScope
+import com.rokoblak.chatbackup.domain.usecases.ConversationUseCase
 import com.rokoblak.chatbackup.navigation.RouteNavigator
 import com.rokoblak.chatbackup.services.ConversationUIMapper
 import com.rokoblak.chatbackup.services.ConversationsRepo
@@ -26,8 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ConversationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val routeNavigator: RouteNavigator,
-    conversationsRepo: ConversationsRepo,
+    routeNavigator: RouteNavigator,
+    conversationUseCase: ConversationUseCase,
     private val uiMapper: ConversationUIMapper,
     private val smsSender: SMSSender,
 ) :
@@ -37,7 +38,7 @@ class ConversationViewModel @Inject constructor(
 
     private val routeInput = ConversationRoute.getIdFrom(savedStateHandle)
 
-    private val convsFlow = conversationsRepo.conversationFor(
+    private val convsFlow = conversationUseCase.conversationFor(
         contactId = routeInput.resolvedContactId,
         number = routeInput.address,
         isImport = routeInput.isImport
@@ -56,7 +57,7 @@ class ConversationViewModel @Inject constructor(
     @SuppressLint("ComposableNaming")
     @Composable
     private fun ConversationPresenter(
-        convFlow: Flow<Conversation?>,
+        convFlow: Flow<Conversation>,
     ): ConversationScreenUIState {
         val conv = convFlow.collectAsState(initial = null).value
 
