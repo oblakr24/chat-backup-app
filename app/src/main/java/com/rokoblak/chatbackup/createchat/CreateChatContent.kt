@@ -8,10 +8,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.rokoblak.chatbackup.commonui.AvatarData
-import com.rokoblak.chatbackup.commonui.ContactDisplayData
-import com.rokoblak.chatbackup.commonui.DetailsContent
-import com.rokoblak.chatbackup.commonui.SearchBar
+import com.rokoblak.chatbackup.ui.commonui.AvatarData
+import com.rokoblak.chatbackup.ui.commonui.ContactDisplayData
+import com.rokoblak.chatbackup.ui.commonui.DetailsContent
+import com.rokoblak.chatbackup.ui.commonui.SearchBar
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
 import kotlinx.collections.immutable.toImmutableList
 

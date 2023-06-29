@@ -1,9 +1,9 @@
 package com.rokoblak.chatbackup.domain.usecases
 
 import com.rokoblak.chatbackup.AppConstants
-import com.rokoblak.chatbackup.commonui.PreviewDataUtils.obfuscate
-import com.rokoblak.chatbackup.data.Contact
-import com.rokoblak.chatbackup.services.ContactsRepository
+import com.rokoblak.chatbackup.ui.commonui.PreviewDataUtils.obfuscate
+import com.rokoblak.chatbackup.data.model.Contact
+import com.rokoblak.chatbackup.data.repo.ContactsRepository
 import javax.inject.Inject
 
 class RetrieveContactUseCase @Inject constructor(

@@ -11,33 +11,30 @@ import androidx.lifecycle.viewModelScope
 import app.cash.molecule.RecompositionClock
 import app.cash.molecule.launchMolecule
 import com.rokoblak.chatbackup.conversation.ConversationRoute
-import com.rokoblak.chatbackup.data.model.OperationResult
-import com.rokoblak.chatbackup.di.AppScope
+import com.rokoblak.chatbackup.domain.usecases.ConversationsImportUseCase
 import com.rokoblak.chatbackup.domain.usecases.DownloadConversationUseCase
 import com.rokoblak.chatbackup.domain.usecases.ImportDownloadState
+import com.rokoblak.chatbackup.domain.usecases.ImportResult
+import com.rokoblak.chatbackup.domain.usecases.PermissionsStateUseCase
 import com.rokoblak.chatbackup.importfile.ImportAction.*
-import com.rokoblak.chatbackup.navigation.RouteNavigator
-import com.rokoblak.chatbackup.services.*
-import com.rokoblak.chatbackup.services.parsing.ConversationsImporter
-import com.rokoblak.chatbackup.services.parsing.ImportResult
+import com.rokoblak.chatbackup.ui.mapper.ConversationUIMapper
+import com.rokoblak.chatbackup.ui.navigation.RouteNavigator
 import com.rokoblak.chatbackup.util.SingleEventFlow
 import com.rokoblak.chatbackup.util.StringUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ImportFileViewModel @Inject constructor(
-    private val appScope: AppScope,
-    private val routeNavigator: RouteNavigator,
-    private val importer: ConversationsImporter,
-    private val uiMapper: ConversationUIMapper,
+    routeNavigator: RouteNavigator,
+    private val permissionsUseCase: PermissionsStateUseCase,
+    private val importer: ConversationsImportUseCase,
     private val downloadUseCase: DownloadConversationUseCase,
+    private val uiMapper: ConversationUIMapper,
 ) : ViewModel(), RouteNavigator by routeNavigator {
 
     private val scope = CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
@@ -46,7 +43,7 @@ class ImportFileViewModel @Inject constructor(
 
     private val loading = MutableStateFlow(false)
     private val editState = MutableStateFlow(EditState())
-    private val isDefaultSMSApp = MutableStateFlow(appScope.isDefaultSMSApp())
+    private val isDefaultSMSApp = permissionsUseCase.permissions.map { it.isDefaultSMSHandlerApp }
 
     val uiState: StateFlow<ImportScreenUIState> by lazy {
         scope.launchMolecule(clock = RecompositionClock.ContextClock) {
@@ -64,7 +61,7 @@ class ImportFileViewModel @Inject constructor(
     private fun ImportPresenter(
         importStateFlow: Flow<ImportDownloadState>,
         editStateFlow: StateFlow<EditState>,
-        isDefaultSMSAppFlow: StateFlow<Boolean>,
+        isDefaultSMSAppFlow: Flow<Boolean>,
         loadingFlow: StateFlow<Boolean>,
     ): ImportScreenUIState {
         val isLoading = loadingFlow.collectAsState().value
@@ -82,7 +79,7 @@ class ImportFileViewModel @Inject constructor(
 
         val selections = importState.selections
         val editState = editStateFlow.collectAsState().value
-        val isDefaultSMSApp = isDefaultSMSAppFlow.collectAsState().value
+        val isDefaultSMSApp = isDefaultSMSAppFlow.collectAsState(false).value
         val downloadProgress = importState.progress
         val mappedItems = uiMapper.mapToUI(res.convs, selections.takeIf { editState.editing })
 
@@ -121,7 +118,7 @@ class ImportFileViewModel @Inject constructor(
                 effects.send(ImportEffect.ShowSetAsDefaultPrompt(act.owner))
             }
             SelectAll -> downloadUseCase.selectAll()
-            SetAsDefaultUpdated -> isDefaultSMSApp.value = appScope.isDefaultSMSApp()
+            SetAsDefaultUpdated -> permissionsUseCase.updatePermissions()
             is ConversationChecked -> downloadUseCase.updateCheckedState(act.contactId, act.checked)
         }
     }
@@ -155,7 +152,7 @@ class ImportFileViewModel @Inject constructor(
 
     private fun openConversation(contactId: String, number: String) {
         val input = ConversationRoute.Input(contactId, address = number, isImport = true)
-        routeNavigator.navigateToRoute(ConversationRoute.get(input))
+        navigateToRoute(ConversationRoute.get(input))
     }
 }
 

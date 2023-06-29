@@ -1,7 +1,7 @@
 package com.rokoblak.chatbackup.di
 
-import com.rokoblak.chatbackup.navigation.AppRouteNavigator
-import com.rokoblak.chatbackup.navigation.RouteNavigator
+import com.rokoblak.chatbackup.ui.navigation.AppRouteNavigator
+import com.rokoblak.chatbackup.ui.navigation.RouteNavigator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

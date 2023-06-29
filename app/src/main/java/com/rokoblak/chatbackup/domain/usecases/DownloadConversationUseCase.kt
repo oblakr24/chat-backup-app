@@ -1,9 +1,8 @@
 package com.rokoblak.chatbackup.domain.usecases
 
 import com.rokoblak.chatbackup.data.model.OperationResult
-import com.rokoblak.chatbackup.services.ConversationsRepo
-import com.rokoblak.chatbackup.services.MessagesRetriever
-import com.rokoblak.chatbackup.services.parsing.ImportResult
+import com.rokoblak.chatbackup.data.repo.ConversationsRepository
+import com.rokoblak.chatbackup.data.datasources.MessagesDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,8 +14,8 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class DownloadConversationUseCase @Inject constructor(
-    private val repo: ConversationsRepo,
-    private val retriever: MessagesRetriever,
+    private val repo: ConversationsRepository,
+    private val retriever: MessagesDataSource,
 ) {
 
     private val downloading = MutableStateFlow<DownloadProgress?>(null)
@@ -73,7 +72,7 @@ class DownloadConversationUseCase @Inject constructor(
         val selected = selections.value
         val selectedMsgs = convs.retrieveMessages(selected.filter { it.value }.keys)
         val total = selectedMsgs.size
-        if (total > MessagesRetriever.CHUNK_SIZE) {
+        if (total > MessagesDataSource.CHUNK_SIZE) {
             onProgressMsg("Saving $total messages...")
         }
 

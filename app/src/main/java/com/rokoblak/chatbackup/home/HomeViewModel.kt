@@ -12,11 +12,12 @@ import app.cash.molecule.RecompositionClock
 import app.cash.molecule.launchMolecule
 import com.rokoblak.chatbackup.AppConstants
 import com.rokoblak.chatbackup.BuildConfig
-import com.rokoblak.chatbackup.commonui.ConversationsListingUIState.*
+import com.rokoblak.chatbackup.ui.commonui.ConversationsListingUIState.*
 import com.rokoblak.chatbackup.conversation.ConversationRoute
 import com.rokoblak.chatbackup.createchat.CreateChatRoute
-import com.rokoblak.chatbackup.data.Conversations
+import com.rokoblak.chatbackup.data.model.Conversations
 import com.rokoblak.chatbackup.data.model.OperationResult
+import com.rokoblak.chatbackup.ui.mapper.ConversationUIMapper
 import com.rokoblak.chatbackup.domain.usecases.ConversationsSearchUseCase
 import com.rokoblak.chatbackup.domain.usecases.ConvsState
 import com.rokoblak.chatbackup.domain.usecases.DarkModeToggleUseCase
@@ -28,8 +29,7 @@ import com.rokoblak.chatbackup.export.ExportRoute
 import com.rokoblak.chatbackup.faq.FAQRoute
 import com.rokoblak.chatbackup.home.HomeAction.*
 import com.rokoblak.chatbackup.importfile.ImportRoute
-import com.rokoblak.chatbackup.navigation.RouteNavigator
-import com.rokoblak.chatbackup.services.*
+import com.rokoblak.chatbackup.ui.navigation.RouteNavigator
 import com.rokoblak.chatbackup.util.SingleEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
@@ -45,7 +45,7 @@ class HomeViewModel @Inject constructor(
     private val permissionsStateUseCase: PermissionsStateUseCase,
     private val convsUseCase: ConversationsSearchUseCase,
     private val darkModeToggleUseCase: DarkModeToggleUseCase,
-    private val routeNavigator: RouteNavigator,
+    routeNavigator: RouteNavigator,
     private val uiMapper: ConversationUIMapper,
 ) : ViewModel(), RouteNavigator by routeNavigator {
 
@@ -67,13 +67,6 @@ class HomeViewModel @Inject constructor(
     ): HomeScreenUIState {
         val darkMode = darkModeFlow.collectAsState(initial = null).value
         val perms = permissions.collectAsState().value
-
-        val drawerState = HomeDrawerUIState(
-            darkMode = darkMode,
-            showDefaultSMSLabel = perms.isDefaultSMSHandlerApp,
-            versionLabel = "Version ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})",
-            showComposeAndImport = perms.hasPermissions
-        )
 
         var editing = false
         var convs: Conversations? = null
@@ -121,7 +114,7 @@ class HomeViewModel @Inject constructor(
                 )
             )
         }
-        return HomeScreenUIState(appbarState, drawerState, contentState)
+        return HomeScreenUIState(appbarState, mapToDrawerUI(perms, darkMode), contentState)
     }
 
     val uiState: StateFlow<HomeScreenUIState> by lazy {
@@ -193,6 +186,13 @@ class HomeViewModel @Inject constructor(
     private fun setDarkMode(enabled: Boolean) = viewModelScope.launch {
         darkModeToggleUseCase.setDarkMode(enabled)
     }
+
+    private fun mapToDrawerUI(perms: PermissionsState, darkMode: Boolean?) = HomeDrawerUIState(
+        darkMode = darkMode,
+        showDefaultSMSLabel = perms.isDefaultSMSHandlerApp,
+        versionLabel = "Version ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})",
+        showComposeAndImport = perms.hasPermissions
+    )
 
     override fun onCleared() {
         super.onCleared()

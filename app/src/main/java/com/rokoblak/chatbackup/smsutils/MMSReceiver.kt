@@ -10,9 +10,10 @@ import com.google.android.mms.pdu_alt.PduBody
 import com.google.android.mms.pdu_alt.PduParser
 import com.google.android.mms.pdu_alt.PduPart
 import com.google.android.mms.pdu_alt.RetrieveConf
-import com.rokoblak.chatbackup.di.AppScope
-import com.rokoblak.chatbackup.di.SMSEvent
-import com.rokoblak.chatbackup.services.MessagesRetriever
+import com.rokoblak.chatbackup.data.datasources.MessagesDataSource
+import com.rokoblak.chatbackup.domain.usecases.AppEventsUseCase
+import com.rokoblak.chatbackup.domain.usecases.SMSEvent
+import com.rokoblak.chatbackup.ui.notif.NotifUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -20,7 +21,7 @@ import javax.inject.Inject
 class MMSReceiver  : HiltBroadcastReceiver() {
 
     @Inject
-    lateinit var appScope: AppScope
+    lateinit var eventsUseCase: AppEventsUseCase
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action != Telephony.Sms.Intents.WAP_PUSH_RECEIVED_ACTION) return
@@ -48,10 +49,10 @@ class MMSReceiver  : HiltBroadcastReceiver() {
 
             if (contentType == ContentType.TEXT_PLAIN) {
                 val textContent = String(part.data)
-                MessagesRetriever.saveSingleMms(context, imageData = null, incoming = true, body = textContent, address = address)
+                MessagesDataSource.saveSingleMms(context, imageData = null, incoming = true, body = textContent, address = address)
             } else if (contentType.startsWith("image/")) {
                 val imageData = part.data
-                MessagesRetriever.saveSingleMms(context, imageData, incoming = true, body = "", address = address)
+                MessagesDataSource.saveSingleMms(context, imageData, incoming = true, body = "", address = address)
             }
         }
 
@@ -62,6 +63,6 @@ class MMSReceiver  : HiltBroadcastReceiver() {
             address = address,
         )
 
-        appScope.onNewEvent(SMSEvent.NewReceived)
+        eventsUseCase.onNewEvent(SMSEvent.NewReceived)
     }
 }

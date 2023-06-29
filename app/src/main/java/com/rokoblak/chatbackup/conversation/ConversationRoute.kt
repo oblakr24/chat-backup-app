@@ -6,8 +6,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.rokoblak.chatbackup.navigation.NavRoute
-import com.rokoblak.chatbackup.navigation.getOrThrow
+import com.rokoblak.chatbackup.ui.navigation.NavRoute
+import com.rokoblak.chatbackup.ui.navigation.getOrThrow
 
 private const val KEY_RESOLVED_CONTACT_ID = "key-resolved-chat-id"
 private const val KEY_ADDRESS = "key-address"

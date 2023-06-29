@@ -9,13 +9,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.molecule.RecompositionClock
 import app.cash.molecule.launchMolecule
-import com.rokoblak.chatbackup.data.Conversation
-import com.rokoblak.chatbackup.di.AppScope
+import com.rokoblak.chatbackup.data.model.Conversation
 import com.rokoblak.chatbackup.domain.usecases.ConversationUseCase
-import com.rokoblak.chatbackup.navigation.RouteNavigator
-import com.rokoblak.chatbackup.services.ConversationUIMapper
-import com.rokoblak.chatbackup.services.ConversationsRepo
-import com.rokoblak.chatbackup.services.sms.SMSSender
+import com.rokoblak.chatbackup.ui.navigation.RouteNavigator
+import com.rokoblak.chatbackup.ui.mapper.ConversationUIMapper
+import com.rokoblak.chatbackup.domain.usecases.SMSSendUseCase
 import com.rokoblak.chatbackup.util.formatDateOnly
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
@@ -30,7 +28,7 @@ class ConversationViewModel @Inject constructor(
     routeNavigator: RouteNavigator,
     conversationUseCase: ConversationUseCase,
     private val uiMapper: ConversationUIMapper,
-    private val smsSender: SMSSender,
+    private val smsSender: SMSSendUseCase,
 ) :
     ViewModel(), RouteNavigator by routeNavigator {
 

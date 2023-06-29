@@ -9,8 +9,8 @@ import androidx.lifecycle.viewModelScope
 import app.cash.molecule.RecompositionClock
 import app.cash.molecule.launchMolecule
 import com.rokoblak.chatbackup.R
-import com.rokoblak.chatbackup.navigation.RouteNavigator
-import com.rokoblak.chatbackup.services.ResourceResolver
+import com.rokoblak.chatbackup.ui.navigation.RouteNavigator
+import com.rokoblak.chatbackup.data.util.ResourceResolver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope

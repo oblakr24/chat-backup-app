@@ -6,9 +6,10 @@ import android.content.Intent
 import android.os.Build
 import android.provider.Telephony
 import android.telephony.SmsMessage
-import com.rokoblak.chatbackup.di.AppScope
-import com.rokoblak.chatbackup.di.SMSEvent
-import com.rokoblak.chatbackup.services.MessagesRetriever
+import com.rokoblak.chatbackup.data.datasources.MessagesDataSource
+import com.rokoblak.chatbackup.domain.usecases.AppEventsUseCase
+import com.rokoblak.chatbackup.domain.usecases.SMSEvent
+import com.rokoblak.chatbackup.ui.notif.NotifUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -21,7 +22,7 @@ abstract class HiltBroadcastReceiver : BroadcastReceiver() {
 class SMSReceiver : HiltBroadcastReceiver() {
 
     @Inject
-    lateinit var appScope: AppScope
+    lateinit var eventsUseCase: AppEventsUseCase
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
@@ -42,7 +43,7 @@ class SMSReceiver : HiltBroadcastReceiver() {
             val displayAddress = sms.displayOriginatingAddress.orEmpty()
             val orgAddress = sms.originatingAddress.orEmpty()
 
-            MessagesRetriever.saveSingle(
+            MessagesDataSource.saveSingle(
                 context,
                 incoming = true,
                 body = msgBody,
@@ -57,7 +58,7 @@ class SMSReceiver : HiltBroadcastReceiver() {
             )
         }
 
-        appScope.onNewEvent(SMSEvent.NewReceived)
+        eventsUseCase.onNewEvent(SMSEvent.NewReceived)
     }
 
     companion object {

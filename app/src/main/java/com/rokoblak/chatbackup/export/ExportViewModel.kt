@@ -10,11 +10,11 @@ import app.cash.molecule.AndroidUiDispatcher
 import app.cash.molecule.RecompositionClock
 import app.cash.molecule.launchMolecule
 import com.rokoblak.chatbackup.home.*
-import com.rokoblak.chatbackup.navigation.RouteNavigator
-import com.rokoblak.chatbackup.services.ConversationsRepo
-import com.rokoblak.chatbackup.services.FileManager
-import com.rokoblak.chatbackup.services.parsing.MessagesExporter
-import com.rokoblak.chatbackup.services.parsing.MessagesExporter.*
+import com.rokoblak.chatbackup.ui.navigation.RouteNavigator
+import com.rokoblak.chatbackup.data.repo.ConversationsRepository
+import com.rokoblak.chatbackup.data.util.FileManager
+import com.rokoblak.chatbackup.domain.usecases.MessagesExportUseCase
+import com.rokoblak.chatbackup.domain.usecases.MessagesExportUseCase.*
 import com.rokoblak.chatbackup.util.SingleEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -23,8 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExportViewModel @Inject constructor(
-    private val exporter: MessagesExporter,
-    private val conversationsRepo: ConversationsRepo,
+    private val exporter: MessagesExportUseCase,
+    private val conversationsRepo: ConversationsRepository,
     private val routeNavigator: RouteNavigator,
     private val fileManager: FileManager,
 ) : ViewModel(), RouteNavigator by routeNavigator {

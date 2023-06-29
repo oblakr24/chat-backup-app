@@ -2,7 +2,7 @@ package com.rokoblak.chatbackup.importfile
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.rokoblak.chatbackup.navigation.NavRoute
+import com.rokoblak.chatbackup.ui.navigation.NavRoute
 
 
 object ImportRoute : NavRoute<ImportFileViewModel> {

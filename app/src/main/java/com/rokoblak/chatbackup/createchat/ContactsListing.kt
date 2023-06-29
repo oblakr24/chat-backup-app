@@ -10,10 +10,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.rokoblak.chatbackup.commonui.ContactDisplay
-import com.rokoblak.chatbackup.commonui.ContactDisplayData
-import com.rokoblak.chatbackup.commonui.SectionItem
-import com.rokoblak.chatbackup.commonui.verticalScrollbar
+import com.rokoblak.chatbackup.ui.commonui.ContactDisplay
+import com.rokoblak.chatbackup.ui.commonui.ContactDisplayData
+import com.rokoblak.chatbackup.ui.commonui.SectionItem
+import com.rokoblak.chatbackup.ui.commonui.verticalScrollbar
 import kotlinx.collections.immutable.ImmutableList
 
 data class ContactsListingData(

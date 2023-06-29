@@ -1,10 +1,10 @@
 package com.rokoblak.chatbackup.domain.usecases
 
-import com.rokoblak.chatbackup.data.Conversations
+import com.rokoblak.chatbackup.data.model.Conversations
 import com.rokoblak.chatbackup.data.model.OperationResult
-import com.rokoblak.chatbackup.services.ConversationSearcher
-import com.rokoblak.chatbackup.services.ConversationsRepo
-import com.rokoblak.chatbackup.services.SearchResults
+import com.rokoblak.chatbackup.data.util.ConversationSearcher
+import com.rokoblak.chatbackup.data.repo.ConversationsRepository
+import com.rokoblak.chatbackup.data.util.SearchResults
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class ConversationsSearchUseCase @Inject constructor(
-    private val conversationsRepo: ConversationsRepo,
+    private val conversationsRepo: ConversationsRepository,
     private val searcher: ConversationSearcher,
 ) {
     private val scope = CoroutineScope(Dispatchers.Main + Job())

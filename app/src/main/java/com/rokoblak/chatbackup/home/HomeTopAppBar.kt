@@ -14,9 +14,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import com.rokoblak.chatbackup.commonui.OptionsPopupMenu
-import com.rokoblak.chatbackup.commonui.PopupOptions
-import com.rokoblak.chatbackup.commonui.PromptDialog
+import com.rokoblak.chatbackup.ui.commonui.OptionsPopupMenu
+import com.rokoblak.chatbackup.ui.commonui.PopupOptions
+import com.rokoblak.chatbackup.ui.commonui.PromptDialog
 
 data class HomeAppbarUIState(
     val hideIcons: Boolean,

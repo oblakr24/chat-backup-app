@@ -15,10 +15,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import com.rokoblak.chatbackup.commonui.ButtonWithIcon
-import com.rokoblak.chatbackup.commonui.OptionsPopupMenu
-import com.rokoblak.chatbackup.commonui.PopupOptions
-import com.rokoblak.chatbackup.commonui.PromptDialog
+import com.rokoblak.chatbackup.ui.commonui.ButtonWithIcon
+import com.rokoblak.chatbackup.ui.commonui.OptionsPopupMenu
+import com.rokoblak.chatbackup.ui.commonui.PopupOptions
+import com.rokoblak.chatbackup.ui.commonui.PromptDialog
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
 import com.rokoblak.chatbackup.ui.theme.alpha
 

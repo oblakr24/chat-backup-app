@@ -2,23 +2,21 @@ package com.rokoblak.chatbackup.domain.usecases
 
 import com.rokoblak.chatbackup.conversation.ConversationRoute
 import com.rokoblak.chatbackup.createchat.CreateChatRoute
-import com.rokoblak.chatbackup.di.AppScope
-import com.rokoblak.chatbackup.di.SMSEvent
-import com.rokoblak.chatbackup.navigation.RouteNavigator
+import com.rokoblak.chatbackup.ui.navigation.RouteNavigator
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class EventsNavigationUseCase @Inject constructor(
-    private val appScope: AppScope,
+    private val eventsUseCase: AppEventsUseCase,
     private val routeNavigator: RouteNavigator,
 ) {
 
-    suspend fun handleEventsNavigation() = appScope.smsEvents.onEach { event ->
+    suspend fun handleEventsNavigation() = eventsUseCase.smsEvents.onEach { event ->
         when (event) {
             SMSEvent.NewReceived -> Unit
             is SMSEvent.OpenCreateChat -> {
-                appScope.markEventConsumed()
+                eventsUseCase.markEventConsumed()
                 if (event.address != null) {
                     val input = ConversationRoute.Input(
                         resolvedContactId = null,

@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.rokoblak.chatbackup.commonui.ButtonWithIcon
+import com.rokoblak.chatbackup.ui.commonui.ButtonWithIcon
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
 import com.rokoblak.chatbackup.ui.theme.LocalTypography
 

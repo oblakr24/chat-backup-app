@@ -1,8 +1,8 @@
 package com.rokoblak.chatbackup.domain.usecases
 
-import com.rokoblak.chatbackup.data.Contact
+import com.rokoblak.chatbackup.data.model.Contact
 import com.rokoblak.chatbackup.data.model.OperationResult
-import com.rokoblak.chatbackup.services.ContactsRepository
+import com.rokoblak.chatbackup.data.repo.ContactsRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow

@@ -7,7 +7,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Color
 import androidx.core.app.NotificationManagerCompat
-import com.rokoblak.chatbackup.services.notif.NotificationType
+import com.rokoblak.chatbackup.ui.notif.model.NotificationType
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
