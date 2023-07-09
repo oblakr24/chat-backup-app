@@ -1,18 +1,21 @@
 package com.rokoblak.chatbackup.faq
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -21,8 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rokoblak.chatbackup.ui.commonui.DetailsContent
+import com.rokoblak.chatbackup.ui.theme.AppThemePreviews
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
-import com.rokoblak.chatbackup.ui.theme.LocalTypography
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
@@ -50,7 +53,6 @@ fun FAQScreen(viewModel: FAQViewModel = hiltViewModel()) {
     }, onAction = {
         viewModel.handleAction(it)
     })
-
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -63,7 +65,9 @@ private fun FAQScreenContent(
     DetailsContent(title = "FAQ", onBackPressed = {
         onNavigateUp()
     }) {
-        LazyColumn(state = rememberLazyListState()) {
+        LazyColumn(
+            state = rememberLazyListState(),
+        ) {
             val items = state.items
             items(
                 count = items.size,
@@ -78,9 +82,10 @@ private fun FAQScreenContent(
                                     .animateItemPlacement(),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(item.subtitle, style = LocalTypography.current.subheadRegular)
+                                Text(item.subtitle, style = MaterialTheme.typography.labelSmall)
                             }
                         }
+
                         is FAQScreenUIState.Item.Title -> {
                             Row(
                                 modifier = Modifier
@@ -99,7 +104,7 @@ private fun FAQScreenContent(
                                         contentDescription = "ExpandCollapse"
                                     )
                                 }
-                                Text(item.title, style = LocalTypography.current.bodySemiBold)
+                                Text(item.title, style = MaterialTheme.typography.labelMedium)
                             }
                         }
                     }
@@ -109,6 +114,7 @@ private fun FAQScreenContent(
     }
 }
 
+@AppThemePreviews
 @Preview
 @Composable
 fun FAQScreenPreview() {

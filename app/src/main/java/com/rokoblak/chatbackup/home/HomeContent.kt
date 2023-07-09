@@ -6,10 +6,10 @@ import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rokoblak.chatbackup.BuildConfig
 import com.rokoblak.chatbackup.ui.commonui.ButtonWithIcon
+import com.rokoblak.chatbackup.ui.theme.AppThemePreviews
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
 
 sealed interface HomeContentUIPermissionsState {
@@ -31,12 +32,12 @@ sealed interface HomeContentUIPermissionsState {
 
 @Composable
 fun HomeContent(
+    modifier: Modifier = Modifier,
     searchQuery: String?,
     state: HomeContentUIPermissionsState,
     onAction: (HomeAction) -> Unit,
     onLaunchPermissions: () -> Unit,
 ) {
-
     val settingsLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = { _ ->
@@ -47,11 +48,11 @@ fun HomeContent(
     when (state) {
         is HomeContentUIPermissionsState.PermissionsGiven -> {
             val innerState = state.content
-            HomeInnerContent(state = innerState, searchQuery = searchQuery, onAction = onAction)
+            HomeInnerContent(modifier = modifier, state = innerState, searchQuery = searchQuery, onAction = onAction)
         }
         is HomeContentUIPermissionsState.PermissionsNeeded -> {
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -93,7 +94,7 @@ fun HomeContent(
         }
         HomeContentUIPermissionsState.NotDefaultSMSHandlerApp -> {
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -109,6 +110,7 @@ fun HomeContent(
     }
 }
 
+@AppThemePreviews
 @Preview
 @Composable
 private fun HomeContentNoPermissionsPreview() {
@@ -117,11 +119,11 @@ private fun HomeContentNoPermissionsPreview() {
             shouldShowRationale = false,
             shouldShowSettingsBtn = true
         )
-
         HomeContent(state = state, onAction = {}, onLaunchPermissions = {}, searchQuery = "")
     }
 }
 
+@AppThemePreviews
 @Preview
 @Composable
 private fun HomeContentNotDefaultSMSHandlerPreview() {

@@ -7,9 +7,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Upload
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,8 +20,8 @@ import com.rokoblak.chatbackup.ui.commonui.ConversationsListing
 import com.rokoblak.chatbackup.ui.commonui.ConversationsListingUIState
 import com.rokoblak.chatbackup.ui.commonui.PreviewDataUtils
 import com.rokoblak.chatbackup.ui.commonui.SearchBar
+import com.rokoblak.chatbackup.ui.theme.AppThemePreviews
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
-import com.rokoblak.chatbackup.ui.theme.LocalTypography
 import kotlinx.collections.immutable.toImmutableList
 
 data class HomeContentUIState(
@@ -32,13 +33,14 @@ data class HomeContentUIState(
 
 @Composable
 fun HomeInnerContent(
+    modifier: Modifier = Modifier,
     searchQuery: String?,
     state: HomeContentUIState,
     onAction: (HomeAction) -> Unit,
 ) {
     val innerState = state.state
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight()
     ) {
@@ -54,8 +56,8 @@ fun HomeInnerContent(
                         .wrapContentHeight()
                         .padding(top = 8.dp)
                 ) {
-                    Text(text = state.title, style = LocalTypography.current.subheadRegular)
-                    Text(text = state.subtitle, style = LocalTypography.current.captionRegular)
+                    Text(text = state.title, style = MaterialTheme.typography.labelMedium)
+                    Text(text = state.subtitle, style = MaterialTheme.typography.labelSmall)
                 }
                 ButtonWithIcon("Export", Icons.Filled.Upload, enabled = state.exportEnabled) {
                     onAction(HomeAction.ExportClicked)
@@ -82,6 +84,7 @@ fun HomeInnerContent(
     }
 }
 
+@AppThemePreviews
 @Preview
 @Composable
 fun HomeInnerContentPreview() {

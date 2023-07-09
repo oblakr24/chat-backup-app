@@ -1,8 +1,8 @@
 package com.rokoblak.chatbackup.createchat
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -12,6 +12,7 @@ import com.rokoblak.chatbackup.ui.commonui.AvatarData
 import com.rokoblak.chatbackup.ui.commonui.ContactDisplayData
 import com.rokoblak.chatbackup.ui.commonui.DetailsContent
 import com.rokoblak.chatbackup.ui.commonui.SearchBar
+import com.rokoblak.chatbackup.ui.theme.AppThemePreviews
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
 import kotlinx.collections.immutable.toImmutableList
 
@@ -57,6 +58,7 @@ fun CreateChatContent(
     }
 }
 
+@AppThemePreviews
 @Preview
 @Composable
 fun CreateChatContentPreview() {

@@ -2,14 +2,24 @@ package com.rokoblak.chatbackup.conversation
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Send
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -17,12 +27,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.rokoblak.chatbackup.ui.theme.AppThemePreviews
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
-import com.rokoblak.chatbackup.ui.theme.LocalTypography
-import com.rokoblak.chatbackup.ui.theme.alpha
 
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun InputBar(
     input: String,
@@ -30,12 +39,12 @@ fun InputBar(
     onSend: (String) -> Unit,
     onChange: (String) -> Unit,
 ) {
-    val bgColor = MaterialTheme.colors.primaryVariant
+    val bgColor = MaterialTheme.colorScheme.primaryContainer
     Surface(
         modifier = modifier
             .fillMaxWidth()
             .height(50.dp),
-        elevation = 4.dp,
+        shadowElevation = 4.dp,
         border = BorderStroke(1.dp, Color.Transparent),
         shape = RoundedCornerShape(25.dp),
         color = Color.Transparent,
@@ -52,7 +61,7 @@ fun InputBar(
                 onValueChange = onChange,
                 maxLines = 1,
                 colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = bgColor,
+                    containerColor = bgColor,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent
@@ -60,10 +69,10 @@ fun InputBar(
                 placeholder = {
                     Text(
                         text = "Text message",
-                        style = LocalTypography.current.subheadRegular
+                        style = MaterialTheme.typography.labelMedium,
                     )
                 },
-                textStyle = LocalTypography.current.subheadRegular,
+                textStyle = MaterialTheme.typography.labelMedium,
                 modifier = Modifier
                     .weight(1f)
                     .background(bgColor)
@@ -78,6 +87,7 @@ fun InputBar(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Send,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
                         contentDescription = "Clear input"
                     )
                 }
@@ -86,6 +96,7 @@ fun InputBar(
     }
 }
 
+@AppThemePreviews
 @Preview
 @Composable
 fun SearchBarPreview() {
