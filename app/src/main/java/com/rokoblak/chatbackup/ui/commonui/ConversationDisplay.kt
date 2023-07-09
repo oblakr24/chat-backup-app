@@ -1,11 +1,16 @@
 package com.rokoblak.chatbackup.ui.commonui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.Checkbox
-import androidx.compose.material.CheckboxDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
-import com.rokoblak.chatbackup.ui.theme.LocalTypography
 
 data class ConversationDisplayData(
     val contactId: String,
@@ -31,7 +35,7 @@ data class ConversationDisplayData(
 @Composable
 fun ConversationDisplay(
     modifier: Modifier = Modifier,
-    background: Color = MaterialTheme.colors.background,
+    background: Color = MaterialTheme.colorScheme.background,
     data: ConversationDisplayData,
     onCheckedChanged: (Boolean) -> Unit
 ) {
@@ -75,7 +79,7 @@ fun ConversationDisplay(
                 start.linkTo(avatar.end, 12.dp)
                 top.linkTo(parent.top)
             }, text = data.title,
-            style = LocalTypography.current.bodySemiBold
+            style = MaterialTheme.typography.titleMedium
         )
         Text(
             modifier = Modifier.constrainAs(subtitle) {
@@ -85,7 +89,7 @@ fun ConversationDisplay(
                 width = Dimension.fillToConstraints
             },
             text = data.subtitle,
-            style = LocalTypography.current.captionRegular,
+            style = MaterialTheme.typography.labelSmall,
         )
         Text(
             modifier = Modifier.constrainAs(date) {
@@ -93,7 +97,7 @@ fun ConversationDisplay(
                 end.linkTo(parent.end)
             },
             text = data.date,
-            style = LocalTypography.current.captionRegular,
+            style = MaterialTheme.typography.labelSmall,
         )
     }
 }

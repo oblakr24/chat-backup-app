@@ -4,8 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -13,10 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.rokoblak.chatbackup.ui.commonui.AvatarData
-import com.rokoblak.chatbackup.ui.commonui.AvatarBadge
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
-import com.rokoblak.chatbackup.ui.theme.LocalTypography
 
 data class ContactDisplayData(
     val id: String,
@@ -33,7 +30,7 @@ fun ContactDisplay(data: ContactDisplayData, modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
             .padding(8.dp),
     ) {
         val (avatar, title, subtitle, type) = createRefs()
@@ -48,7 +45,7 @@ fun ContactDisplay(data: ContactDisplayData, modifier: Modifier = Modifier) {
                 start.linkTo(avatar.end, 12.dp)
                 top.linkTo(parent.top)
             }, text = data.title,
-            style = LocalTypography.current.bodySemiBold
+            style = MaterialTheme.typography.titleMedium
         )
         Text(
             modifier = Modifier.constrainAs(subtitle) {
@@ -58,7 +55,7 @@ fun ContactDisplay(data: ContactDisplayData, modifier: Modifier = Modifier) {
                 width = Dimension.fillToConstraints
             },
             text = data.subtitle,
-            style = LocalTypography.current.captionRegular,
+            style = MaterialTheme.typography.labelSmall,
         )
         Text(
             modifier = Modifier.constrainAs(type) {
@@ -67,7 +64,7 @@ fun ContactDisplay(data: ContactDisplayData, modifier: Modifier = Modifier) {
                 end.linkTo(parent.end)
             },
             text = data.type,
-            style = LocalTypography.current.captionRegular,
+            style = MaterialTheme.typography.labelSmall,
         )
     }
 }

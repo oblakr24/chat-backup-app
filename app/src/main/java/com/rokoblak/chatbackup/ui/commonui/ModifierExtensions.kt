@@ -3,7 +3,7 @@ package com.rokoblak.chatbackup.ui.commonui
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -27,7 +27,7 @@ fun Modifier.verticalScrollbar(
         animationSpec = tween(durationMillis = duration)
     )
 
-    val color = MaterialTheme.colors.onBackground.alpha(0.5f)
+    val color = MaterialTheme.colorScheme.onBackground.alpha(0.5f)
 
     drawWithContent {
         drawContent()

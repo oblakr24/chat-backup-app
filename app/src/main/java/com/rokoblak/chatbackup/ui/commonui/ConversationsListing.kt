@@ -6,11 +6,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ImportExport
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,7 +64,7 @@ fun ConversationsListing(
                 item {
                     Row(
                         modifier = Modifier
-                            .background(MaterialTheme.colors.background.alpha(0.8f))
+                            .background(MaterialTheme.colorScheme.background.alpha(0.8f))
                             .padding(12.dp)
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
@@ -78,7 +78,7 @@ fun ConversationsListing(
                     stickyHeader {
                         Row(
                             modifier = Modifier
-                                .background(MaterialTheme.colors.background.alpha(0.8f))
+                                .background(MaterialTheme.colorScheme.background.alpha(0.8f))
                                 .padding(12.dp)
                                 .fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
@@ -98,9 +98,9 @@ fun ConversationsListing(
                             }
                             .animateItemPlacement(),
                             background = if (idx.mod(2) == 1) {
-                                MaterialTheme.colors.primaryVariant.alpha(0.16f)
+                                MaterialTheme.colorScheme.primary.alpha(0.16f)
                             } else {
-                                MaterialTheme.colors.background
+                                MaterialTheme.colorScheme.background
                             },
                             data = data,
                             onCheckedChanged = { checked ->
@@ -108,7 +108,7 @@ fun ConversationsListing(
                             })
 
                         if (idx < state.items.lastIndex) {
-                            Divider(color = MaterialTheme.colors.primary, thickness = 1.dp)
+                            Divider(color = MaterialTheme.colorScheme.primary, thickness = 1.dp)
                         }
                     }
                 )

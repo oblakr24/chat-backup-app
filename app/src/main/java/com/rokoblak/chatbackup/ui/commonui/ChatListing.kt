@@ -6,15 +6,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.rokoblak.chatbackup.ui.theme.AppThemePreviews
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
-import com.rokoblak.chatbackup.ui.theme.LocalTypography
 import com.rokoblak.chatbackup.ui.theme.alpha
 import kotlinx.collections.immutable.ImmutableList
 
@@ -49,23 +49,24 @@ fun ChatListing(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colors.background.alpha(0.8f))
+                    .background(MaterialTheme.colorScheme.background.alpha(0.2f))
                     .padding(8.dp),
                 text = subtitle,
                 textAlign = TextAlign.Center,
-                style = LocalTypography.current.captionRegular
+                style = MaterialTheme.typography.labelSmall
             )
         }
         items(
             count = items.size,
             key = { items[it].id },
             itemContent = {
-                ChatDisplay(data = items[it])
+                ChatDisplay(data = items[it], modifier = Modifier.padding(horizontal = 8.dp))
             }
         )
     }
 }
 
+@AppThemePreviews
 @Preview
 @Composable
 fun ChatListingPreview() {
