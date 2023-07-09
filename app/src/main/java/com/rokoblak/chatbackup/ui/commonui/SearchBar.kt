@@ -2,12 +2,25 @@ package com.rokoblak.chatbackup.ui.commonui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -16,11 +29,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.rokoblak.chatbackup.ui.theme.AppThemePreviews
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
-import com.rokoblak.chatbackup.ui.theme.LocalTypography
 import com.rokoblak.chatbackup.ui.theme.alpha
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     text: String,
@@ -33,13 +46,13 @@ fun SearchBar(
             .padding(horizontal = 16.dp, vertical = 4.dp)
             .fillMaxWidth()
             .height(50.dp).clip(RoundedCornerShape(25.dp)),
-        elevation = 4.dp,
-        border = BorderStroke(1.dp, MaterialTheme.colors.onPrimary.alpha(0.5f)),
+        shadowElevation = 4.dp,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onPrimary.alpha(0.5f)),
         shape = RoundedCornerShape(25.dp),
-        color = MaterialTheme.colors.background
+        color = MaterialTheme.colorScheme.background
     ) {
         Row(
-            modifier = Modifier.background(MaterialTheme.colors.background),
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -53,17 +66,17 @@ fun SearchBar(
                 value = text,
                 onValueChange = onChange,
                 maxLines = 1,
-                colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.background),
+                colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background),
                 placeholder = {
                     Text(
                         text = placeholder,
-                        style = LocalTypography.current.subheadRegular
+                        style = MaterialTheme.typography.labelSmall
                     )
                 },
-                textStyle = LocalTypography.current.subheadRegular,
+                textStyle = MaterialTheme.typography.labelSmall,
                 modifier = Modifier
                     .weight(1f)
-                    .background(MaterialTheme.colors.background)
+                    .background(MaterialTheme.colorScheme.background)
             )
 
             if (text.isNotBlank()) {
@@ -83,6 +96,7 @@ fun SearchBar(
     }
 }
 
+@AppThemePreviews
 @Preview
 @Composable
 fun SearchBarPreview() {

@@ -4,8 +4,8 @@ import androidx.annotation.FloatRange
 import androidx.annotation.IntRange
 import androidx.compose.ui.graphics.Color
 
-val PrimaryDark = Color.DarkGray
-val PrimaryLight = Color(0xFFD6D6EC)
+val PrimaryDark = Color(0xFFD6D6EC)
+val PrimaryLight = Color(0xFF4C73FF)
 val PrimaryVariantLight = Color(0xFFDBDBEC)
 val PrimaryVariantDark = Color(0xFF303030)
 

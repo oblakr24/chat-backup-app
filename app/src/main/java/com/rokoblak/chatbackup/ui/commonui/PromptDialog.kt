@@ -2,12 +2,12 @@ package com.rokoblak.chatbackup.ui.commonui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.rokoblak.chatbackup.ui.theme.LocalTypography
 
 
 @Composable
@@ -20,7 +20,7 @@ fun PromptDialog(
     AlertDialog(
         onDismissRequest = dismiss,
         title = {
-            Text(text = title, style = LocalTypography.current.titleSemiBold)
+            Text(text = title, style = MaterialTheme.typography.titleMedium)
         },
         text = {
             Column(
