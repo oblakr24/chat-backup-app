@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -16,6 +16,7 @@ import com.rokoblak.chatbackup.ui.commonui.ChatDisplayData
 import com.rokoblak.chatbackup.ui.commonui.ChatListing
 import com.rokoblak.chatbackup.ui.commonui.DetailsHeader
 import com.rokoblak.chatbackup.ui.commonui.PreviewDataUtils
+import com.rokoblak.chatbackup.ui.theme.AppThemePreviews
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
 import kotlinx.collections.immutable.ImmutableList
 
@@ -50,7 +51,7 @@ private fun ConversationScreenContent(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .background(MaterialTheme.colors.surface)
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         DetailsHeader(
             text = state.title,
@@ -58,7 +59,7 @@ private fun ConversationScreenContent(
             onIconPressed = null,
             onBackPressed = { onNavigateUp() }
         )
-        ChatListing(modifier = Modifier.weight(1f).padding(horizontal = 8.dp), subtitle = state.subtitle, items = state.items)
+        ChatListing(modifier = Modifier.weight(1f), subtitle = state.subtitle, items = state.items)
         if (state.showInput) {
             InputBar(
                 input = input,
@@ -73,6 +74,7 @@ private fun ConversationScreenContent(
     }
 }
 
+@AppThemePreviews
 @Preview
 @Composable
 fun ConversationScreenPreview() {

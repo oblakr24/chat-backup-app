@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace 'com.rokoblak.chatbackup'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.rokoblak.chatbackup"
         minSdk 29
-        targetSdk 33
+        targetSdk 34
         versionCode 6
         versionName "1.0.3"
 
@@ -85,6 +85,9 @@ dependencies {
     implementation "com.google.accompanist:accompanist-permissions:0.31.2-alpha"
     // Compose extended material icons
     implementation "androidx.compose.material:material-icons-extended:1.4.3"
+    // Compose Material 3
+    implementation platform('androidx.compose:compose-bom:2022.10.00')
+    implementation 'androidx.compose.material3:material3'
     // Coil
     implementation "io.coil-kt:coil-compose:2.2.2"
 
