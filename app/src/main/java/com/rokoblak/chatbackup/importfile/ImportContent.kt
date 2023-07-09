@@ -1,23 +1,30 @@
 package com.rokoblak.chatbackup.importfile
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DataObject
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.rokoblak.chatbackup.ui.commonui.PreviewDataUtils.mockConversations
 import com.rokoblak.chatbackup.ui.commonui.ButtonWithIcon
 import com.rokoblak.chatbackup.ui.commonui.ConversationDisplayData
 import com.rokoblak.chatbackup.ui.commonui.ConversationsListing
 import com.rokoblak.chatbackup.ui.commonui.ConversationsListingUIState
 import com.rokoblak.chatbackup.ui.commonui.DetailsContent
+import com.rokoblak.chatbackup.ui.commonui.PreviewDataUtils.mockConversations
+import com.rokoblak.chatbackup.ui.theme.AppThemePreviews
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
-import com.rokoblak.chatbackup.ui.theme.LocalTypography
 import kotlinx.collections.immutable.ImmutableList
 
 sealed interface ImportScreenUIState {
@@ -52,9 +59,6 @@ fun ImportContent(
                     ButtonWithIcon("Import JSON", icon = Icons.Filled.DataObject) {
                         onAction(ImportAction.ImportJSONClicked)
                     }
-//                    ButtonWithIcon("Import XML", icon = Icons.Filled.DataArray) {
-//                        onAction(ImportAction.ImportXMLClicked)
-//                    }
                 }
             }
             ImportScreenUIState.Loading -> {
@@ -81,7 +85,7 @@ fun ImportContent(
                                 strokeWidth = 2.dp
                             )
                         }
-                        Text(state.subtitle, style = LocalTypography.current.subheadRegular)
+                        Text(state.subtitle, style = MaterialTheme.typography.labelSmall)
                     }
                 }
                 val conversationsState = ConversationsListingUIState.Loaded(state.listing)
@@ -98,6 +102,7 @@ fun ImportContent(
     }
 }
 
+@AppThemePreviews
 @Preview
 @Composable
 fun ImportContentPreview() {

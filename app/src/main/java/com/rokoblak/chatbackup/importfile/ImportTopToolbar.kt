@@ -3,9 +3,15 @@ package com.rokoblak.chatbackup.importfile
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,14 +35,17 @@ data class ImportTopToolbarUIState(
     val deleteEnabled: Boolean,
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImportTopToolbar(
     state: ImportTopToolbarUIState,
     onAction: (ImportAction) -> Unit,
 ) {
     TopAppBar(
-        backgroundColor = MaterialTheme.colors.primaryVariant.alpha(0.9f),
-        elevation = 0.dp,
+        colors = TopAppBarDefaults.smallTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.primaryContainer
+        ),
         title = { },
         actions = {
             var openSMSDefaultPrompt by remember {
@@ -57,7 +66,7 @@ fun ImportTopToolbar(
                             .shadow(8.dp)
                             .wrapContentSize()
                             .background(
-                                MaterialTheme.colors.surface,
+                                MaterialTheme.colorScheme.surface,
                                 RoundedCornerShape(8.dp)
                             )
                     ) {

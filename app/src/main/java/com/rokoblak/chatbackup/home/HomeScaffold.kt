@@ -1,17 +1,19 @@
 package com.rokoblak.chatbackup.home
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Message
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.rokoblak.chatbackup.ui.commonui.ButtonWithIcon
 import com.rokoblak.chatbackup.ui.commonui.ConversationsListingUIState
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
@@ -23,54 +25,76 @@ data class HomeScaffoldUIState(
     val contentPermissions: HomeContentUIPermissionsState
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScaffold(
     searchQuery: String?,
     state: HomeScaffoldUIState,
-    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     onAction: (HomeAction) -> Unit,
     onLaunchPermissions: () -> Unit,
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        scaffoldState = scaffoldState,
-        topBar = {
-            HomeTopAppBar(state.appbar, onAction) {
-                coroutineScope.launch {
-                    scaffoldState.drawerState.open()
-                }
-            }
-        },
+    ModalNavigationDrawer(
+        drawerState = drawerState,
         drawerContent = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
+            val coroutineScope = rememberCoroutineScope()
+            ModalDrawerSheet {
                 HomeDrawer(state.drawer) {
                     coroutineScope.launch {
-                        scaffoldState.drawerState.close()
+                        drawerState.close()
                         onAction(it)
                     }
                 }
             }
-        }, content = {
-            it.calculateBottomPadding()
-            HomeContent(searchQuery, state.contentPermissions, onAction, onLaunchPermissions)
-        }, floatingActionButton = {
+        }
+    ) {
+        HomeScaffoldContent(
+            searchQuery = searchQuery,
+            state = state,
+            drawerState = drawerState,
+            onAction = onAction,
+            onLaunchPermissions = onLaunchPermissions,
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HomeScaffoldContent(
+    searchQuery: String?,
+    state: HomeScaffoldUIState,
+    drawerState: DrawerState,
+    onAction: (HomeAction) -> Unit,
+    onLaunchPermissions: () -> Unit,
+) {
+    Scaffold(
+        topBar = {
+            val coroutineScope = rememberCoroutineScope()
+
+            HomeTopAppBar(state.appbar, onAction) {
+                coroutineScope.launch {
+                    drawerState.open()
+                }
+            }
+        },
+        floatingActionButton = {
             if (state.contentPermissions is HomeContentUIPermissionsState.PermissionsGiven) {
                 ButtonWithIcon(modifier = Modifier,
                     text = "Compose",
                     icon = Icons.Filled.Message,
                     onClick = { onAction(HomeAction.ComposeClicked) })
             }
-        })
+        }
+    ) { paddingValues ->
+        val topPadding = paddingValues.calculateTopPadding()
+        HomeContent(modifier = Modifier.padding(top = topPadding), searchQuery, state.contentPermissions, onAction, onLaunchPermissions)
+    }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun HomeScaffoldPreview() {
-    val drawerOpenState = DrawerValue.Closed
     val drawerState = HomeDrawerUIState(
         darkMode = true,
         showDefaultSMSLabel = true,
@@ -86,10 +110,9 @@ private fun HomeScaffoldPreview() {
     )
     ChatBackupTheme {
         val state = ConversationsListingUIState.Loading
-        val scaffoldState = ScaffoldState(DrawerState(drawerOpenState), SnackbarHostState())
         HomeScaffold(
             searchQuery = "",
-            scaffoldState = scaffoldState,
+            drawerState = DrawerState(DrawerValue.Closed),
             state = HomeScaffoldUIState(
                 appbarState,
                 drawerState,

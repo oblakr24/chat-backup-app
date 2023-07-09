@@ -3,17 +3,18 @@ package com.rokoblak.chatbackup.ui.commonui
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ImportExport
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.rokoblak.chatbackup.ui.theme.AppThemePreviews
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
 
 @Composable
@@ -26,7 +27,7 @@ fun ButtonWithIcon(
 ) {
     Button(
         enabled = enabled, modifier = modifier,
-        onClick = onClick
+        onClick = onClick,
     ) {
         Row(
             modifier = Modifier.widthIn(80.dp, 320.dp),
@@ -41,6 +42,7 @@ fun ButtonWithIcon(
     }
 }
 
+@AppThemePreviews
 @Preview
 @Composable
 fun IconButtonPreviewShort() {
@@ -49,6 +51,7 @@ fun IconButtonPreviewShort() {
     }
 }
 
+@AppThemePreviews
 @Preview
 @Composable
 fun IconButtonPreviewLong() {
