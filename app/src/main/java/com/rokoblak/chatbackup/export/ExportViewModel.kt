@@ -7,9 +7,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.molecule.AndroidUiDispatcher
-import app.cash.molecule.RecompositionClock
+import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
-import com.rokoblak.chatbackup.home.*
 import com.rokoblak.chatbackup.ui.navigation.RouteNavigator
 import com.rokoblak.chatbackup.data.repo.ConversationsRepository
 import com.rokoblak.chatbackup.data.util.FileManager
@@ -41,7 +40,7 @@ class ExportViewModel @Inject constructor(
     val effects = SingleEventFlow<ExportEffect>()
 
     val uiState: StateFlow<ExportScreenUIState> by lazy {
-        scope.launchMolecule(clock = RecompositionClock.ContextClock) {
+        scope.launchMolecule(mode = RecompositionMode.ContextClock) {
             ExportPresenter(exportFlow)
         }
     }

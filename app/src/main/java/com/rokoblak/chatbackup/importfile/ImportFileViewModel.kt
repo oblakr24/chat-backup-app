@@ -8,7 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.AndroidUiDispatcher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.cash.molecule.RecompositionClock
+import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
 import com.rokoblak.chatbackup.conversation.ConversationRoute
 import com.rokoblak.chatbackup.domain.usecases.ConversationsImportUseCase
@@ -46,7 +46,7 @@ class ImportFileViewModel @Inject constructor(
     private val isDefaultSMSApp = permissionsUseCase.permissions.map { it.isDefaultSMSHandlerApp }
 
     val uiState: StateFlow<ImportScreenUIState> by lazy {
-        scope.launchMolecule(clock = RecompositionClock.ContextClock) {
+        scope.launchMolecule(mode = RecompositionMode.ContextClock) {
             ImportPresenter(
                 downloadUseCase.state,
                 editState,

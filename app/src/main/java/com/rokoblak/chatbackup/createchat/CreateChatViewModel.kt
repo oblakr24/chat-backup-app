@@ -6,21 +6,22 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.AndroidUiDispatcher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.cash.molecule.RecompositionClock
+import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
-import com.rokoblak.chatbackup.ui.commonui.ContactDisplayData
 import com.rokoblak.chatbackup.conversation.ConversationRoute
-import com.rokoblak.chatbackup.createchat.CreateChatUIState.*
+import com.rokoblak.chatbackup.createchat.CreateChatUIState.Content
 import com.rokoblak.chatbackup.data.model.Contact
 import com.rokoblak.chatbackup.data.model.OperationResult
 import com.rokoblak.chatbackup.domain.usecases.ContactsFilteringUseCase
-import com.rokoblak.chatbackup.ui.navigation.RouteNavigator
+import com.rokoblak.chatbackup.ui.commonui.ContactDisplayData
 import com.rokoblak.chatbackup.ui.mapper.ConversationUIMapper
+import com.rokoblak.chatbackup.ui.navigation.RouteNavigator
 import com.rokoblak.chatbackup.util.SingleEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 
@@ -36,7 +37,7 @@ class CreateChatViewModel @Inject constructor(
     val effects = SingleEventFlow<CreateChatEffect>()
 
     val uiState: StateFlow<CreateChatUIState> by lazy {
-        scope.launchMolecule(clock = RecompositionClock.ContextClock) {
+        scope.launchMolecule(mode = RecompositionMode.ContextClock) {
             CreateChatPresenter(contactsFilteringUseCase.filteredContacts())
         }
     }

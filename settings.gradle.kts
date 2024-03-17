@@ -4,10 +4,8 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
-    plugins {
-        id 'org.jetbrains.kotlin.android' version '1.8.0'
-    }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -16,4 +14,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "chatbackup"
-include ':app'
+include(":app")

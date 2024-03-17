@@ -8,16 +8,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.molecule.AndroidUiDispatcher
-import app.cash.molecule.RecompositionClock
+import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
 import com.rokoblak.chatbackup.AppConstants
 import com.rokoblak.chatbackup.BuildConfig
-import com.rokoblak.chatbackup.ui.commonui.ConversationsListingUIState.*
 import com.rokoblak.chatbackup.conversation.ConversationRoute
 import com.rokoblak.chatbackup.createchat.CreateChatRoute
 import com.rokoblak.chatbackup.data.model.Conversations
 import com.rokoblak.chatbackup.data.model.OperationResult
-import com.rokoblak.chatbackup.ui.mapper.ConversationUIMapper
 import com.rokoblak.chatbackup.domain.usecases.ConversationsSearchUseCase
 import com.rokoblak.chatbackup.domain.usecases.ConvsState
 import com.rokoblak.chatbackup.domain.usecases.DarkModeToggleUseCase
@@ -27,14 +25,35 @@ import com.rokoblak.chatbackup.domain.usecases.PermissionsStateUseCase
 import com.rokoblak.chatbackup.domain.usecases.SearchState
 import com.rokoblak.chatbackup.export.ExportRoute
 import com.rokoblak.chatbackup.faq.FAQRoute
-import com.rokoblak.chatbackup.home.HomeAction.*
+import com.rokoblak.chatbackup.home.HomeAction.ClearSelection
+import com.rokoblak.chatbackup.home.HomeAction.CloseEditClicked
+import com.rokoblak.chatbackup.home.HomeAction.ComposeClicked
+import com.rokoblak.chatbackup.home.HomeAction.ConversationChecked
+import com.rokoblak.chatbackup.home.HomeAction.ConversationClicked
+import com.rokoblak.chatbackup.home.HomeAction.DeleteClicked
+import com.rokoblak.chatbackup.home.HomeAction.EditClicked
+import com.rokoblak.chatbackup.home.HomeAction.ExportClicked
+import com.rokoblak.chatbackup.home.HomeAction.FAQClicked
+import com.rokoblak.chatbackup.home.HomeAction.ImportClicked
+import com.rokoblak.chatbackup.home.HomeAction.OpenRepoUrl
+import com.rokoblak.chatbackup.home.HomeAction.OpenSetAsDefaultClicked
+import com.rokoblak.chatbackup.home.HomeAction.PermissionsUpdated
+import com.rokoblak.chatbackup.home.HomeAction.QueryChanged
+import com.rokoblak.chatbackup.home.HomeAction.SelectAll
+import com.rokoblak.chatbackup.home.HomeAction.SetAsDefaultUpdated
+import com.rokoblak.chatbackup.home.HomeAction.SetDarkMode
 import com.rokoblak.chatbackup.importfile.ImportRoute
+import com.rokoblak.chatbackup.ui.commonui.ConversationsListingUIState.Empty
+import com.rokoblak.chatbackup.ui.commonui.ConversationsListingUIState.Loaded
+import com.rokoblak.chatbackup.ui.commonui.ConversationsListingUIState.Loading
+import com.rokoblak.chatbackup.ui.mapper.ConversationUIMapper
 import com.rokoblak.chatbackup.ui.navigation.RouteNavigator
 import com.rokoblak.chatbackup.util.SingleEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -118,7 +137,7 @@ class HomeViewModel @Inject constructor(
     }
 
     val uiState: StateFlow<HomeScreenUIState> by lazy {
-        scope.launchMolecule(clock = RecompositionClock.ContextClock) {
+        scope.launchMolecule(mode = RecompositionMode.ContextClock) {
             HomePresenter(
                 convsUseCase.mappedConvs,
                 darkModeToggleUseCase.darkModeEnabled(),

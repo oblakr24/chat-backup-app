@@ -7,7 +7,7 @@ import androidx.compose.ui.platform.AndroidUiDispatcher
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.cash.molecule.RecompositionClock
+import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
 import com.rokoblak.chatbackup.data.model.Conversation
 import com.rokoblak.chatbackup.domain.usecases.ConversationUseCase
@@ -45,7 +45,7 @@ class ConversationViewModel @Inject constructor(
     private val inputs = MutableStateFlow("")
 
     val uiState: StateFlow<ConversationScreenUIState> by lazy {
-        scope.launchMolecule(clock = RecompositionClock.ContextClock) {
+        scope.launchMolecule(mode = RecompositionMode.ContextClock) {
             ConversationPresenter(convsFlow)
         }
     }

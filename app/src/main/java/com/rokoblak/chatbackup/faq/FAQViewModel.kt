@@ -6,7 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.AndroidUiDispatcher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.cash.molecule.RecompositionClock
+import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
 import com.rokoblak.chatbackup.R
 import com.rokoblak.chatbackup.ui.navigation.RouteNavigator
@@ -30,7 +30,7 @@ class FAQViewModel @Inject constructor(
     private val expandedIndices = MutableStateFlow(emptyMap<Int, Boolean>())
 
     val uiState: StateFlow<FAQScreenUIState> by lazy {
-        scope.launchMolecule(clock = RecompositionClock.ContextClock) {
+        scope.launchMolecule(mode = RecompositionMode.ContextClock) {
             FAQPresenter(items, expandedIndices)
         }
     }
