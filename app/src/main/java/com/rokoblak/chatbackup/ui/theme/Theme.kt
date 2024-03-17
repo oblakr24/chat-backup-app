@@ -32,7 +32,7 @@ fun ChatBackupTheme(
     overrideDarkMode: Boolean? = null,
     darkTheme: Boolean = overrideDarkMode ?: isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+//    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

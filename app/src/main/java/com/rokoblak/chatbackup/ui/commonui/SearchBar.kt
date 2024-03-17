@@ -45,7 +45,8 @@ fun SearchBar(
         modifier = modifier
             .padding(horizontal = 16.dp, vertical = 4.dp)
             .fillMaxWidth()
-            .height(50.dp).clip(RoundedCornerShape(25.dp)),
+            .height(50.dp)
+            .clip(RoundedCornerShape(25.dp)),
         shadowElevation = 4.dp,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.onPrimary.alpha(0.5f)),
         shape = RoundedCornerShape(25.dp),
@@ -66,7 +67,10 @@ fun SearchBar(
                 value = text,
                 onValueChange = onChange,
                 maxLines = 1,
-                colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.background),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background
+                ),
                 placeholder = {
                     Text(
                         text = placeholder,

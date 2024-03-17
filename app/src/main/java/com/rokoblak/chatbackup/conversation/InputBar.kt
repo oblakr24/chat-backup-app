@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,8 +31,6 @@ import androidx.compose.ui.unit.dp
 import com.rokoblak.chatbackup.ui.theme.AppThemePreviews
 import com.rokoblak.chatbackup.ui.theme.ChatBackupTheme
 
-
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun InputBar(
     input: String,
@@ -60,8 +59,9 @@ fun InputBar(
                 value = input,
                 onValueChange = onChange,
                 maxLines = 1,
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = bgColor,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = bgColor,
+                    unfocusedContainerColor = bgColor,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent
@@ -86,7 +86,7 @@ fun InputBar(
                     }
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Send,
+                        imageVector = Icons.AutoMirrored.Filled.Send,
                         tint = MaterialTheme.colorScheme.onPrimaryContainer,
                         contentDescription = "Clear input"
                     )

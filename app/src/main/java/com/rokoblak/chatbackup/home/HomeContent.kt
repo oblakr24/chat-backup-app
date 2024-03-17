@@ -7,6 +7,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Text
@@ -62,7 +63,7 @@ fun HomeContent(
                     // then gently explain why the app requires this permission
                     Text("The app needs to read messages and contacts in order to list and export the data. Please grant the necessary permissions.")
 
-                    ButtonWithIcon("Grant permissions", icon = Icons.Filled.Message) {
+                    ButtonWithIcon("Grant permissions", icon = Icons.AutoMirrored.Filled.Message) {
                         onLaunchPermissions()
                     }
                 } else {
@@ -85,7 +86,7 @@ fun HomeContent(
                             )
                         }
                     } else {
-                        ButtonWithIcon("Grant permissions", icon = Icons.Filled.Message) {
+                        ButtonWithIcon("Grant permissions", icon = Icons.AutoMirrored.Filled.Message) {
                             onLaunchPermissions()
                         }
                     }
@@ -102,7 +103,7 @@ fun HomeContent(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                ButtonWithIcon("Set as default", icon = Icons.Filled.Message) {
+                ButtonWithIcon("Set as default", icon = Icons.AutoMirrored.Filled.Message) {
                     onAction(HomeAction.OpenSetAsDefaultClicked)
                 }
             }

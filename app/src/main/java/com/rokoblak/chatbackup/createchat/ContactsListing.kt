@@ -2,10 +2,9 @@ package com.rokoblak.chatbackup.createchat
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -43,7 +42,7 @@ fun ContactsListing(data: ContactsListingData, onItemClicked: (cId: String, numb
                         data = item,
                     )
                     if (idx < data.items.lastIndex) {
-                        Divider(color = MaterialTheme.colorScheme.primary, thickness = 1.dp)
+                        HorizontalDivider(color = MaterialTheme.colorScheme.primary, thickness = 1.dp)
                     }
                 }
             )

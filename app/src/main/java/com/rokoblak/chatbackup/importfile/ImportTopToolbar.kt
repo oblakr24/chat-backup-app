@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Message
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -42,7 +44,7 @@ fun ImportTopToolbar(
     onAction: (ImportAction) -> Unit,
 ) {
     TopAppBar(
-        colors = TopAppBarDefaults.smallTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = MaterialTheme.colorScheme.primaryContainer
         ),
@@ -84,7 +86,7 @@ fun ImportTopToolbar(
                                     .widthIn(20.dp, 220.dp)
                             )
                             val owner = LocalContext.current
-                            ButtonWithIcon("Set as default", Icons.Filled.Message) {
+                            ButtonWithIcon("Set as default", Icons.AutoMirrored.Filled.Message) {
                                 openSMSDefaultPrompt = false
                                 onAction(ImportAction.OpenSetAsDefaultClicked(owner))
                             }
@@ -230,7 +232,7 @@ fun ImportTopToolbar(
                 }
             ) {
                 Icon(
-                    imageVector = Icons.Filled.OpenInNew,
+                    imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                     contentDescription = "Show open file submenu"
                 )
             }

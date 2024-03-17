@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Message
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.OpenInNew
@@ -49,12 +51,12 @@ fun HomeDrawer(
         if (state.showComposeAndImport) {
             ButtonWithIcon(modifier = Modifier.padding(horizontal = 16.dp),
                 text = "Compose",
-                icon = Icons.Filled.Message,
+                icon = Icons.AutoMirrored.Filled.Message,
                 onClick = { onAction(HomeAction.ComposeClicked) })
             Spacer(modifier = Modifier.height(8.dp))
             ButtonWithIcon(modifier = Modifier.padding(horizontal = 16.dp),
                 text = "Import",
-                icon = Icons.Filled.OpenInNew,
+                icon = Icons.AutoMirrored.Filled.OpenInNew,
                 onClick = { onAction(HomeAction.ImportClicked) })
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -117,7 +119,7 @@ fun HomeDrawer(
                 ) {
                     Text("This is not the default SMS app.\nChange to enable additional functionalities such as restoring imported messages and deleting.")
                     Spacer(modifier = Modifier.height(12.dp))
-                    ButtonWithIcon("Make default", Icons.Filled.Message) {
+                    ButtonWithIcon("Make default", Icons.AutoMirrored.Filled.Message) {
                         onAction(HomeAction.OpenSetAsDefaultClicked)
                     }
                 }

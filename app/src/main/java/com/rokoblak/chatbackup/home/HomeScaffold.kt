@@ -2,6 +2,7 @@ package com.rokoblak.chatbackup.home
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.Message
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -81,7 +82,7 @@ private fun HomeScaffoldContent(
             if (state.contentPermissions is HomeContentUIPermissionsState.PermissionsGiven) {
                 ButtonWithIcon(modifier = Modifier,
                     text = "Compose",
-                    icon = Icons.Filled.Message,
+                    icon = Icons.AutoMirrored.Filled.Message,
                     onClick = { onAction(HomeAction.ComposeClicked) })
             }
         }
