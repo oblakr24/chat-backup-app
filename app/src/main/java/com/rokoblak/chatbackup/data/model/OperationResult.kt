@@ -1,10 +1,12 @@
 package com.rokoblak.chatbackup.data.model
 
-sealed interface OperationResult<out T : Any?> {
-    data class Done<out T : Any>(val data: T) : OperationResult<T>
-    data class Error(val msg: String) : OperationResult<Nothing>
+interface RootError
 
-    fun <R : Any> map(mapper: (T) -> R): OperationResult<R> = when (this) {
+sealed interface OperationResult<out T : Any?, out E: RootError> {
+    data class Done<out T : Any, out E: RootError>(val data: T) : OperationResult<T, E>
+    data class Error<out E: RootError>(val error: E) : OperationResult<Nothing, E>
+
+    fun <R : Any> map(mapper: (T) -> R): OperationResult<R, E> = when (this) {
         is Done -> Done(mapper(data))
         is Error -> this
     }

@@ -78,6 +78,8 @@ fun ConversationDisplay(
             modifier = Modifier.constrainAs(title) {
                 start.linkTo(avatar.end, 12.dp)
                 top.linkTo(parent.top)
+                end.linkTo(date.start, 4.dp)
+                width = Dimension.fillToConstraints
             }, text = data.title,
             style = MaterialTheme.typography.titleMedium
         )
@@ -112,6 +114,26 @@ fun ConversationDisplayPreview() {
                 id = "id1",
                 number = "num1",
                 title = AnnotatedString("Conv title"),
+                subtitle = AnnotatedString("conv subtitle long message to make it really long and fit more than one line"),
+                date = "13th Mar 2022 19:45:44",
+                checked = true,
+                avatar = AvatarData.Initials("CO", Color.Blue),
+            ),
+            onCheckedChanged = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun ConversationDisplayLongNamePreview() {
+    ChatBackupTheme {
+        ConversationDisplay(
+            data = ConversationDisplayData(
+                contactId = "C_id1",
+                id = "id1",
+                number = "num1",
+                title = AnnotatedString("Conv title - Very Long name"),
                 subtitle = AnnotatedString("conv subtitle long message to make it really long and fit more than one line"),
                 date = "13th Mar 2022 19:45:44",
                 checked = true,

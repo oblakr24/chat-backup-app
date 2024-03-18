@@ -14,7 +14,7 @@ android {
         applicationId = "com.rokoblak.chatbackup"
         minSdk = 29
         targetSdk = 34
-        versionCode = 6
+        versionCode = 7
         versionName = "1.0.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -59,8 +59,9 @@ android {
 
 dependencies {
     val composeHiltNavigationVersion = "1.2.0"
-    val nav_version = "2.7.7"
-    val compose_ui_version = "1.6.3"
+    val navVersion = "2.7.7"
+    val composeUiVersion = "1.6.3"
+    val timberVersion = "5.0.1"
 
     // Core/activity/lifecycle
     implementation("androidx.core:core-ktx:1.12.0")
@@ -71,19 +72,19 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:2.49")
 
     // Compose
-    implementation("androidx.compose.ui:ui:$compose_ui_version")
-    implementation("androidx.compose.ui:ui-tooling-preview:$compose_ui_version")
+    implementation("androidx.compose.ui:ui:$composeUiVersion")
+    implementation("androidx.compose.ui:ui-tooling-preview:$composeUiVersion")
     implementation("androidx.compose.material:material:1.6.3")
     // Compose constraint layout
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     // Compose tooling
-    debugImplementation("androidx.compose.ui:ui-tooling:$compose_ui_version")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_ui_version")
+    debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeUiVersion")
     // Compose Navigation
-    implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation("androidx.navigation:navigation-compose:$navVersion")
     implementation("androidx.hilt:hilt-navigation-compose:$composeHiltNavigationVersion")
     // Compose permissions
-    implementation("com.google.accompanist:accompanist-permissions:0.31.2-alpha")
+    implementation("com.google.accompanist:accompanist-permissions:0.35.0-alpha")
     // Compose extended material icons
     implementation("androidx.compose.material:material-icons-extended:1.6.3")
     // Compose Material 3
@@ -93,8 +94,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.6.0")
 
     // Timber
-    val timber = "5.0.1"
-    implementation("com.jakewharton.timber:timber:$timber")
+    implementation("com.jakewharton.timber:timber:$timberVersion")
 
     // Datastore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
@@ -112,7 +112,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_ui_version")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeUiVersion")
 }
 
 kapt {

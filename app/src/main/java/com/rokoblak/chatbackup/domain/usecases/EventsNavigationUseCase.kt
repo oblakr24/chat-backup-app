@@ -1,7 +1,7 @@
 package com.rokoblak.chatbackup.domain.usecases
 
-import com.rokoblak.chatbackup.conversation.ConversationRoute
-import com.rokoblak.chatbackup.createchat.CreateChatRoute
+import com.rokoblak.chatbackup.feature.conversation.ConversationRoute
+import com.rokoblak.chatbackup.feature.createchat.CreateChatRoute
 import com.rokoblak.chatbackup.ui.navigation.RouteNavigator
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach

@@ -9,6 +9,7 @@ import com.rokoblak.chatbackup.ui.commonui.PreviewDataUtils.obfuscate
 import com.rokoblak.chatbackup.data.model.Contact
 import com.rokoblak.chatbackup.data.model.PhoneType
 import com.rokoblak.chatbackup.data.model.OperationResult
+import com.rokoblak.chatbackup.data.model.RootError
 import com.rokoblak.chatbackup.di.AppScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -20,7 +21,7 @@ class ContactsRepository @Inject constructor(
 
     private val scope = CoroutineScope(Dispatchers.Main + Job())
 
-    val contactsFlow: StateFlow<OperationResult<List<Contact>>?> = flow {
+    val contactsFlow: StateFlow<OperationResult<List<Contact>, ContactsLoadError>?> = flow {
         emit(loadContacts())
     }.stateIn(scope, SharingStarted.WhileSubscribed(5000), OperationResult.Done(emptyList()))
 
@@ -67,10 +68,10 @@ class ContactsRepository @Inject constructor(
         name?.contains(query, ignoreCase = true) == true
                 || number.contains(query, ignoreCase = true)
 
-    private suspend fun loadContacts(): OperationResult<List<Contact>> =
+    private suspend fun loadContacts(): OperationResult<List<Contact>, ContactsLoadError> =
         withContext(Dispatchers.IO) {
             val cursor =
-                createCursor() ?: return@withContext OperationResult.Error("Could not open cursor")
+                createCursor() ?: return@withContext OperationResult.Error(ContactsLoadError.CursorOpenError)
             OperationResult.Done(
                 cursor.parseContacts().let { contacts ->
                     if (AppConstants.OBFUSCATE) contacts.map { it.obfuscate() } else contacts
@@ -180,4 +181,8 @@ class ContactsRepository @Inject constructor(
                 Phone.PHOTO_URI
             )
     }
+}
+
+sealed interface ContactsLoadError: RootError {
+    data object CursorOpenError: ContactsLoadError
 }

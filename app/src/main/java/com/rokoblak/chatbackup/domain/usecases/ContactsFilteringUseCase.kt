@@ -2,6 +2,7 @@ package com.rokoblak.chatbackup.domain.usecases
 
 import com.rokoblak.chatbackup.data.model.Contact
 import com.rokoblak.chatbackup.data.model.OperationResult
+import com.rokoblak.chatbackup.data.repo.ContactsLoadError
 import com.rokoblak.chatbackup.data.repo.ContactsRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -27,7 +28,7 @@ class ContactsFilteringUseCase @Inject constructor(
         if (q.isBlank()) 0L else 100L
     }
 
-    fun filteredContacts(): Flow<OperationResult<List<Contact>>?> {
+    fun filteredContacts(): Flow<OperationResult<List<Contact>, ContactsLoadError>?> {
         return contactsRepo.contactsFlow.flatMapLatest { res ->
             when (res) {
                 is OperationResult.Done -> {

@@ -40,7 +40,7 @@ data class SearchResults(
 )
 
 sealed interface MatchedContact {
-    object NotMatched : MatchedContact
+    data object NotMatched : MatchedContact
     data class MatchingInName(val contact: Contact, val matchingLastMsg: Message?) : MatchedContact
     data class MatchingInMessage(val contact: Contact, val last: Message) : MatchedContact
 }

@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.os.bundleOf
 import com.rokoblak.chatbackup.R
-import com.rokoblak.chatbackup.main.MainActivity
+import com.rokoblak.chatbackup.feature.main.MainActivity
 import com.rokoblak.chatbackup.ui.notif.model.NotificationType
 
 object NotifUtils {

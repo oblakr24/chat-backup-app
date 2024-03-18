@@ -1,5 +1,6 @@
 package com.rokoblak.chatbackup.domain.usecases
 
+import com.rokoblak.chatbackup.data.datasources.MessageInsertionError
 import com.rokoblak.chatbackup.data.model.OperationResult
 import com.rokoblak.chatbackup.data.repo.ConversationsRepository
 import com.rokoblak.chatbackup.data.datasources.MessagesDataSource
@@ -91,7 +92,10 @@ class DownloadConversationUseCase @Inject constructor(
                 }
 
                 is OperationResult.Error -> {
-                    onProgressMsg(chunkRes.msg)
+                    val msg = when (val e = chunkRes.error) {
+                        is MessageInsertionError.InsertionError -> "Inserted ${e.inserted} out of ${e.totalToInsert} total"
+                    }
+                    onProgressMsg(msg)
                 }
             }
         }.collect()

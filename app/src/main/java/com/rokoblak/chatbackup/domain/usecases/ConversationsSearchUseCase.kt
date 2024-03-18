@@ -1,5 +1,6 @@
 package com.rokoblak.chatbackup.domain.usecases
 
+import com.rokoblak.chatbackup.data.datasources.MessageDeletionError
 import com.rokoblak.chatbackup.data.model.Conversations
 import com.rokoblak.chatbackup.data.model.OperationResult
 import com.rokoblak.chatbackup.data.util.ConversationSearcher
@@ -99,7 +100,7 @@ class ConversationsSearchUseCase @Inject constructor(
         _editState.update { it.copy(editing = false) }
     }
 
-    suspend fun deleteSelected(): OperationResult<Unit> {
+    suspend fun deleteSelected(): OperationResult<Unit, MessageDeletionError> {
         val selectedIds = _selections.value.filter { it.value }.keys
         return conversationsRepo.deleteDeviceConvs(selectedIds)
     }

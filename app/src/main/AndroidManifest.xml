@@ -42,7 +42,7 @@
         </receiver>
 
         <activity
-            android:name="com.rokoblak.chatbackup.main.MainActivity"
+            android:name="com.rokoblak.chatbackup.feature.main.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/Theme.ChatBackup">

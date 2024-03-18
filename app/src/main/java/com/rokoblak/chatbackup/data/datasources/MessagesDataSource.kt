@@ -12,6 +12,7 @@ import com.rokoblak.chatbackup.data.model.Conversations
 import com.rokoblak.chatbackup.data.model.Message
 import com.rokoblak.chatbackup.data.model.MinimalContact
 import com.rokoblak.chatbackup.data.model.OperationResult
+import com.rokoblak.chatbackup.data.model.RootError
 import com.rokoblak.chatbackup.data.util.ConversationBuilder
 import com.rokoblak.chatbackup.di.AppScope
 import com.rokoblak.chatbackup.domain.usecases.RetrieveContactUseCase
@@ -174,7 +175,7 @@ class MessagesDataSource @Inject constructor(
         )
     }
 
-    suspend fun saveMessages(messages: List<Message>): Flow<OperationResult<Int>> {
+    suspend fun saveMessages(messages: List<Message>): Flow<OperationResult<Int, MessageInsertionError>> {
         val (incomingMsgs, sentMsgs) = messages.partition { it.incoming }
         val incomingUrl = Telephony.Sms.Inbox.CONTENT_URI
         val sentUrl = Telephony.Sms.Sent.CONTENT_URI
@@ -187,7 +188,7 @@ class MessagesDataSource @Inject constructor(
     private suspend fun saveMessagesForUri(
         messages: List<Message>,
         uri: Uri
-    ): Flow<OperationResult<Int>> =
+    ): Flow<OperationResult<Int, MessageInsertionError>> =
         withContext(Dispatchers.IO) {
             val allValues = messages.map {
                 createMsgValues(
@@ -202,7 +203,7 @@ class MessagesDataSource @Inject constructor(
                         Timber.i("Inserted: $it out of ${valuesList.size}")
                     }
                     if (inserted != valuesList.size) {
-                        emit(OperationResult.Error("Failed to insert messages: $inserted out of ${valuesList.size}"))
+                        emit(OperationResult.Error(MessageInsertionError.InsertionError(totalToInsert = valuesList.size, inserted = inserted)))
                         return@forEach
                     } else {
                         emit(OperationResult.Done(inserted))
@@ -212,7 +213,7 @@ class MessagesDataSource @Inject constructor(
         }
 
 
-    suspend fun deleteMessages(ids: Set<String>): OperationResult<Unit> =
+    suspend fun deleteMessages(ids: Set<String>): OperationResult<Unit, MessageDeletionError> =
         withContext(Dispatchers.IO) {
             val cr = appScope.appContext.contentResolver
 
@@ -228,13 +229,16 @@ class MessagesDataSource @Inject constructor(
                 }
                 if (anyFailed) {
                     val totalDeleted = results.sumOf { it.count ?: 0 }
-                    OperationResult.Error("Error deleting ${ids.size} messages: only deleted $totalDeleted")
+                    OperationResult.Error(MessageDeletionError.DeletionError(
+                        totalToDelete = ids.size,
+                        deleted = totalDeleted
+                    ))
                 } else {
                     OperationResult.Done(Unit)
                 }
             } catch (e: Throwable) {
                 e.printStackTrace()
-                OperationResult.Error(e.message ?: "Error deleting: unknown error")
+                OperationResult.Error(MessageDeletionError.GenericDeletionError(e.message ?: "Error deleting: unknown error"))
             }
         }
 
@@ -302,4 +306,13 @@ class MessagesDataSource @Inject constructor(
                 put("date", timestamp.toEpochMilli())
             }
     }
+}
+
+sealed interface MessageDeletionError: RootError {
+    data class DeletionError(val totalToDelete: Int, val deleted: Int): MessageDeletionError
+    data class GenericDeletionError(val message: String): MessageDeletionError
+}
+
+sealed interface MessageInsertionError: RootError {
+    data class InsertionError(val totalToInsert: Int, val inserted: Int): MessageInsertionError
 }

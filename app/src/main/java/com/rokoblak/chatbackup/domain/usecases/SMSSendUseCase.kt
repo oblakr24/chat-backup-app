@@ -10,6 +10,7 @@ import android.telephony.SmsManager
 import androidx.core.content.ContextCompat
 import com.rokoblak.chatbackup.data.datasources.MessagesDataSource
 import com.rokoblak.chatbackup.data.model.OperationResult
+import com.rokoblak.chatbackup.data.model.RootError
 import com.rokoblak.chatbackup.di.AppScope
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeoutOrNull
@@ -23,7 +24,7 @@ class SMSSendUseCase @Inject constructor(
     private val eventsUseCase: AppEventsUseCase,
 ) {
 
-    suspend fun send(address: String, body: String): OperationResult<Unit> {
+    suspend fun send(address: String, body: String): OperationResult<Unit, SMSSendError> {
         val context = appScope.appContext
         val smsManager = ContextCompat.getSystemService(context, SmsManager::class.java)
             ?: throw IllegalAccessError("No SMS manager")
@@ -33,7 +34,7 @@ class SMSSendUseCase @Inject constructor(
             PendingIntent.getBroadcast(context, 0, Intent(action), PendingIntent.FLAG_IMMUTABLE)
 
         val res = withTimeoutOrNull(5000L) {
-            suspendCancellableCoroutine<OperationResult<Unit>> { cont ->
+            suspendCancellableCoroutine<OperationResult<Unit, SMSSendError>> { cont ->
                 val sentIntentReceiver = object : BroadcastReceiver() {
                     override fun onReceive(context: Context, intent: Intent?) {
                         val resultCode = resultCode
@@ -46,7 +47,7 @@ class SMSSendUseCase @Inject constructor(
                 smsManager.sendTextMessage(address, null, body, sendPendingIntent, null)
                 appScope.appContext.registerReceiver(sentIntentReceiver, IntentFilter(action))
             }
-        } ?: OperationResult.Error("Error sending: timeout")
+        } ?: OperationResult.Error(SMSSendError.Timeout)
 
         // TODO: Handle error cases
         when (res) {
@@ -54,7 +55,7 @@ class SMSSendUseCase @Inject constructor(
                 Timber.i("Message sent: $body to $address")
             }
             is OperationResult.Error -> {
-                Timber.e("Send failure: ${res.msg}")
+                Timber.e("Send failure: ${res.error}")
             }
         }
         MessagesDataSource.saveSingle(context, incoming = false, body = body, address = address)
@@ -64,16 +65,25 @@ class SMSSendUseCase @Inject constructor(
         return res
     }
 
-    private fun Int.mapCodeToResult() = when (this) {
+    private fun Int.mapCodeToResult(): OperationResult<Unit, SMSSendError> = when (this) {
         Activity.RESULT_OK -> OperationResult.Done(Unit)
-        SmsManager.RESULT_ERROR_GENERIC_FAILURE -> OperationResult.Error("Generic failure")
-        SmsManager.RESULT_ERROR_NO_SERVICE -> OperationResult.Error("No service")
-        SmsManager.RESULT_ERROR_NULL_PDU -> OperationResult.Error("Null PDU")
-        SmsManager.RESULT_ERROR_RADIO_OFF -> OperationResult.Error("Radio off")
-        else -> OperationResult.Error("Send failure")
+        SmsManager.RESULT_ERROR_GENERIC_FAILURE -> OperationResult.Error(SMSSendError.GenericFailure)
+        SmsManager.RESULT_ERROR_NO_SERVICE -> OperationResult.Error(SMSSendError.NoService)
+        SmsManager.RESULT_ERROR_NULL_PDU -> OperationResult.Error(SMSSendError.NullPDU)
+        SmsManager.RESULT_ERROR_RADIO_OFF -> OperationResult.Error(SMSSendError.RadioOff)
+        else -> OperationResult.Error(SMSSendError.OtherError)
     }
 
     companion object {
         private const val ACTION_SENT = "sms-action-sent"
     }
+}
+
+sealed interface SMSSendError: RootError {
+    data object GenericFailure: SMSSendError
+    data object NoService: SMSSendError
+    data object NullPDU: SMSSendError
+    data object RadioOff: SMSSendError
+    data object OtherError: SMSSendError
+    data object Timeout: SMSSendError
 }

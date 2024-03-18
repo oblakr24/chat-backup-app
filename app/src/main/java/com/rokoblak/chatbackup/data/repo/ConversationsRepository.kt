@@ -1,5 +1,6 @@
 package com.rokoblak.chatbackup.data.repo
 
+import com.rokoblak.chatbackup.data.datasources.MessageDeletionError
 import com.rokoblak.chatbackup.data.model.Conversation
 import com.rokoblak.chatbackup.data.model.Conversations
 import com.rokoblak.chatbackup.data.model.OperationResult
@@ -72,7 +73,7 @@ class ConversationsRepository @Inject constructor(
         deviceLoadConvsFlow(it.emitInitial)
     }.stateIn(scope, SharingStarted.WhileSubscribed(5000), null)
 
-    suspend fun deleteDeviceConvs(contactIds: Set<String>): OperationResult<Unit> {
+    suspend fun deleteDeviceConvs(contactIds: Set<String>): OperationResult<Unit, MessageDeletionError> {
         deletionsFlow.update { contactIds }
 
         val msgIds = contactIds.flatMap {
