@@ -115,8 +115,8 @@ data class EditState(
 )
 
 sealed interface ConvsState {
-    object Empty : ConvsState
-    object Loading : ConvsState
+    data object Empty : ConvsState
+    data object Loading : ConvsState
     data class Loaded(
         val convs: Conversations,
         val selections: Map<String, Boolean>?,
@@ -125,8 +125,8 @@ sealed interface ConvsState {
 }
 
 sealed interface SearchState {
-    object NoSearch : SearchState
-    object Searching : SearchState
-    object NoResults : SearchState
+    data object NoSearch : SearchState
+    data object Searching : SearchState
+    data object NoResults : SearchState
     data class ResultsFound(val results: SearchResults) : SearchState
 }

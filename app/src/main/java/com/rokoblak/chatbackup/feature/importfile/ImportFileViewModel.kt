@@ -10,13 +10,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
-import com.rokoblak.chatbackup.feature.conversation.ConversationRoute
+import com.rokoblak.chatbackup.data.model.OperationResult
 import com.rokoblak.chatbackup.domain.usecases.ConversationsImportUseCase
 import com.rokoblak.chatbackup.domain.usecases.DownloadConversationUseCase
 import com.rokoblak.chatbackup.domain.usecases.ImportDownloadState
+import com.rokoblak.chatbackup.domain.usecases.ImportError
 import com.rokoblak.chatbackup.domain.usecases.ImportResult
 import com.rokoblak.chatbackup.domain.usecases.PermissionsStateUseCase
-import com.rokoblak.chatbackup.feature.importfile.ImportAction.*
+import com.rokoblak.chatbackup.feature.conversation.ConversationRoute
+import com.rokoblak.chatbackup.feature.importfile.ImportAction.ClearSelection
+import com.rokoblak.chatbackup.feature.importfile.ImportAction.CloseEditClicked
+import com.rokoblak.chatbackup.feature.importfile.ImportAction.ConversationChecked
+import com.rokoblak.chatbackup.feature.importfile.ImportAction.ConversationClicked
+import com.rokoblak.chatbackup.feature.importfile.ImportAction.DeleteClicked
+import com.rokoblak.chatbackup.feature.importfile.ImportAction.DownloadConfirmed
+import com.rokoblak.chatbackup.feature.importfile.ImportAction.EditClicked
+import com.rokoblak.chatbackup.feature.importfile.ImportAction.ImportJSONClicked
+import com.rokoblak.chatbackup.feature.importfile.ImportAction.JSONFileSelected
+import com.rokoblak.chatbackup.feature.importfile.ImportAction.OpenSetAsDefaultClicked
+import com.rokoblak.chatbackup.feature.importfile.ImportAction.SelectAll
+import com.rokoblak.chatbackup.feature.importfile.ImportAction.SetAsDefaultUpdated
 import com.rokoblak.chatbackup.ui.mapper.ConversationUIMapper
 import com.rokoblak.chatbackup.ui.navigation.RouteNavigator
 import com.rokoblak.chatbackup.util.SingleEventFlow
@@ -24,7 +37,11 @@ import com.rokoblak.chatbackup.util.StringUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -66,15 +83,15 @@ class ImportFileViewModel @Inject constructor(
     ): ImportScreenUIState {
         val isLoading = loadingFlow.collectAsState().value
         if (isLoading) return ImportScreenUIState.Loading
-        val importState = importStateFlow.collectAsState(initial = ImportDownloadState(null, emptyMap(), null)).value
-        val importResult = importState.importResult ?: return ImportScreenUIState.Initial
+        val importState = importStateFlow.collectAsState(initial = null).value
+        val importResult = importState?.importResult ?: return ImportScreenUIState.Initial
 
         val res = when (importResult) {
-            is ImportResult.Error -> {
-                effects.send(ImportEffect.ShowToast("Error importing: ${importResult.message}"))
+            is OperationResult.Done -> importResult.data
+            is OperationResult.Error -> {
+                effects.send(ImportEffect.ShowToast("Error importing: $importResult"))
                 return ImportScreenUIState.Initial
             }
-            is ImportResult.Success -> importResult
         }
 
         val selections = importState.selections
@@ -135,7 +152,7 @@ class ImportFileViewModel @Inject constructor(
         }
     }
 
-    private fun importFile(doImport: suspend () -> ImportResult) =
+    private fun importFile(doImport: suspend () -> OperationResult<ImportResult, ImportError>) =
         viewModelScope.launch {
             loading.value = true
             downloadUseCase.importFile(doImport)
@@ -151,8 +168,8 @@ class ImportFileViewModel @Inject constructor(
     }
 
     private fun openConversation(contactId: String, number: String) {
-        val input = ConversationRoute.Input(contactId, address = number, isImport = true)
-        navigateToRoute(ConversationRoute.get(input))
+        val input = ConversationRoute(contactId, address = number, isImport = true)
+        navigateToRoute(input)
     }
 }
 

@@ -21,7 +21,7 @@ class DownloadConversationUseCase @Inject constructor(
 
     private val downloading = MutableStateFlow<DownloadProgress?>(null)
     private val selections = MutableStateFlow(emptyMap<String, Boolean>())
-    private val importedConvs = MutableStateFlow<ImportResult?>(null)
+    private val importedConvs = MutableStateFlow<OperationResult<ImportResult, ImportError>?>(null)
 
     val state = combine(downloading, selections, importedConvs) { progress, selections, importRes ->
         ImportDownloadState(progress, selections, importRes)
@@ -47,28 +47,27 @@ class DownloadConversationUseCase @Inject constructor(
         }
     }
 
-    suspend fun importFile(doImport: suspend () -> ImportResult) {
+    suspend fun importFile(doImport: suspend () -> OperationResult<ImportResult, ImportError>) {
         importedConvs.value = doImport().also { res ->
-            if (res is ImportResult.Success) {
-                selections.update { res.convs.mapping.map { it.key.id to true }.toMap() }
-                repo.setImportedConversations(res.convs)
-            }
+            val result = res.optValue() ?: return
+            selections.update { result.convs.mapping.map { it.key.id to true }.toMap() }
+            repo.setImportedConversations(result.convs)
         }
     }
 
     fun deleteSelected() {
-        val res = importedConvs.value as? ImportResult.Success ?: return
+        val res = importedConvs.value?.optValue() ?: return
         val convs = res.convs
         val selected = selections.value
         val keys = selected.filter { it.value }.keys
         val removed = convs.removeConvs(keys)
         repo.setImportedConversations(removed)
         selections.update { it.toMutableMap().filterKeys { k -> keys.contains(k).not() } }
-        importedConvs.value = res.copy(convs = removed)
+        importedConvs.value = OperationResult.Done(res.copy(convs = removed))
     }
 
     suspend fun downloadSelected(onProgressMsg: (String) -> Unit) = withContext(Dispatchers.IO) {
-        val res = importedConvs.value as? ImportResult.Success ?: return@withContext
+        val res = importedConvs.value?.optValue() ?: return@withContext
         val convs = res.convs
         val selected = selections.value
         val selectedMsgs = convs.retrieveMessages(selected.filter { it.value }.keys)
@@ -113,7 +112,7 @@ class DownloadConversationUseCase @Inject constructor(
 data class ImportDownloadState(
     val progress: DownloadProgress?,
     val selections: Map<String, Boolean>,
-    val importResult: ImportResult?,
+    val importResult: OperationResult<ImportResult, ImportError>?,
 )
 
 data class DownloadProgress(val done: Int, val total: Int)

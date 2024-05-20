@@ -4,37 +4,43 @@ import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.AndroidUiDispatcher
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
 import com.rokoblak.chatbackup.data.model.Conversation
 import com.rokoblak.chatbackup.domain.usecases.ConversationUseCase
-import com.rokoblak.chatbackup.ui.navigation.RouteNavigator
-import com.rokoblak.chatbackup.ui.mapper.ConversationUIMapper
 import com.rokoblak.chatbackup.domain.usecases.SMSSendUseCase
+import com.rokoblak.chatbackup.ui.mapper.ConversationUIMapper
+import com.rokoblak.chatbackup.ui.navigation.RouteNavigator
 import com.rokoblak.chatbackup.util.formatDateOnly
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class ConversationViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+@HiltViewModel(assistedFactory = ConversationViewModel.Factory::class)
+class ConversationViewModel @AssistedInject constructor(
     routeNavigator: RouteNavigator,
     conversationUseCase: ConversationUseCase,
     private val uiMapper: ConversationUIMapper,
     private val smsSender: SMSSendUseCase,
-) :
-    ViewModel(), RouteNavigator by routeNavigator {
+    @Assisted val routeInput: ConversationRoute,
+) : ViewModel(), RouteNavigator by routeNavigator {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(routeInput: ConversationRoute): ConversationViewModel
+    }
 
     private val scope = CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
-
-    private val routeInput = ConversationRoute.getIdFrom(savedStateHandle)
 
     private val convsFlow = conversationUseCase.conversationFor(
         contactId = routeInput.resolvedContactId,
@@ -86,6 +92,7 @@ class ConversationViewModel @Inject constructor(
             is ConversationAction.InputChanged -> {
                 inputs.value = act.input
             }
+
             is ConversationAction.SendClicked -> {
                 viewModelScope.launch {
                     val address = routeInput.address

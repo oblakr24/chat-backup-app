@@ -18,17 +18,16 @@ class EventsNavigationUseCase @Inject constructor(
             is SMSEvent.OpenCreateChat -> {
                 eventsUseCase.markEventConsumed()
                 if (event.address != null) {
-                    val input = ConversationRoute.Input(
+                    val input = ConversationRoute(
                         resolvedContactId = null,
                         address = event.address,
                         isImport = false
                     )
-                    routeNavigator.navigateToRoute(ConversationRoute.get(input))
+                    routeNavigator.navigateToRoute(input)
                 } else {
-                    routeNavigator.navigateToRoute(CreateChatRoute.route)
+                    routeNavigator.navigateToRoute(CreateChatRoute)
                 }
             }
         }
     }.collect()
-
 }

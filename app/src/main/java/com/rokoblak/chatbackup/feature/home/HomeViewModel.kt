@@ -154,10 +154,10 @@ class HomeViewModel @Inject constructor(
         when (act) {
             is ConversationChecked -> updateCheckedState(act.contactId, act.checked)
             is ConversationClicked -> openConversation(act.contactId, act.number)
-            is ImportClicked -> navigateToRoute(ImportRoute.route)
-            is ComposeClicked -> navigateToRoute(CreateChatRoute.route)
+            is ImportClicked -> navigateToRoute(ImportRoute)
+            is ComposeClicked -> navigateToRoute(CreateChatRoute)
             is ExportClicked -> navigateToExport()
-            FAQClicked -> navigateToRoute(FAQRoute.route)
+            FAQClicked -> navigateToRoute(FAQRoute)
             is SetDarkMode -> setDarkMode(act.enabled)
             CloseEditClicked -> convsUseCase.exitEdit()
             EditClicked -> enterEdit()
@@ -176,12 +176,11 @@ class HomeViewModel @Inject constructor(
 
     private fun openConversation(contactId: String, number: String) {
         navigateToRoute(
-            ConversationRoute.get(
-                ConversationRoute.Input(
+            ConversationRoute(
             resolvedContactId = contactId,
             address = number,
             isImport = false
-        )))
+        ))
     }
 
     private fun enterEdit() {
@@ -202,7 +201,7 @@ class HomeViewModel @Inject constructor(
 
     private fun navigateToExport() {
         convsUseCase.setExportedSelections()
-        navigateToRoute(ExportRoute.route)
+        navigateToRoute(ExportRoute)
     }
 
     private fun updateCheckedState(contactId: String, checked: Boolean) {

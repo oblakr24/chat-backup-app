@@ -8,12 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
-import com.rokoblak.chatbackup.feature.conversation.ConversationRoute
-import com.rokoblak.chatbackup.feature.createchat.CreateChatUIState.Content
 import com.rokoblak.chatbackup.data.model.Contact
 import com.rokoblak.chatbackup.data.model.OperationResult
 import com.rokoblak.chatbackup.data.repo.ContactsLoadError
 import com.rokoblak.chatbackup.domain.usecases.ContactsFilteringUseCase
+import com.rokoblak.chatbackup.feature.conversation.ConversationRoute
+import com.rokoblak.chatbackup.feature.createchat.CreateChatUIState.Content
 import com.rokoblak.chatbackup.ui.commonui.ContactDisplayData
 import com.rokoblak.chatbackup.ui.mapper.ConversationUIMapper
 import com.rokoblak.chatbackup.ui.navigation.RouteNavigator
@@ -77,8 +77,8 @@ class CreateChatViewModel @Inject constructor(
     fun handleAction(act: CreateChatAction) {
         when (act) {
             is CreateChatAction.ContactClicked -> {
-                val input = ConversationRoute.Input(resolvedContactId = act.contactId, act.number)
-                navigateToRoute(ConversationRoute.get(input))
+                val input = ConversationRoute(resolvedContactId = act.contactId, act.number)
+                navigateToRoute(input)
             }
 
             is CreateChatAction.QueryChanged -> contactsFilteringUseCase.updateQuery(act.query)

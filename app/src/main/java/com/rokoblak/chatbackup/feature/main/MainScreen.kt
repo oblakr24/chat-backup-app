@@ -40,12 +40,12 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
 
 @Composable
 private fun MainNavHostContainer(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = HomeRoute.route) {
+    NavHost(navController = navController, startDestination = HomeRoute) {
         HomeRoute.register(this, navController)
         FAQRoute.register(this, navController)
-        ConversationRoute.register(this, navController)
         ImportRoute.register(this, navController)
         ExportRoute.register(this, navController)
         CreateChatRoute.register(this, navController)
+        ConversationRoute.register(this, navController)
     }
 }

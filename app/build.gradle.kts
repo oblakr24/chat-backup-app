@@ -59,22 +59,23 @@ android {
 
 dependencies {
     val composeHiltNavigationVersion = "1.2.0"
-    val navVersion = "2.7.7"
-    val composeUiVersion = "1.6.3"
+    val navVersion = "2.8.0-beta01"
+    val composeUiVersion = "1.6.7"
     val timberVersion = "5.0.1"
 
     // Core/activity/lifecycle
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.activity:activity-compose:1.8.2")
+    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.activity:activity-compose:1.9.0")
 
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.49")
-    kapt("com.google.dagger:hilt-compiler:2.49")
+    val hiltVersion = "2.51.1"
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 
     // Compose
     implementation("androidx.compose.ui:ui:$composeUiVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeUiVersion")
-    implementation("androidx.compose.material:material:1.6.3")
+    implementation("androidx.compose.material:material:1.6.7")
     // Compose constraint layout
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     // Compose tooling
@@ -86,9 +87,9 @@ dependencies {
     // Compose permissions
     implementation("com.google.accompanist:accompanist-permissions:0.35.0-alpha")
     // Compose extended material icons
-    implementation("androidx.compose.material:material-icons-extended:1.6.3")
+    implementation("androidx.compose.material:material-icons-extended:1.6.7")
     // Compose Material 3
-    implementation(platform("androidx.compose:compose-bom:2024.02.02"))
+    implementation(platform("androidx.compose:compose-bom:2024.05.00"))
     implementation("androidx.compose.material3:material3")
     // Coil
     implementation("io.coil-kt:coil-compose:2.6.0")
@@ -97,13 +98,13 @@ dependencies {
     implementation("com.jakewharton.timber:timber:$timberVersion")
 
     // Datastore
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     // KotlinX immutable collections
     api("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
 
     // KotlinX Serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     // SMS-MMS parsing lib, used for MMS
     implementation("com.klinkerapps:android-smsmms:5.2.6")

@@ -5,7 +5,7 @@ buildscript {
     }
     dependencies {
         val kotlinVersion = "1.9.22"
-        classpath("app.cash.molecule:molecule-gradle-plugin:1.4.1")
+        classpath("app.cash.molecule:molecule-gradle-plugin:1.4.2")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     }
 }

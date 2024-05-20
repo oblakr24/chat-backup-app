@@ -22,6 +22,6 @@ class AppEventsUseCase @Inject constructor() {
 }
 
 sealed interface SMSEvent {
-    object NewReceived: SMSEvent
+    data object NewReceived: SMSEvent
     data class OpenCreateChat(val address: String?): SMSEvent
 }
