@@ -3,7 +3,9 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.22"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0"
+
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -47,9 +49,6 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.10"
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -59,7 +58,7 @@ android {
 
 dependencies {
     val composeHiltNavigationVersion = "1.2.0"
-    val navVersion = "2.8.0-beta01"
+    val navVersion = "2.8.0-beta02"
     val composeUiVersion = "1.6.7"
     val timberVersion = "5.0.1"
 
